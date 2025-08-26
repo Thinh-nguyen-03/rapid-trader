@@ -13,7 +13,7 @@ Comprehensive operational guide for running and maintaining the RapidTrader syst
 
 ### Data Pipeline Failure
 1. **Identify scope**: Which symbols/dates are affected
-2. **Check data sources**: FMP API status, yfinance availability
+2. **Check data sources**: Polygon.io API status and rate limits
 3. **Manual re-run**: Execute failed jobs with specific parameters
 4. **Validate results**: Verify data completeness and quality
 5. **Update monitoring**: Adjust alerts if systematic issue
@@ -31,7 +31,7 @@ Comprehensive operational guide for running and maintaining the RapidTrader syst
 - [ ] **System Health**: All services running normally
 - [ ] **Data Validation**: Previous day's data complete
 - [ ] **Error Review**: Check overnight logs for issues
-- [ ] **API Status**: Verify FMP and yfinance availability
+- [ ] **API Status**: Verify Polygon.io API availability and rate limits
 - [ ] **Database Space**: Confirm adequate storage available
 - [ ] **Backup Status**: Verify automated backups completed
 
@@ -156,7 +156,7 @@ python scripts/test_apis.py --verbose
 - Archive logs older than 30 days
 - Clean up temporary files and cache
 - Vacuum database tables for performance
-- Update symbol universe from FMP
+- Update symbol universe from Polygon.io
 - Review and rotate API keys if needed
 
 #### Performance Review
@@ -291,7 +291,7 @@ python scripts/test_apis.py --verbose
 RT_DB_URL="postgresql://user:pass@host:port/db"
 
 # API keys
-RT_FMP_API_KEY="your_fmp_api_key"
+RT_POLYGON_API_KEY="your_polygon_api_key"
 
 # Capital and risk settings
 RT_START_CAPITAL=100000.0
@@ -387,8 +387,8 @@ python scripts/db_maintenance.py --vacuum
 ### External Dependencies
 
 #### Data Providers
-- **Financial Modeling Prep**: support@financialmodelingprep.com
-- **Yahoo Finance**: No direct support (free service)
+- **Polygon.io**: support@polygon.io
+- **Wikipedia**: No direct support (free service)
 
 #### Infrastructure
 - **Supabase Support**: support@supabase.io

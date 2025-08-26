@@ -11,7 +11,7 @@ RapidTrader is an end-of-day (EOD) algorithmic trading system designed for syste
 - **Risk Management**: Portfolio-level risk controls and position sizing
 - **Simplicity**: Clean, maintainable codebase with minimal dependencies
 - **Extensibility**: Modular design for easy strategy addition
-- **Cost-Effective**: Leverage free and low-cost data sources
+- **Enterprise-Grade Data**: Professional quality data via Polygon.io
 
 ### Target Users
 - Individual quantitative traders
@@ -126,9 +126,9 @@ RapidTrader is an end-of-day (EOD) algorithmic trading system designed for syste
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │   Data Sources  │────│  RapidTrader    │────│   Database      │
 │                 │    │     Core        │    │                 │
-│ • FMP API       │    │                 │    │ • PostgreSQL    │
-│ • yfinance      │    │ • Indicators    │    │ • Supabase      │
-│ • Yahoo Finance │    │ • Strategies    │    │                 │
+│ • Polygon.io    │    │                 │    │ • PostgreSQL    │
+│ • Wikipedia     │    │ • Indicators    │    │ • Supabase      │
+│                 │    │ • Strategies    │    │                 │
 └─────────────────┘    │ • Risk Mgmt     │    └─────────────────┘
                        │ • Jobs          │
                        └─────────────────┘
@@ -315,16 +315,16 @@ RT_ATR_STOP_K: ATR stop multiplier (default 3.0)
 RT_COOLDOWN_DAYS_ON_STOP: Stop cooldown period (default 1)
 
 # API Configuration
-RT_FMP_API_KEY: Financial Modeling Prep API key
+RT_POLYGON_API_KEY: Polygon.io API key
 ```
 
 ### Error Handling Strategy
 
 #### Data Source Failures
-- Primary: FMP API for S&P 500 data
-- Fallback: Static symbol list for emergency operation
-- Primary: yfinance for OHLCV data
-- Fallback: Skip symbol and log error
+- Primary: Polygon.io API for all market data
+- Fallback: Wikipedia for S&P 500 symbols
+- Fallback: Skip symbol and log error for OHLCV data
+- Emergency: Static symbol list for system continuity
 
 #### Database Failures
 - Retry logic with exponential backoff
@@ -461,15 +461,15 @@ RT_FMP_API_KEY: Financial Modeling Prep API key
 - No options or derivatives trading
 
 ### Constraints
-- Maximum 500 API calls per day (FMP free tier)
+- Maximum 1,000 API calls per month (Polygon.io free tier)
 - PostgreSQL database limitations
 - Single-threaded processing for simplicity
 - No real-time data requirements
 - Dry-run orders only (no actual trading)
 
 ### Dependencies
-- Financial Modeling Prep API availability
-- Yahoo Finance data accessibility
+- Polygon.io API availability
+- Wikipedia data accessibility
 - PostgreSQL/Supabase service uptime
 - Python ecosystem stability
 - Internet connectivity for data sources

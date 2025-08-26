@@ -4,18 +4,18 @@ Minimal EOD (End-of-Day) algorithmic trading system for Python.
 
 ## Quick Start
 
-1. **Get FMP API Key** (free): https://financialmodelingprep.com/developer/docs
+1. **Get Polygon.io API Key** (free): https://polygon.io/
 
 2. **Setup**:
    ```bash
    pip install -e .
-   echo "RT_FMP_API_KEY=your_key_here" > .env
+   echo "RT_POLYGON_API_KEY=your_key_here" > .env
    ```
 
 3. **Run**:
    ```bash
-   # Test FMP connection
-   python scripts/test_fmp_api.py
+   # Test Polygon.io connection
+   python scripts/test_polygon_api.py
    
    # Seed S&P 500 symbols
    python scripts/seed_sp500.py
@@ -23,8 +23,8 @@ Minimal EOD (End-of-Day) algorithmic trading system for Python.
 
 ## What's Included
 
-- **S&P 500 data**: Automatic symbol and sector fetching via FMP API
-- **OHLCV data**: yfinance integration for price/volume data  
+- **S&P 500 data**: Automatic symbol and sector fetching via Polygon.io API
+- **OHLCV data**: High-quality market data from Polygon.io  
 - **Technical indicators**: SMA, RSI, ATR implementations
 - **Database**: PostgreSQL/Supabase ready schema
 - **Minimal codebase**: Clean, focused implementation
@@ -32,7 +32,7 @@ Minimal EOD (End-of-Day) algorithmic trading system for Python.
 ## Core Components
 
 - `rapidtrader/core/` - Configuration and database
-- `rapidtrader/data/` - Data fetching (FMP + yfinance)
+- `rapidtrader/data/` - Data fetching (Polygon.io)
 - `rapidtrader/indicators/` - Technical analysis functions
 - `scripts/` - Setup and utility scripts
 - `docs/` - Essential documentation only
@@ -49,7 +49,7 @@ CREATE TABLE bars_daily (symbol TEXT, d DATE, open REAL, high REAL, low REAL, cl
 ## Configuration
 
 Environment variables in `.env`:
-- `RT_FMP_API_KEY` - Financial Modeling Prep API key
+- `RT_POLYGON_API_KEY` - Polygon.io API key
 - `RT_DB_URL` - Database connection string
 - See `rapidtrader/core/config.py` for all options
 

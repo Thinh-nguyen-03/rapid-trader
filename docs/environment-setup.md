@@ -47,7 +47,7 @@ Create `.env` file:
 RT_DB_URL=postgresql+psycopg://user:pass@host:port/database
 
 # API Keys
-RT_FMP_API_KEY=your_fmp_key_here
+RT_POLYGON_API_KEY=your_polygon_api_key_here
 
 # Trading Parameters
 RT_START_CAPITAL=100000.0
@@ -82,8 +82,8 @@ python scripts/setup_db.sql
 ### 6. Verify Installation
 
 ```bash
-# Test database connection
-python scripts/test_fmp_api.py
+# Test API connection
+python scripts/test_polygon_api.py
 
 # Seed S&P 500 symbols
 python scripts/seed_sp500.py
@@ -132,8 +132,8 @@ psql $RT_DB_URL < backup.sql
 - Reinstall with `pip install -e .`
 
 ### 3. API Key Issues
-- Verify FMP API key is valid
-- Check rate limits
+- Verify Polygon.io API key is valid
+- Check rate limits (1,000/month free tier)
 - Ensure .env file is loaded
 
 ### 4. Import Errors

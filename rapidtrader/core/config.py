@@ -6,6 +6,9 @@ class Settings(BaseSettings):
     # Database
     RT_DB_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/rapidtrader"
     
+    # API Keys
+    RT_POLYGON_API_KEY: str = ""
+    
     # Market Filter (SPY 200-SMA gate)
     RT_MARKET_FILTER_ENABLE: int = 1
     RT_MARKET_FILTER_SMA: int = 200
