@@ -1,0 +1,6 @@
+---
+description: Logging
+alwaysApply: false
+---
+
+Keep the logging in the code simple but effective. Don't use emojis, icons, symbols, special characters in the logging,
