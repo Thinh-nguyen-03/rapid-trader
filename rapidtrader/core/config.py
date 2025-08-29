@@ -31,5 +31,9 @@ class Settings(BaseSettings):
     RT_PCT_PER_TRADE: float = 0.05  # 5% per trade
     RT_DAILY_RISK_CAP: float = 0.005  # 0.5% daily risk
     RT_MAX_EXPOSURE_PER_SECTOR: float = 0.30  # 30% max per sector
+    
+    # Technical Indicators
+    RT_USE_POLYGON_INDICATORS: int = 0  # 0=local calc, 1=Polygon API (for validation/comparison)
+    RT_POLYGON_RATE_LIMIT: int = 0  # 0=unlimited (Stocks Starter), >0=requests per minute
 
 settings = Settings()

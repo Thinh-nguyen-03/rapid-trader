@@ -202,8 +202,8 @@ def ingest_symbols(symbols: List[str], days: int = 365) -> None:
                 print(f"No data available for {symbol}")
                 error_count += 1
             
-            # Rate limiting - Polygon free tier allows 5 requests per minute
-            time.sleep(12)  # Wait 12 seconds between requests (5 per minute)
+            # No rate limiting needed with Stocks Starter subscription (unlimited API calls)
+            # Removed time.sleep(12) for faster data collection
             
         except Exception as e:
             print(f"Error processing {symbol}: {e}")

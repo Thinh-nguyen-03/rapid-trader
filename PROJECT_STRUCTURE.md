@@ -40,11 +40,10 @@ rapidtrader-starter-v4.1/
 │   └── setup_db.sql          # Database schema creation
 │
 ├── 🛠️ tools/                 # Development and testing tools
-│   └── testing/              # API and integration testing scripts
+│   └── testing/              # Core system validation scripts
 │       ├── README.md          # Testing tools documentation
-│       ├── test_polygon_api.py # Polygon.io API testing
 │       ├── test_database_connection.py # Database connectivity tests
-│       └── verify_polygon_integration.py # Integration verification
+│       └── test_indicator_accuracy.py # Technical indicator validation
 │
 └── 🧪 tests/                 # Test suite (framework ready)
     └── __init__.py            # Test package initialization

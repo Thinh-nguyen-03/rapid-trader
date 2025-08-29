@@ -1,27 +1,23 @@
 # Testing and Development Tools
 
-This directory contains development and testing scripts used during the setup and validation of the RapidTrader system.
+This directory contains essential testing scripts for validating core RapidTrader system components.
 
 ## Scripts
 
-### API Testing
-- `test_polygon_api.py` - Comprehensive Polygon.io API integration tests
-- `test_database_connection.py` - Database connectivity and schema validation tests  
-- `verify_polygon_integration.py` - End-to-end Polygon integration verification
+### Core System Validation
+- `test_database_connection.py` - Database connectivity and schema validation tests
+- `test_indicator_accuracy.py` - Technical indicator calculation accuracy validation
 
 ## Usage
 
-These scripts are primarily used during development and can be run standalone to test specific components:
+These scripts validate critical system components and can be run standalone:
 
 ```bash
-# Test Polygon API integration
-python tools/testing/test_polygon_api.py
-
-# Test database connectivity
+# Test database connectivity and schema
 python tools/testing/test_database_connection.py
 
-# Verify full Polygon integration
-python tools/testing/verify_polygon_integration.py
+# Validate indicator calculations against real market data
+python tools/testing/test_indicator_accuracy.py
 ```
 
 ## Note
