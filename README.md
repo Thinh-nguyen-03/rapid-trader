@@ -4,7 +4,7 @@ Minimal EOD (End-of-Day) algorithmic trading system for Python.
 
 ## Quick Start
 
-1. **Get Polygon.io API Key** (free): https://polygon.io/
+1. **Get Polygon.io API Key**: https://polygon.io/ (Stocks Starter recommended for unlimited calls)
 
 2. **Setup**:
    ```bash
@@ -14,8 +14,9 @@ Minimal EOD (End-of-Day) algorithmic trading system for Python.
 
 3. **Run**:
    ```bash
-   # Test Polygon.io connection
-   python scripts/test_polygon_api.py
+   # Test system components
+   python tools/testing/test_database_connection.py
+   python tools/testing/test_indicator_accuracy.py
    
    # Seed S&P 500 symbols
    python scripts/seed_sp500.py

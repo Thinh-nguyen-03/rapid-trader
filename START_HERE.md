@@ -13,9 +13,9 @@ RapidTrader is an **End-of-Day (EOD) algorithmic trading system** designed for s
 
 ## ⚡ Quick Start (5 minutes)
 
-### 1. Get Your Free API Key
+### 1. Get Your Polygon.io API Key
 - Go to: https://polygon.io/
-- Sign up for free account (1,000 API calls/month)
+- Sign up for account (Stocks Starter recommended for unlimited calls)
 - Copy your API key
 
 ### 2. Setup Environment
@@ -31,8 +31,9 @@ echo "RT_POLYGON_API_KEY=your_key_here" > .env
 
 ### 3. Test & Run
 ```bash
-# Test API connection
-python scripts/test_polygon_api.py
+# Test system components
+python tools/testing/test_database_connection.py
+python tools/testing/test_indicator_accuracy.py
 
 # Seed S&P 500 symbols
 python scripts/seed_sp500.py
@@ -76,7 +77,7 @@ python scripts/seed_sp500.py
 - **Job framework** - Automated EOD workflow
 - **Reporting** - Daily performance analytics
 
-**Progress: ~40% complete** - Foundation is solid, ready for core trading logic.
+**Progress: ~80% complete** - Data pipeline complete, ready for strategy implementation.
 
 ## 🛠️ Development Workflow
 
@@ -119,8 +120,8 @@ Data Sources     RapidTrader Core        Database
 
 ### Enterprise-Grade Data
 - **Professional data source**: Polygon.io for high-quality market data
-- **Generous free tier**: 1,000 API calls/month for S&P 500 data
-- **Efficient processing**: Bulk operations, minimal API calls
+- **Scalable subscriptions**: Free tier for testing, Stocks Starter for unlimited calls
+- **Optimized performance**: 57x faster data collection with unlimited API access
 
 ### Production-Ready
 - **Database persistence**: All data and decisions stored

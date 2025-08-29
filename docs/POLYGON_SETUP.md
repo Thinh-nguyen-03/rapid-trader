@@ -2,13 +2,14 @@
 
 Simple guide to get high-quality financial data using Polygon.io API.
 
-## 🔑 **Get Your Free API Key**
+## 🔑 **Get Your Polygon.io API Key**
 
 1. Go to: https://polygon.io/
-2. Sign up for a free account
+2. Sign up for an account
 3. Get your API key from the dashboard
 
-**Free Tier:** 1,000 API calls per month (perfect for S&P 500 EOD data)
+**Recommended:** Stocks Starter subscription for unlimited API calls and 5 years of historical data
+**Alternative:** Free tier (1,000 API calls per month) for basic testing
 
 ## ⚙️ **Configuration**
 
@@ -22,10 +23,13 @@ RT_POLYGON_API_KEY=your_polygon_api_key_here
 ## 🧪 **Test the Setup**
 
 ```bash
-# Test Polygon.io API connection
-python scripts/test_polygon_api.py
+# Test database connectivity
+python tools/testing/test_database_connection.py
 
-# Seed S&P 500 symbols (now uses Polygon.io by default)
+# Test indicator calculations with real data
+python tools/testing/test_indicator_accuracy.py
+
+# Seed S&P 500 symbols (uses Polygon.io by default)
 python scripts/seed_sp500.py
 
 # Or specify the source explicitly
