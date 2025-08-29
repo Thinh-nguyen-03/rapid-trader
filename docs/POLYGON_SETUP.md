@@ -25,8 +25,11 @@ RT_POLYGON_API_KEY=your_polygon_api_key_here
 # Test Polygon.io API connection
 python scripts/test_polygon_api.py
 
-# Seed S&P 500 symbols
+# Seed S&P 500 symbols (now uses Polygon.io by default)
 python scripts/seed_sp500.py
+
+# Or specify the source explicitly
+python scripts/seed_sp500.py --source polygon
 ```
 
 ## 📊 **What You Get**
@@ -46,14 +49,17 @@ python scripts/seed_sp500.py
 ## 🔄 **Usage Pattern**
 
 ```bash
-# Daily EOD data ingestion
-python scripts/ingest_daily_data.py
+# Daily EOD data ingestion (using Polygon.io)
+python -m rapidtrader.jobs.eod_ingest
 
-# Update S&P 500 symbol list (weekly)
-python scripts/seed_sp500.py --source polygon
+# Update S&P 500 symbol list (weekly, now defaults to Polygon.io)
+python scripts/seed_sp500.py
 
-# Historical data backfill
-python scripts/backfill_data.py --days 365
+# Historical data backfill (for individual symbols)
+python -c "from rapidtrader.data.ingest import ingest_symbol; ingest_symbol('AAPL', days=365)"
+
+# Test data ingestion for a few symbols
+python scripts/test_polygon_api.py
 ```
 
 ## 🚀 **Why Polygon.io?**

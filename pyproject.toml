@@ -2,4 +2,4 @@
 name = "rapidtrader"
 version = "0.4.1"
 requires-python = ">=3.11,<3.14"
-dependencies = ["pandas>=2.2","numpy>=1.26","SQLAlchemy>=2.0","psycopg[binary]>=3.2","pydantic-settings>=2.4","python-dotenv>=1.0","alpaca-py>=0.21","pandas-market-calendars>=4.4"]
+dependencies = ["pandas>=2.2","numpy>=1.26","SQLAlchemy>=2.0","psycopg[binary]>=3.2","pydantic-settings>=2.4","python-dotenv>=1.0","alpaca-py>=0.21","pandas-market-calendars>=4.4","polygon-api-client>=1.14.0"]

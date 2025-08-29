@@ -35,10 +35,16 @@ rapidtrader-starter-v4.1/
 │   └── LEARNING_PATH/         # Learning resources
 │       └── Apply_It_Now.md    # Implementation checklist
 │
-├── 🔧 scripts/               # Utility and setup scripts
-│   ├── seed_sp500.py          # S&P 500 symbol seeding
-│   ├── setup_db.sql          # Database schema creation
-│   └── test_fmp_api.py        # API connectivity testing
+├── 🔧 scripts/               # Core utility scripts
+│   ├── seed_sp500.py          # S&P 500 symbol seeding (Polygon.io)
+│   └── setup_db.sql          # Database schema creation
+│
+├── 🛠️ tools/                 # Development and testing tools
+│   └── testing/              # API and integration testing scripts
+│       ├── README.md          # Testing tools documentation
+│       ├── test_polygon_api.py # Polygon.io API testing
+│       ├── test_database_connection.py # Database connectivity tests
+│       └── verify_polygon_integration.py # Integration verification
 │
 └── 🧪 tests/                 # Test suite (framework ready)
     └── __init__.py            # Test package initialization
@@ -73,20 +79,21 @@ core/
 
 ```
 data/
-├── __init__.py              # Data module exports
-├── ingest.py                # OHLCV data ingestion (yfinance)
-└── sp500_api.py             # S&P 500 symbol management (FMP API)
+├── __init__.py              # Data module exports  
+├── ingest.py                # ✅ OHLCV data ingestion (Polygon.io)
+└── sp500_api.py             # ✅ S&P 500 symbol management (Polygon.io/Wikipedia)
 ```
 
 **Key Components**:
-- **Data Ingestion**: Download OHLCV data from yfinance
-- **Symbol Management**: S&P 500 constituent tracking via FMP API
+- **Data Ingestion**: Download OHLCV data from Polygon.io with enterprise-grade quality
+- **Symbol Management**: S&P 500 constituent tracking via Polygon.io with Wikipedia fallback
 - **Data Validation**: Quality checks and error handling
 - **Database Storage**: Efficient bulk insert operations
 
 **Data Sources**:
-- **Financial Modeling Prep**: S&P 500 constituents, sector data
-- **yfinance**: Daily OHLCV bars, historical data
+- **Polygon.io**: Primary source for S&P 500 constituents, OHLCV data, real-time market data
+- **Wikipedia**: Fallback for S&P 500 constituents (no API key required)
+- **Financial Modeling Prep**: Legacy support for S&P 500 constituents
 
 ### rapidtrader/indicators/ - Technical Analysis
 
@@ -95,7 +102,7 @@ data/
 ```
 indicators/
 ├── __init__.py              # Indicator module exports
-└── core.py                  # Core indicators (SMA, RSI, ATR)
+└── core.py                  # ✅ Core indicators (SMA, RSI, ATR)
 ```
 
 **Key Components**:
@@ -267,7 +274,7 @@ tests/              # 🚧 FRAMEWORK READY
 dependencies = [
     "pandas>=2.2",           # Data manipulation
     "numpy>=1.26",           # Numerical computing
-    "yfinance>=0.2.40",      # Market data
+    "polygon-api-client>=1.14.0",  # Market data (Polygon.io)
     "SQLAlchemy>=2.0",       # Database ORM
     "psycopg[binary]>=3.2",  # PostgreSQL adapter
     "pydantic-settings>=2.4", # Configuration

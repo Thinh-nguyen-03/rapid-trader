@@ -14,12 +14,12 @@ from rapidtrader.core.config import settings
 from rapidtrader.data.sp500_api import get_sp500_symbols, map_sector_name
 from sqlalchemy import text
 
-def seed_symbols(source: str = "wikipedia", clear_existing: bool = False):
+def seed_symbols(source: str = "polygon", clear_existing: bool = False):
     """
     Fetch S&P 500 symbols and populate the database.
     
     Args:
-        source: Data source ("wikipedia" or "fmp")
+        source: Data source ("polygon", "wikipedia", or "fmp")
         clear_existing: Whether to clear existing symbols first
     """
     print(f"Starting S&P 500 symbol seeding from {source.title()}...")
@@ -118,16 +118,25 @@ def verify_symbols():
 def main():
     """Main entry point with command line argument parsing."""
     parser = argparse.ArgumentParser(description="Seed S&P 500 symbols from Wikipedia or FMP API")
-    parser.add_argument("--source", choices=["wikipedia", "fmp"], default="wikipedia",
-                       help="Data source for S&P 500 symbols (default: wikipedia)")
+    parser.add_argument("--source", choices=["polygon", "wikipedia", "fmp"], default="polygon",
+                       help="Data source for S&P 500 symbols (default: polygon)")
     parser.add_argument("--clear", action="store_true", 
                        help="Clear existing symbols before seeding")
     
     args = parser.parse_args()
     
-    # Check if FMP API key is needed
-    if args.source == "fmp":
-        api_key = settings.RT_FMP_API_KEY
+    # Check if API keys are needed
+    if args.source == "polygon":
+        api_key = settings.RT_POLYGON_API_KEY
+        if not api_key:
+            print("❌ Polygon API key required for Polygon source!")
+            print("Either:")
+            print("  1. Set RT_POLYGON_API_KEY in your .env file")
+            print("  2. Use --source wikipedia (no API key needed)")
+            print("  3. Get Polygon key at: https://polygon.io/")
+            sys.exit(1)
+    elif args.source == "fmp":
+        api_key = getattr(settings, 'RT_FMP_API_KEY', None)
         if not api_key:
             print("❌ FMP API key required for FMP source!")
             print("Either:")

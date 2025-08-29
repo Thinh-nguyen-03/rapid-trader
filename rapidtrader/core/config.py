@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     
     # API Keys
     RT_POLYGON_API_KEY: str = ""
+    RT_FMP_API_KEY: str = ""  # Legacy support
     
     # Market Filter (SPY 200-SMA gate)
     RT_MARKET_FILTER_ENABLE: int = 1
