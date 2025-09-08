@@ -10,10 +10,18 @@ class Settings(BaseSettings):
     RT_POLYGON_API_KEY: str = ""
     RT_FMP_API_KEY: str = ""  # Legacy support
     
+    # Alpaca Trading API
+    RT_ALPACA_API_KEY: str = ""
+    RT_ALPACA_SECRET_KEY: str = ""
+    RT_ALPACA_PAPER: bool = True  # True for paper trading, False for live
+    RT_ALPACA_ENDPOINT: str = "https://paper-api.alpaca.markets"
+    
     # Market Filter (SPY 200-SMA gate)
     RT_MARKET_FILTER_ENABLE: int = 1
     RT_MARKET_FILTER_SMA: int = 200
     RT_MARKET_FILTER_SYMBOL: str = "SPY"
+    RT_ALLOW_EXITS_IN_BEAR: int = 1  # Allow sell/exit orders even in bear market
+    RT_SELLS_HELD_POSITIONS_ONLY: int = 0  # Only create sell orders for held positions (0=all signals, 1=positions only)
     
     # Signal Confirmation (2-of-3 accumulator)
     RT_ENABLE_SIGNAL_CONFIRM: int = 1

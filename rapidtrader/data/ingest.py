@@ -1,41 +1,22 @@
-"""
-OHLCV data ingestion using Polygon.io API.
-Clean, simple implementation focused on reliable data.
-"""
+""" OHLCV data ingestion."""
 
 import pandas as pd
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 from typing import List, Optional, Dict, Any
 from polygon import RESTClient
 from sqlalchemy import text
 from ..core.db import get_engine
 from ..core.config import settings
-import time
-
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import threading
 
 class PolygonDataClient:
-    """Polygon.io data client for OHLCV ingestion."""
-    
     def __init__(self, api_key: str):
         self.api_key = api_key
         self.client = RESTClient(api_key=api_key)
     
     def get_daily_bars(self, symbol: str, start_date: date, end_date: date) -> pd.DataFrame:
-        """
-        Fetch daily OHLCV bars for a symbol from Polygon.io.
-        
-        Args:
-            symbol: Stock symbol (e.g., 'AAPL')
-            start_date: Start date for data
-            end_date: End date for data
-            
-        Returns:
-            DataFrame with OHLCV data indexed by date
-        """
         try:
-            print(f"Fetching {symbol} data from {start_date} to {end_date}")
-            
-            # Convert dates to strings
             start_str = start_date.strftime('%Y-%m-%d')
             end_str = end_date.strftime('%Y-%m-%d')
             
@@ -65,22 +46,11 @@ class PolygonDataClient:
                 print(f"No data returned for {symbol}")
                 return pd.DataFrame()
             
-            # Convert to DataFrame
             df = pd.DataFrame(aggs)
-            
-            # Convert timestamp to datetime
             df['date'] = pd.to_datetime(df['timestamp'], unit='ms').dt.date
-            
-            # Set date as index and select OHLCV columns
             df = df.set_index('date')[['open', 'high', 'low', 'close', 'volume']]
-            
-            # Rename columns to match expected format
             df.columns = ['Open', 'High', 'Low', 'Close', 'Volume']
-            
-            # Remove any duplicate dates (keep last)
             df = df[~df.index.duplicated(keep='last')]
-            
-            # Sort by date
             df = df.sort_index()
             
             print(f"Retrieved {len(df)} bars for {symbol}")
@@ -91,15 +61,6 @@ class PolygonDataClient:
             return pd.DataFrame()
     
     def get_previous_close(self, symbol: str) -> Optional[Dict[str, Any]]:
-        """
-        Get the previous trading day's close data for a symbol.
-        
-        Args:
-            symbol: Stock symbol
-            
-        Returns:
-            Dictionary with previous close data or None
-        """
         try:
             prev_close = self.client.get_previous_close_agg(ticker=symbol)
             
@@ -119,19 +80,12 @@ class PolygonDataClient:
             print(f"Error fetching previous close for {symbol}: {e}")
             return None
 
-
 def upsert_bars(symbol: str, bars: pd.DataFrame) -> None:
-    """
-    Insert or update daily OHLCV bars in the database.
-    
-    Args:
-        symbol: Stock symbol
-        bars: DataFrame with OHLCV data indexed by date
-    """
+    """Insert or update daily OHLCV bars in the database."""
     if bars.empty:
         print(f"No data to upsert for {symbol}")
         return
-    
+
     eng = get_engine()
     
     with eng.begin() as c:
@@ -154,94 +108,133 @@ def upsert_bars(symbol: str, bars: pd.DataFrame) -> None:
             except Exception as e:
                 print(f"Error inserting data for {symbol} on {d}: {e}")
                 continue
-    
-    print(f"Upserted {len(bars)} bars for {symbol}")
 
-
-def ingest_symbols(symbols: List[str], days: int = 365) -> None:
-    """
-    Ingest OHLCV data for a list of symbols using Polygon.io.
+def check_data_exists_for_date(symbols: List[str], target_date: date) -> Dict[str, bool]:
+    if not symbols:
+        return {}
     
-    Args:
-        symbols: List of stock symbols
-        days: Number of days of historical data to fetch
-    """
+    eng = get_engine()
+    
+    symbol_placeholders = ','.join([f':symbol_{i}' for i in range(len(symbols))])
+    query = text(f"""
+        SELECT symbol, COUNT(*) as count
+        FROM bars_daily 
+        WHERE symbol IN ({symbol_placeholders}) 
+        AND d = :target_date
+        GROUP BY symbol
+    """)
+    
+    params = {"target_date": target_date}
+    for i, symbol in enumerate(symbols):
+        params[f'symbol_{i}'] = symbol
+    
+    try:
+        with eng.begin() as conn:
+            results = conn.execute(query, params).fetchall()
+            
+        existing_data = {symbol: False for symbol in symbols}
+        for symbol, count in results:
+            existing_data[symbol] = count > 0
+            
+        return existing_data
+        
+    except Exception as e:
+        print(f"ERROR: Failed to check existing data: {e}")
+        return {symbol: False for symbol in symbols}
+
+def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None, 
+                  skip_existing: bool = True, max_workers: int = 10) -> None:
+    """Ingest OHLCV data for multiple symbols using parallel processing."""
     if not symbols:
         print("No symbols provided for ingestion")
         return
     
-    # Check API key
     api_key = settings.RT_POLYGON_API_KEY
     if not api_key:
         raise ValueError("Polygon API key not provided. Set RT_POLYGON_API_KEY in config.")
     
-    # Initialize client
-    client = PolygonDataClient(api_key)
-    
-    # Calculate date range
     end_date = date.today()
     start_date = end_date - timedelta(days=days)
     
-    print(f"Starting data ingestion for {len(symbols)} symbols from {start_date} to {end_date}")
+    if target_date is None:
+        target_date = end_date
+    
+    symbols_to_process = symbols
+    skipped_count = 0
+    
+    if skip_existing:
+        print(f"INFO: Checking for existing data for {target_date}")
+        existing_data = check_data_exists_for_date(symbols, target_date)
+        
+        symbols_to_process = [symbol for symbol in symbols if not existing_data.get(symbol, False)]
+        skipped_count = len(symbols) - len(symbols_to_process)
+        
+        if skipped_count > 0:
+            print(f"SUCCESS: Skipping symbols that already have data for {target_date}")
+    
+    if not symbols_to_process:
+        print(f"SUCCESS: All symbols already have data for {target_date}")
+        return
+    
+    if settings.RT_POLYGON_RATE_LIMIT == 0:
+        # For small batches, use all available. For large batches, cap at 50 for stability
+        if len(symbols_to_process) <= 20:
+            max_workers = min(max_workers, len(symbols_to_process))
+        else:
+            max_workers = min(max_workers, 50, len(symbols_to_process))
+    else:
+        max_workers = min(max_workers, 5, len(symbols_to_process))
+    
+    print(f"Starting data ingestion from {start_date} to {end_date}")
     
     success_count = 0
     error_count = 0
+    completed_count = 0
     
-    for i, symbol in enumerate(symbols, 1):
-        try:
-            print(f"[{i}/{len(symbols)}] Processing {symbol}")
-            
-            # Fetch data
-            df = client.get_daily_bars(symbol, start_date, end_date)
-            
-            if not df.empty:
-                # Store in database
-                upsert_bars(symbol, df)
-                success_count += 1
-            else:
-                print(f"No data available for {symbol}")
-                error_count += 1
-            
-            # No rate limiting needed with Stocks Starter subscription (unlimited API calls)
-            # Removed time.sleep(12) for faster data collection
-            
-        except Exception as e:
-            print(f"Error processing {symbol}: {e}")
-            error_count += 1
-            continue
+    db_lock = threading.Lock()
     
-    print(f"\nIngestion complete: {success_count} successful, {error_count} errors")
-
-
-def ingest_symbol(symbol: str, days: int = 365) -> bool:
-    """
-    Ingest OHLCV data for a single symbol.
-    
-    Args:
-        symbol: Stock symbol
-        days: Number of days of historical data to fetch
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_symbol = {
+            executor.submit(_fetch_symbol_data, symbol, api_key, start_date, end_date): symbol 
+            for symbol in symbols_to_process
+        }
         
-    Returns:
-        True if successful, False otherwise
-    """
-    try:
-        ingest_symbols([symbol], days)
-        return True
-    except Exception as e:
-        print(f"Error ingesting {symbol}: {e}")
-        return False
+        for future in as_completed(future_to_symbol):
+            symbol = future_to_symbol[future]
+            completed_count += 1
+            
+            try:
+                symbol_result, df, success, error_msg = future.result()
+                
+                if success and not df.empty:
+                    with db_lock:
+                        upsert_bars(symbol_result, df)
+                    success_count += 1
+                else:
+                    error_count += 1
 
+            except Exception as e:
+                error_count += 1
+    
+    total_processed = success_count + error_count
+    print(f"\nSUCCESS: Ingestion complete: {success_count} successful, {error_count} errors")
+    if skipped_count > 0:
+        print(f"INFO: {skipped_count} symbols skipped (data already exists), {total_processed} symbols processed")
+
+def _fetch_symbol_data(symbol: str, api_key: str, start_date: date, end_date: date) -> tuple:
+    try:
+        client = PolygonDataClient(api_key)
+        df = client.get_daily_bars(symbol, start_date, end_date)
+        
+        if not df.empty:
+            return (symbol, df, True, None)
+        else:
+            return (symbol, pd.DataFrame(), False, f"No data available for {symbol}")
+            
+    except Exception as e:
+        return (symbol, pd.DataFrame(), False, str(e))
 
 def get_latest_bar_date(symbol: str) -> Optional[date]:
-    """
-    Get the date of the most recent bar for a symbol.
-    
-    Args:
-        symbol: Stock symbol
-        
-    Returns:
-        Date of most recent bar or None if no data
-    """
     eng = get_engine()
     
     try:
@@ -260,28 +253,15 @@ def get_latest_bar_date(symbol: str) -> Optional[date]:
         print(f"Error getting latest bar date for {symbol}: {e}")
         return None
 
-
 def update_symbol_data(symbol: str, days_back: int = 30) -> bool:
-    """
-    Update data for a symbol, fetching only missing recent data.
-    
-    Args:
-        symbol: Stock symbol
-        days_back: How many days back to check for missing data
-        
-    Returns:
-        True if successful, False otherwise
-    """
     try:
-        # Get the latest date we have
         latest_date = get_latest_bar_date(symbol)
         
         if latest_date is None:
-            # No data exists, fetch full history
             print(f"No existing data for {symbol}, fetching full history")
-            return ingest_symbol(symbol, days=365)
+            ingest_symbols([symbol], days=365)
+            return True
         
-        # Calculate start date for update
         today = date.today()
         start_date = max(latest_date + timedelta(days=1), today - timedelta(days=days_back))
         
@@ -289,7 +269,6 @@ def update_symbol_data(symbol: str, days_back: int = 30) -> bool:
             print(f"{symbol} data is up to date")
             return True
         
-        # Fetch missing data
         api_key = settings.RT_POLYGON_API_KEY
         if not api_key:
             raise ValueError("Polygon API key not provided")
@@ -299,7 +278,6 @@ def update_symbol_data(symbol: str, days_back: int = 30) -> bool:
         
         if not df.empty:
             upsert_bars(symbol, df)
-            print(f"Updated {symbol} with {len(df)} new bars")
         else:
             print(f"No new data available for {symbol}")
         
@@ -309,23 +287,9 @@ def update_symbol_data(symbol: str, days_back: int = 30) -> bool:
         print(f"Error updating {symbol}: {e}")
         return False
 
-
 def refresh_spy_cache(days: int = 300) -> pd.Series:
-    """
-    Refresh SPY data for market filter calculations.
-    
-    Args:
-        days: Number of days of SPY data to fetch
-        
-    Returns:
-        SPY close price series
-    """
-    print("Refreshing SPY cache for market filter...")
-    
-    # Get SPY symbol from settings
     spy_symbol = settings.RT_MARKET_FILTER_SYMBOL
     
-    # Fetch SPY data
     api_key = settings.RT_POLYGON_API_KEY
     if not api_key:
         raise ValueError("Polygon API key not provided")
@@ -340,12 +304,42 @@ def refresh_spy_cache(days: int = 300) -> pd.Series:
     if df.empty:
         raise RuntimeError(f"{spy_symbol} download failed")
     
-    # Store in database
     upsert_bars(spy_symbol, df)
     
-    # Return close prices for market state calculations
     close_series = df["Close"].copy()
     close_series.index = pd.to_datetime(close_series.index)
-    
-    print(f"Refreshed {len(close_series)} days of {spy_symbol} data")
+
     return close_series
+
+def validate_data_completeness(trade_date: date) -> bool:
+    eng = get_engine()
+    
+    with eng.begin() as conn:
+        bars_count = conn.execute(text("""
+            SELECT COUNT(*) FROM bars_daily WHERE d = :d
+        """), {"d": trade_date}).scalar_one()
+        
+        spy_data = conn.execute(text("""
+            SELECT COUNT(*) FROM market_state WHERE d = :d
+        """), {"d": trade_date}).scalar_one()
+        
+        if bars_count == 0:
+            print(f"INFO: No bars data found for {trade_date}")
+            return False
+            
+        if spy_data == 0:
+            print(f"INFO: No SPY market state found for {trade_date}")
+            return False
+            
+        print(f"INFO: Data validation passed: {bars_count} symbols, SPY state OK")
+        return True
+
+def get_last_trading_session() -> date:
+    eng = get_engine()
+    
+    with eng.begin() as conn:
+        result = conn.execute(text("""
+            SELECT MAX(d) FROM bars_daily
+        """)).scalar_one()
+    
+    return result

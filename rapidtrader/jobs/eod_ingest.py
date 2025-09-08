@@ -9,6 +9,7 @@ from sqlalchemy import text
 from ..core.db import get_engine
 from ..data.ingest import ingest_symbols
 from ..core.market_state import refresh_spy_cache
+from datetime import date
 
 
 def get_active_symbols() -> list[str]:
@@ -50,6 +51,24 @@ def main():
         action="store_true", 
         help="Only refresh SPY cache, skip symbol data"
     )
+    # Parallel processing is always used - no need for flags
+    parser.add_argument(
+        "--max-workers",
+        type=int,
+        default=10,
+        help="Maximum concurrent API requests (default: 10)"
+    )
+    parser.add_argument(
+        "--skip-existing",
+        action="store_true",
+        default=True,
+        help="Skip symbols that already have data for today (default: enabled)"
+    )
+    parser.add_argument(
+        "--force-all",
+        action="store_true",
+        help="Force ingestion for all symbols, ignore existing data"
+    )
     
     args = parser.parse_args()
     
@@ -62,12 +81,23 @@ def main():
             print(f"Found {len(symbols)} active symbols to update")
             
             if symbols:
-                # Ingest OHLCV data for all symbols
-                print("Ingesting symbol data...")
-                ingest_symbols(symbols, days=args.days)
-                print("Symbol data ingestion complete")
+                skip_existing = args.skip_existing and not args.force_all
+                
+                print(f"INFO: Using PARALLEL ingestion")
+                print(f"INFO: {'Checking for existing data' if skip_existing else 'Processing all symbols'}")
+                
+                # Use parallel ingestion (always)
+                ingest_symbols(
+                    symbols, 
+                    days=args.days,
+                    target_date=date.today(),
+                    skip_existing=skip_existing,
+                    max_workers=args.max_workers
+                )
+                    
+                print("SUCCESS: Symbol data ingestion complete")
             else:
-                print("Warning: No active symbols found in database")
+                print("WARNING: No active symbols found in database")
         
         if not args.symbols_only:
             # Refresh SPY market state cache

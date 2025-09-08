@@ -17,6 +17,7 @@ from ..risk.sizing import shares_fixed_fractional, shares_atr_target
 from ..risk.controls import sector_exposure_ok
 from ..risk.stop_cooldown import stop_cooldown_active
 from ..core.market_state import is_bull_market
+from ..risk.kill_switch import is_kill_switch_active, update_kill_switch_state
 
 
 def get_bars(symbol: str, lookback: int = 250) -> pd.DataFrame:
@@ -96,6 +97,31 @@ def get_sector_value(sector: str) -> float:
         """), {"sector": sector}).scalar_one()
     
     return float(result or 0.0)
+
+
+def get_position_quantity(symbol: str) -> int:
+    """Get current position quantity for a symbol.
+    
+    Args:
+        symbol: Stock symbol
+        
+    Returns:
+        Current position quantity (0 if no position)
+    """
+    eng = get_engine()
+    
+    try:
+        with eng.begin() as conn:
+            result = conn.execute(text("""
+                SELECT COALESCE(qty, 0) 
+                FROM positions 
+                WHERE symbol = :symbol
+            """), {"symbol": symbol}).scalar()
+            
+            return int(result or 0)
+            
+    except Exception:
+        return 0
 
 
 def record_signal(trade_date: date, symbol: str, strategy: str, direction: str, strength: float = 1.0):
@@ -203,11 +229,26 @@ def main():
         trade_date = get_last_session()
         print(f"Processing signals for {trade_date}")
         
-        # Check market filter
-        if settings.RT_MARKET_FILTER_ENABLE and not is_bull_market(trade_date):
-            print(f"{trade_date}: Market filter OFF — no new entries allowed")
+        # Update and check kill switch first
+        kill_active, kill_reason = update_kill_switch_state(trade_date)
+        if kill_active:
+            print(f"ALERT: Kill switch ACTIVE for {trade_date}: {kill_reason}")
+            print("WARNING: No new entries allowed - system in protective mode")
             update_filtering_metrics(trade_date, 0, 0)
             return 0
+        
+        # Check market filter but don't return early
+        bear_gate = settings.RT_MARKET_FILTER_ENABLE and not is_bull_market(trade_date)
+        if bear_gate:
+            # Get market state info for enhanced logging
+            from ..core.market_state import get_market_state
+            market_info = get_market_state(trade_date)
+            spy_close = market_info.get('spy_close', 'N/A')
+            spy_sma200 = market_info.get('spy_sma200', 'N/A')
+            print(f"{trade_date}: Market filter OFF — buys blocked, exits allowed.")
+            print(f"INFO: SPY close: {spy_close}, SMA200: {spy_sma200}")
+        else:
+            print(f"INFO: Kill switch OFF for {trade_date} - trading permitted")
         
         # Get active symbols with sector information
         eng = get_engine()
@@ -272,7 +313,7 @@ def main():
                     final_signal = "buy"
                     strategy = "RSI_MR" if rsi_signal == "buy" else "SMA_X"
                 
-                # Record signals for both strategies
+                # Always record signals for analytics (regardless of market gate)
                 record_signal(trade_date, symbol, "RSI_MR", rsi_signal)
                 record_signal(trade_date, symbol, "SMA_X", sma_signal)
                 
@@ -283,10 +324,29 @@ def main():
                     if args.signals_only:
                         continue
                     
-                    # Get current price and calculate position size
+                    # Get current price for order processing
                     current_price = float(df["close"].iloc[-1])
                     
                     if final_signal == "buy":
+                        # Gate buy orders when bear_gate is active
+                        if bear_gate:
+                            filtered_candidates += 1
+                            # Record blocked buy order for audit trail
+                            record_order(
+                                trade_date,
+                                symbol,
+                                "buy",
+                                0,  # 0 quantity indicates blocked order
+                                "market_gate_block"
+                            )
+                            continue
+                        
+                        # Double-check kill switch for buy orders (extra safety)
+                        kill_check, _ = is_kill_switch_active(trade_date)
+                        if kill_check:
+                            filtered_candidates += 1
+                            continue
+                        
                         # Calculate position size using both methods
                         atr_14 = float(atr(df["high"], df["low"], df["close"], settings.RT_ATR_LOOKBACK).iloc[-1])
                         
@@ -330,15 +390,24 @@ def main():
                                 filtered_candidates += 1
                         
                     elif final_signal == "sell":
-                        # Create exit order (quantity 0 indicates full position exit)
-                        record_order(
-                            trade_date,
-                            symbol,
-                            "sell",
-                            0,  # 0 = exit full position
-                            f"mvp-exit-{strategy.lower()}"
-                        )
-                        orders_created += 1
+                        # Allow sell/exit orders regardless of bear_gate (if config permits)
+                        if not bear_gate or settings.RT_ALLOW_EXITS_IN_BEAR:
+                            # Check if we should filter sells to held positions only
+                            should_create_sell = True
+                            if settings.RT_SELLS_HELD_POSITIONS_ONLY:
+                                position_qty = get_position_quantity(symbol)
+                                should_create_sell = position_qty > 0
+                            
+                            if should_create_sell:
+                                # Create exit order (quantity 0 indicates full position exit)
+                                record_order(
+                                    trade_date,
+                                    symbol,
+                                    "sell",
+                                    0,  # 0 = exit full position
+                                    f"mvp-exit-{strategy.lower()}"
+                                )
+                                orders_created += 1
                 
             except Exception as e:
                 print(f"Error processing {symbol}: {e}")

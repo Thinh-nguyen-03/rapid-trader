@@ -1,1 +1,1 @@
-# package
+"""Core utilities and configuration."""
