@@ -1,0 +1,2023 @@
+================================================================================
+RAPIDTRADER DAILY TRADING REPORT
+Report Date: 2025-08-29
+Generated: 2025-09-01 23:01:44
+================================================================================
+
+MARKET STATE ANALYSIS
+----------------------------------------
+Market Regime: BEAR Market
+Kill Switch: INACTIVE
+Total Candidates: 505
+Filtered Out: 8 (1.6%)
+
+SUMMARY STATISTICS
+----------------------------------------
+Symbols Analyzed: 497
+Signals Generated:
+  BUY: 154
+  SELL: 340
+  HOLD: 3
+Orders Created:
+  BUY: 0 orders ($0.00)
+  SELL: 680 orders ($0.00)
+  BLOCKED BUYS: 308 orders
+
+FILTERING ANALYSIS
+----------------------------------------
+No Position To Sell: 340 symbols
+Market Gate Block: 154 symbols
+
+DETAILED SIGNAL ANALYSIS
+----------------------------------------
+BUY SIGNALS (154):
+  AEE    | $  99.78 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  AEP    | $ 111.02 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  ALL    | $ 203.45 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  AMAT   | $ 160.76 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  AMD    | $ 162.63 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  AME    | $ 184.80 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  AMGN   | $ 287.71 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  AMP    | $ 514.81 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  AMZN   | $ 229.00 | SMA_X  | Sector: Consumer Discretionary | RSI: hold | SMA: buy 
+  AON    | $ 367.00 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  AOS    | $  71.29 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  APD    | $ 294.11 | SMA_X  | Sector: Materials       | RSI: hold | SMA: buy 
+  APH    | $ 108.86 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  APO    | $ 136.23 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  AVGO   | $ 297.39 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  AWK    | $ 143.51 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  AXON   | $ 747.29 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  BDX    | $ 192.98 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  BIIB   | $ 132.22 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  BKNG   | $5599.05 | SMA_X  | Sector: Consumer Discretionary | RSI: hold | SMA: buy 
+  BLDR   | $ 138.68 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  BLK    | $1127.14 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  BR     | $ 255.62 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  BSX    | $ 105.50 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  BX     | $ 171.40 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  CAT    | $ 419.04 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  CBOE   | $ 235.95 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  CCI    | $  99.14 | SMA_X  | Sector: Real Estate     | RSI: hold | SMA: buy 
+  CDNS   | $ 350.43 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  CEG    | $ 307.98 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  CINF   | $ 153.60 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  CME    | $ 266.51 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  CMS    | $  71.57 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  CNP    | $  37.71 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  COIN   | $ 304.54 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  COR    | $ 291.61 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  CSCO   | $  69.09 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  CSGP   | $  89.49 | SMA_X  | Sector: Real Estate     | RSI: hold | SMA: buy 
+  CSX    | $  32.51 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  CTAS   | $ 210.03 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  D      | $  59.90 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  DASH   | $ 245.25 | SMA_X  | Sector: Consumer Discretionary | RSI: hold | SMA: buy 
+  DDOG   | $ 136.68 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  DELL   | $ 122.15 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  DG     | $ 108.76 | SMA_X  | Sector: Consumer Staples | RSI: hold | SMA: buy 
+  DHR    | $ 205.82 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  DIS    | $ 118.38 | SMA_X  | Sector: Communication Services | RSI: hold | SMA: buy 
+  DLR    | $ 167.64 | SMA_X  | Sector: Real Estate     | RSI: hold | SMA: buy 
+  DLTR   | $ 109.17 | SMA_X  | Sector: Consumer Staples | RSI: hold | SMA: buy 
+  DOV    | $ 178.86 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  DTE    | $ 136.65 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  DUK    | $ 122.49 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  EBAY   | $  90.61 | SMA_X  | Sector: Consumer Discretionary | RSI: hold | SMA: buy 
+  ECL    | $ 277.04 | SMA_X  | Sector: Materials       | RSI: hold | SMA: buy 
+  EL     | $  91.73 | SMA_X  | Sector: Consumer Staples | RSI: hold | SMA: buy 
+  EMR    | $ 132.00 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  ES     | $  64.07 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  ETN    | $ 349.14 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  ETR    | $  88.09 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  EVRG   | $  71.26 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  EXC    | $  43.68 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  FDX    | $ 231.07 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  FFIV   | $ 313.14 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  FSLR   | $ 195.19 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  GEHC   | $  73.73 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  GEN    | $  30.20 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  GEV    | $ 612.97 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  GILD   | $ 112.97 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  GNRC   | $ 185.25 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  HOLX   | $  67.12 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  HUBB   | $ 430.99 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  HWM    | $ 174.10 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  IBKR   | $  62.24 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  ICE    | $ 176.60 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  INTU   | $ 667.00 | RSI_MR | Sector: Technology      | RSI: buy  | SMA: buy 
+  J      | $ 146.23 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  JBHT   | $ 144.99 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  JBL    | $ 204.83 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  JCI    | $ 106.89 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  KEYS   | $ 163.43 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  KKR    | $ 139.49 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  KLAC   | $ 872.00 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  KR     | $  67.84 | SMA_X  | Sector: Consumer Staples | RSI: hold | SMA: buy 
+  LII    | $ 557.86 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  LIN    | $ 478.29 | SMA_X  | Sector: Materials       | RSI: hold | SMA: buy 
+  LNT    | $  65.07 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  LRCX   | $ 100.15 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  MAR    | $ 267.86 | SMA_X  | Sector: Consumer Discretionary | RSI: hold | SMA: buy 
+  MCHP   | $  65.00 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  MCO    | $ 509.76 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  META   | $ 738.70 | SMA_X  | Sector: Communication Services | RSI: hold | SMA: buy 
+  MMM    | $ 155.53 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  MNST   | $  62.41 | SMA_X  | Sector: Consumer Staples | RSI: hold | SMA: buy 
+  MRK    | $  84.12 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  MSCI   | $ 567.72 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  MU     | $ 119.01 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  NDAQ   | $  94.74 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  NEE    | $  72.05 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  NFLX   | $1208.25 | SMA_X  | Sector: Communication Services | RSI: hold | SMA: buy 
+  NI     | $  42.27 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  NRG    | $ 145.56 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  NSC    | $ 279.98 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  NWS    | $  33.87 | SMA_X  | Sector: Communication Services | RSI: hold | SMA: buy 
+  NWSA   | $  29.41 | SMA_X  | Sector: Communication Services | RSI: hold | SMA: buy 
+  ON     | $  49.59 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  ORCL   | $ 226.13 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  PCAR   | $  99.98 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  PEG    | $  82.33 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  PFE    | $  24.76 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  PLTR   | $ 156.71 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  PNW    | $  89.36 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  POOL   | $ 310.71 | SMA_X  | Sector: Consumer Discretionary | RSI: hold | SMA: buy 
+  PPL    | $  36.47 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  PWR    | $ 377.96 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  REGN   | $ 580.70 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  RMD    | $ 274.51 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  ROK    | $ 343.43 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  ROL    | $  56.54 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  SBUX   | $  88.19 | SMA_X  | Sector: Consumer Discretionary | RSI: hold | SMA: buy 
+  SCHW   | $  95.84 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  SJM    | $ 110.51 | SMA_X  | Sector: Consumer Staples | RSI: hold | SMA: buy 
+  SMCI   | $  41.54 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  SNA    | $ 325.24 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  SNPS   | $ 603.52 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  SO     | $  92.30 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  SOLV   | $  73.09 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  SPGI   | $ 548.44 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  SWK    | $  74.29 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  SWKS   | $  74.94 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  SYK    | $ 391.41 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  SYY    | $  80.47 | SMA_X  | Sector: Consumer Staples | RSI: hold | SMA: buy 
+  TDY    | $ 538.17 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  TECH   | $  54.63 | SMA_X  | Sector: Healthcare      | RSI: hold | SMA: buy 
+  TGT    | $  95.98 | SMA_X  | Sector: Consumer Staples | RSI: hold | SMA: buy 
+  TPR    | $ 101.82 | SMA_X  | Sector: Consumer Discretionary | RSI: hold | SMA: buy 
+  TRMB   | $  80.82 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  TROW   | $ 107.62 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  TT     | $ 415.60 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  TTWO   | $ 233.27 | SMA_X  | Sector: Communication Services | RSI: hold | SMA: buy 
+  TXT    | $  80.16 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  TYL    | $ 562.88 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+  UBER   | $  93.75 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  ULTA   | $ 492.73 | SMA_X  | Sector: Consumer Discretionary | RSI: hold | SMA: buy 
+  VLTO   | $ 106.19 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  VST    | $ 189.11 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  VTR    | $  68.08 | SMA_X  | Sector: Real Estate     | RSI: hold | SMA: buy 
+  WBD    | $  11.64 | SMA_X  | Sector: Communication Services | RSI: hold | SMA: buy 
+  WEC    | $ 106.51 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  WMT    | $  96.98 | SMA_X  | Sector: Consumer Staples | RSI: hold | SMA: buy 
+  WSM    | $ 188.19 | SMA_X  | Sector: Consumer Discretionary | RSI: hold | SMA: buy 
+  WTW    | $ 326.79 | SMA_X  | Sector: Financials      | RSI: hold | SMA: buy 
+  XEL    | $  72.39 | SMA_X  | Sector: Utilities       | RSI: hold | SMA: buy 
+  XYL    | $ 141.56 | SMA_X  | Sector: Industrials     | RSI: hold | SMA: buy 
+  ZBRA   | $ 317.09 | SMA_X  | Sector: Technology      | RSI: hold | SMA: buy 
+
+SELL SIGNALS (340):
+  A      | $ 125.66 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  ABBV   | $ 210.40 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  ABNB   | $ 130.53 | SMA_X  | Sector: Consumer Discretionary | (No Pos)   | RSI: hold | SMA: sell
+  ABT    | $ 132.66 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: hold
+  ACGL   | $  91.53 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  ACN    | $ 259.97 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  ADBE   | $ 356.70 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  ADI    | $ 251.31 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  ADM    | $  62.64 | RSI_MR | Sector: Consumer Staples | (No Pos)   | RSI: sell | SMA: buy 
+  ADP    | $ 304.05 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  ADSK   | $ 314.70 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  AES    | $  13.54 | RSI_MR | Sector: Utilities       | (No Pos)   | RSI: sell | SMA: buy 
+  AFL    | $ 106.86 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  AIG    | $  81.32 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  AIZ    | $ 215.61 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  AJG    | $ 302.75 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  AKAM   | $  79.13 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: sell
+  ALB    | $  84.92 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  ALGN   | $ 141.96 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  ALLE   | $ 169.80 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  AMCR   | $   8.63 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  AMT    | $ 203.85 | SMA_X  | Sector: Real Estate     | (No Pos)   | RSI: hold | SMA: sell
+  ANET   | $ 136.55 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  APA    | $  23.22 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  APTV   | $  79.53 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  ARE    | $  82.44 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  ATO    | $ 166.13 | RSI_MR | Sector: Utilities       | (No Pos)   | RSI: sell | SMA: buy 
+  AVB    | $ 195.85 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: sell
+  AVY    | $ 171.65 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  AXP    | $ 331.28 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  AZO    | $4198.53 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  BA     | $ 234.68 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  BAC    | $  50.74 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  BALL   | $  52.64 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  BAX    | $  24.69 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  BBY    | $  73.64 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  BEN    | $  25.66 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  BF.B   | $  29.94 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  BG     | $  84.22 | RSI_MR | Sector: Consumer Staples | (No Pos)   | RSI: sell | SMA: buy 
+  BK     | $ 105.60 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  BKR    | $  45.40 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  BMY    | $  47.18 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  BRK.B  | $ 502.98 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: sell
+  BRO    | $  96.95 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  BXP    | $  72.51 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: sell
+  C      | $  96.57 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  CAG    | $  19.13 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  CAH    | $ 148.78 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  CARR   | $  65.20 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  CB     | $ 275.07 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  CBRE   | $ 162.12 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  CCL    | $  31.89 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  CDW    | $ 164.76 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  CF     | $  86.63 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  CFG    | $  52.28 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  CHD    | $  93.16 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  CHRW   | $ 128.70 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  CHTR   | $ 265.58 | SMA_X  | Sector: Communication Services | (No Pos)   | RSI: hold | SMA: sell
+  CI     | $ 300.87 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: sell
+  CL     | $  84.07 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  CLX    | $ 118.20 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  CMCSA  | $  33.97 | SMA_X  | Sector: Communication Services | (No Pos)   | RSI: hold | SMA: sell
+  CMG    | $  42.14 | SMA_X  | Sector: Consumer Discretionary | (No Pos)   | RSI: hold | SMA: sell
+  CMI    | $ 398.44 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  CNC    | $  29.04 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  COF    | $ 227.22 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  COO    | $  67.39 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  COP    | $  98.97 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  COST   | $ 943.32 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  CPAY   | $ 325.67 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  CPB    | $  31.93 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  CPRT   | $  48.81 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: sell
+  CPT    | $ 111.98 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: sell
+  CRL    | $ 163.31 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  CRM    | $ 256.25 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: sell
+  CRWD   | $ 423.70 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  CTRA   | $  24.44 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: sell
+  CTSH   | $  72.25 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  CTVA   | $  74.19 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  CVS    | $  73.15 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  CVX    | $ 160.60 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  CZR    | $  26.77 | SMA_X  | Sector: Consumer Discretionary | (No Pos)   | RSI: hold | SMA: sell
+  DAL    | $  61.78 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  DAY    | $  69.77 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  DD     | $  76.92 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  DECK   | $ 119.63 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: sell
+  DGX    | $ 181.64 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  DHI    | $ 169.48 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  DOC    | $  17.94 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: sell
+  DOW    | $  24.63 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  DPZ    | $ 458.30 | SMA_X  | Sector: Consumer Discretionary | (No Pos)   | RSI: hold | SMA: sell
+  DRI    | $ 206.94 | SMA_X  | Sector: Consumer Discretionary | (No Pos)   | RSI: hold | SMA: sell
+  DVA    | $ 137.76 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  DVN    | $  36.10 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  DXCM   | $  75.34 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  EA     | $ 171.95 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  ED     | $  98.23 | SMA_X  | Sector: Utilities       | (No Pos)   | RSI: hold | SMA: sell
+  EFX    | $ 246.30 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  EG     | $ 341.88 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: sell
+  EIX    | $  56.13 | RSI_MR | Sector: Utilities       | (No Pos)   | RSI: sell | SMA: buy 
+  ELV    | $ 318.65 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: sell
+  EMN    | $  70.34 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  ENPH   | $  37.70 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: sell
+  EOG    | $ 124.82 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  EPAM   | $ 176.36 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: sell
+  EQIX   | $ 786.19 | SMA_X  | Sector: Real Estate     | (No Pos)   | RSI: hold | SMA: sell
+  EQR    | $  66.12 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: sell
+  EQT    | $  51.84 | SMA_X  | Sector: Energy          | (No Pos)   | RSI: hold | SMA: sell
+  ERIE   | $ 354.38 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  ESS    | $ 270.21 | SMA_X  | Sector: Real Estate     | (No Pos)   | RSI: hold | SMA: sell
+  EW     | $  81.34 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  EXE    | $  96.78 | SMA_X  | Sector: Energy          | (No Pos)   | RSI: hold | SMA: sell
+  EXPD   | $ 120.54 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  EXPE   | $ 214.80 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  EXR    | $ 143.58 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: sell
+  F      | $  11.77 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  FANG   | $ 148.76 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  FAST   | $  49.66 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  FCX    | $  44.40 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  FDS    | $ 373.32 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  FE     | $  43.62 | RSI_MR | Sector: Utilities       | (No Pos)   | RSI: sell | SMA: buy 
+  FI     | $ 138.18 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  FICO   | $1521.64 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: sell
+  FIS    | $  69.81 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  FITB   | $  45.77 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  FOX    | $  54.55 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  FOXA   | $  59.70 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  FRT    | $ 100.55 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  FTNT   | $  78.77 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  FTV    | $  47.86 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  GD     | $ 324.57 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  GDDY   | $ 148.31 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  GE     | $ 275.20 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  GIS    | $  49.33 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  GL     | $ 139.95 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  GLW    | $  67.03 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  GM     | $  58.59 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  GOOG   | $ 213.53 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  GPC    | $ 139.33 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  GPN    | $  88.82 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  GRMN   | $ 241.82 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  GS     | $ 745.25 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  GWW    | $1013.50 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  HAL    | $  22.73 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  HAS    | $  81.17 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  HBAN   | $  17.81 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  HCA    | $ 403.96 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  HD     | $ 406.77 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  HIG    | $ 132.31 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  HII    | $ 270.79 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  HLT    | $ 276.06 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  HON    | $ 219.50 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  HPE    | $  22.57 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  HPQ    | $  28.54 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  HRL    | $  25.44 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: buy  | SMA: sell
+  HSIC   | $  69.58 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  HST    | $  17.21 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  HSY    | $ 183.75 | RSI_MR | Sector: Consumer Staples | (No Pos)   | RSI: sell | SMA: buy 
+  HUM    | $ 303.66 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  IBM    | $ 243.49 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  IDXX   | $ 647.09 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  IEX    | $ 164.50 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  IFF    | $  67.51 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  INCY   | $  84.61 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  INTC   | $  24.35 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  INVH   | $  31.29 | SMA_X  | Sector: Real Estate     | (No Pos)   | RSI: hold | SMA: sell
+  IP     | $  49.68 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  IPG    | $  26.84 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  IQV    | $ 190.81 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  IR     | $  79.43 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  IRM    | $  92.33 | SMA_X  | Sector: Real Estate     | (No Pos)   | RSI: hold | SMA: sell
+  ISRG   | $ 473.30 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  IT     | $ 251.19 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  ITW    | $ 264.65 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  IVZ    | $  21.89 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  JKHY   | $ 163.26 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  JNJ    | $ 177.17 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  JPM    | $ 301.42 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  K      | $  79.50 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  KDP    | $  29.09 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: buy  | SMA: sell
+  KEY    | $  19.36 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  KIM    | $  22.49 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  KMB    | $ 129.14 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  KMI    | $  26.98 | SMA_X  | Sector: Energy          | (No Pos)   | RSI: hold | SMA: sell
+  KMX    | $  61.35 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: sell
+  KO     | $  68.99 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  KVUE   | $  20.71 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  L      | $  96.80 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  LDOS   | $ 180.92 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  LEN    | $ 133.14 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  LH     | $ 277.99 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  LHX    | $ 277.62 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  LKQ    | $  32.62 | SMA_X  | Sector: Consumer Discretionary | (No Pos)   | RSI: hold | SMA: sell
+  LLY    | $ 732.58 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  LMT    | $ 455.63 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: sell
+  LOW    | $ 258.06 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  LULU   | $ 202.20 | SMA_X  | Sector: Consumer Discretionary | (No Pos)   | RSI: hold | SMA: sell
+  LUV    | $  32.90 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: sell
+  LVS    | $  57.63 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  LW     | $  57.53 | RSI_MR | Sector: Consumer Staples | (No Pos)   | RSI: sell | SMA: buy 
+  LYB    | $  56.35 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  LYV    | $ 166.49 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  MA     | $ 595.29 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  MAA    | $ 145.82 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: sell
+  MAS    | $  73.39 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  MCD    | $ 313.54 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  MCK    | $ 686.64 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  MDLZ   | $  61.44 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  MDT    | $  92.81 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  MET    | $  81.36 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  MGM    | $  39.69 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  MHK    | $ 132.69 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  MKC    | $  70.37 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  MKTX   | $ 183.84 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  MLM    | $ 616.40 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  MMC    | $ 205.81 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  MO     | $  67.21 | RSI_MR | Sector: Consumer Staples | (No Pos)   | RSI: sell | SMA: buy 
+  MOH    | $ 180.83 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  MOS    | $  33.40 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  MPC    | $ 179.71 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  MPWR   | $ 835.76 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  MRNA   | $  24.09 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  MS     | $ 150.48 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  MSI    | $ 472.46 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  MTB    | $ 201.66 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  MTCH   | $  37.34 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  MTD    | $1301.04 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  NCLH   | $  24.84 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  NDSN   | $ 225.09 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  NEM    | $  74.40 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  NKE    | $  77.37 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  NOC    | $ 590.04 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  NOW    | $ 917.46 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  NTAP   | $ 112.79 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  NTRS   | $ 131.28 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  NUE    | $ 148.73 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  NVR    | $8117.65 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  NXPI   | $ 234.85 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  O      | $  58.76 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  ODFL   | $ 150.97 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  OKE    | $  76.38 | SMA_X  | Sector: Energy          | (No Pos)   | RSI: hold | SMA: sell
+  OMC    | $  78.33 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  ORLY   | $ 103.68 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  OTIS   | $  86.38 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  OXY    | $  47.61 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  PANW   | $ 190.52 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: sell
+  PAYC   | $ 227.15 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  PAYX   | $ 139.46 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  PCG    | $  15.28 | RSI_MR | Sector: Utilities       | (No Pos)   | RSI: sell | SMA: sell
+  PEP    | $ 148.65 | RSI_MR | Sector: Consumer Staples | (No Pos)   | RSI: sell | SMA: buy 
+  PFG    | $  80.51 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  PG     | $ 157.04 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  PGR    | $ 247.06 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  PH     | $ 759.35 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  PHM    | $ 132.02 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  PKG    | $ 217.96 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  PLD    | $ 113.78 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  PM     | $ 167.13 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  PNC    | $ 207.44 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  PNR    | $ 107.53 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  PODD   | $ 339.88 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  PPG    | $ 111.23 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  PRU    | $ 109.66 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  PSA    | $ 294.59 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: sell
+  PSX    | $ 133.58 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  PTC    | $ 213.50 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  PYPL   | $  70.19 | SMA_X  | Sector: Financials      | (No Pos)   | RSI: hold | SMA: sell
+  QCOM   | $ 160.73 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  RCL    | $ 363.22 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  REG    | $  72.50 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  RF     | $  27.39 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  RJF    | $ 169.44 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  RL     | $ 296.93 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  ROP    | $ 526.31 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  ROST   | $ 147.16 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  RSG    | $ 233.97 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  RTX    | $ 158.60 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  RVTY   | $  90.11 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  SBAC   | $ 204.85 | SMA_X  | Sector: Real Estate     | (No Pos)   | RSI: hold | SMA: sell
+  SHW    | $ 365.83 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  SLB    | $  36.84 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: sell
+  SPG    | $ 180.66 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  SRE    | $  82.56 | RSI_MR | Sector: Utilities       | (No Pos)   | RSI: sell | SMA: buy 
+  STE    | $ 245.06 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  STLD   | $ 130.92 | SMA_X  | Sector: Materials       | (No Pos)   | RSI: hold | SMA: sell
+  STT    | $ 114.97 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  STX    | $ 167.40 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  STZ    | $ 161.94 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  SW     | $  47.36 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  SYF    | $  76.34 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  T      | $  29.29 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  TAP    | $  50.49 | SMA_X  | Sector: Consumer Staples | (No Pos)   | RSI: hold | SMA: sell
+  TDG    | $1398.88 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  TEL    | $ 206.50 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  TER    | $ 118.24 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  TFC    | $  46.82 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  TJX    | $ 136.61 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  TKO    | $ 189.56 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  TMO    | $ 492.72 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  TMUS   | $ 251.99 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  TPL    | $ 933.48 | SMA_X  | Sector: Energy          | (No Pos)   | RSI: hold | SMA: sell
+  TRGP   | $ 167.76 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: sell
+  TRV    | $ 271.51 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  TSCO   | $  61.76 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  TTD    | $  54.66 | SMA_X  | Sector: Communication Services | (No Pos)   | RSI: hold | SMA: sell
+  TXN    | $ 202.48 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  UAL    | $ 105.00 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  UDR    | $  39.57 | SMA_X  | Sector: Real Estate     | (No Pos)   | RSI: hold | SMA: sell
+  UHS    | $ 181.58 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: sell
+  UNH    | $ 309.87 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: sell
+  UNP    | $ 223.57 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  UPS    | $  87.44 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  URI    | $ 956.34 | RSI_MR | Sector: Industrials     | (No Pos)   | RSI: sell | SMA: buy 
+  USB    | $  48.83 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  V      | $ 351.78 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: sell
+  VICI   | $  33.78 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  VLO    | $ 152.01 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  VMC    | $ 291.16 | RSI_MR | Sector: Materials       | (No Pos)   | RSI: sell | SMA: buy 
+  VRSK   | $ 268.12 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  VRSN   | $ 273.37 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  VRTX   | $ 391.02 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  VTRS   | $  10.55 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  VZ     | $  44.23 | RSI_MR | Sector: Communication Services | (No Pos)   | RSI: sell | SMA: buy 
+  WAB    | $ 193.50 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  WAT    | $ 301.80 | SMA_X  | Sector: Healthcare      | (No Pos)   | RSI: hold | SMA: sell
+  WBA    | $   0.00 | RSI_MR | Sector: Consumer Staples | (No Pos)   | RSI: sell | SMA: buy 
+  WDAY   | $ 230.82 | SMA_X  | Sector: Technology      | (No Pos)   | RSI: hold | SMA: sell
+  WDC    | $  80.34 | RSI_MR | Sector: Technology      | (No Pos)   | RSI: sell | SMA: buy 
+  WELL   | $ 168.28 | RSI_MR | Sector: Real Estate     | (No Pos)   | RSI: sell | SMA: buy 
+  WFC    | $  82.18 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: buy 
+  WM     | $ 226.39 | SMA_X  | Sector: Industrials     | (No Pos)   | RSI: hold | SMA: sell
+  WMB    | $  57.88 | SMA_X  | Sector: Energy          | (No Pos)   | RSI: hold | SMA: sell
+  WRB    | $  71.69 | RSI_MR | Sector: Financials      | (No Pos)   | RSI: sell | SMA: sell
+  WST    | $ 246.95 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  WY     | $  25.87 | SMA_X  | Sector: Real Estate     | (No Pos)   | RSI: hold | SMA: sell
+  WYNN   | $ 126.75 | RSI_MR | Sector: Consumer Discretionary | (No Pos)   | RSI: sell | SMA: buy 
+  XOM    | $ 114.29 | RSI_MR | Sector: Energy          | (No Pos)   | RSI: sell | SMA: buy 
+  YUM    | $ 146.97 | SMA_X  | Sector: Consumer Discretionary | (No Pos)   | RSI: hold | SMA: sell
+  ZBH    | $ 106.10 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: buy 
+  ZTS    | $ 156.40 | RSI_MR | Sector: Healthcare      | (No Pos)   | RSI: sell | SMA: sell
+
+ORDERS CREATED
+----------------------------------------
+SELL ORDERS (680):
+  A      | Full Exit    | mvp-exit-rsi_mr
+  A      | Full Exit    | mvp-exit-rsi_mr
+  ABBV   | Full Exit    | mvp-exit-rsi_mr
+  ABBV   | Full Exit    | mvp-exit-rsi_mr
+  ABNB   | Full Exit    | mvp-exit-sma_x
+  ABNB   | Full Exit    | mvp-exit-sma_x
+  ABT    | Full Exit    | mvp-exit-rsi_mr
+  ABT    | Full Exit    | mvp-exit-rsi_mr
+  ACGL   | Full Exit    | mvp-exit-sma_x
+  ACGL   | Full Exit    | mvp-exit-sma_x
+  ACN    | Full Exit    | mvp-exit-sma_x
+  ACN    | Full Exit    | mvp-exit-sma_x
+  ADBE   | Full Exit    | mvp-exit-sma_x
+  ADBE   | Full Exit    | mvp-exit-sma_x
+  ADI    | Full Exit    | mvp-exit-rsi_mr
+  ADI    | Full Exit    | mvp-exit-rsi_mr
+  ADM    | Full Exit    | mvp-exit-rsi_mr
+  ADM    | Full Exit    | mvp-exit-rsi_mr
+  ADP    | Full Exit    | mvp-exit-sma_x
+  ADP    | Full Exit    | mvp-exit-sma_x
+  ADSK   | Full Exit    | mvp-exit-rsi_mr
+  ADSK   | Full Exit    | mvp-exit-rsi_mr
+  AES    | Full Exit    | mvp-exit-rsi_mr
+  AES    | Full Exit    | mvp-exit-rsi_mr
+  AFL    | Full Exit    | mvp-exit-rsi_mr
+  AFL    | Full Exit    | mvp-exit-rsi_mr
+  AIG    | Full Exit    | mvp-exit-sma_x
+  AIG    | Full Exit    | mvp-exit-sma_x
+  AIZ    | Full Exit    | mvp-exit-rsi_mr
+  AIZ    | Full Exit    | mvp-exit-rsi_mr
+  AJG    | Full Exit    | mvp-exit-sma_x
+  AJG    | Full Exit    | mvp-exit-sma_x
+  AKAM   | Full Exit    | mvp-exit-rsi_mr
+  AKAM   | Full Exit    | mvp-exit-rsi_mr
+  ALB    | Full Exit    | mvp-exit-rsi_mr
+  ALB    | Full Exit    | mvp-exit-rsi_mr
+  ALGN   | Full Exit    | mvp-exit-sma_x
+  ALGN   | Full Exit    | mvp-exit-sma_x
+  ALLE   | Full Exit    | mvp-exit-rsi_mr
+  ALLE   | Full Exit    | mvp-exit-rsi_mr
+  AMCR   | Full Exit    | mvp-exit-sma_x
+  AMCR   | Full Exit    | mvp-exit-sma_x
+  AMT    | Full Exit    | mvp-exit-sma_x
+  AMT    | Full Exit    | mvp-exit-sma_x
+  ANET   | Full Exit    | mvp-exit-rsi_mr
+  ANET   | Full Exit    | mvp-exit-rsi_mr
+  APA    | Full Exit    | mvp-exit-rsi_mr
+  APA    | Full Exit    | mvp-exit-rsi_mr
+  APTV   | Full Exit    | mvp-exit-rsi_mr
+  APTV   | Full Exit    | mvp-exit-rsi_mr
+  ARE    | Full Exit    | mvp-exit-rsi_mr
+  ARE    | Full Exit    | mvp-exit-rsi_mr
+  ATO    | Full Exit    | mvp-exit-rsi_mr
+  ATO    | Full Exit    | mvp-exit-rsi_mr
+  AVB    | Full Exit    | mvp-exit-rsi_mr
+  AVB    | Full Exit    | mvp-exit-rsi_mr
+  AVY    | Full Exit    | mvp-exit-sma_x
+  AVY    | Full Exit    | mvp-exit-sma_x
+  AXP    | Full Exit    | mvp-exit-rsi_mr
+  AXP    | Full Exit    | mvp-exit-rsi_mr
+  AZO    | Full Exit    | mvp-exit-rsi_mr
+  AZO    | Full Exit    | mvp-exit-rsi_mr
+  BA     | Full Exit    | mvp-exit-rsi_mr
+  BA     | Full Exit    | mvp-exit-rsi_mr
+  BAC    | Full Exit    | mvp-exit-rsi_mr
+  BAC    | Full Exit    | mvp-exit-rsi_mr
+  BALL   | Full Exit    | mvp-exit-sma_x
+  BALL   | Full Exit    | mvp-exit-sma_x
+  BAX    | Full Exit    | mvp-exit-sma_x
+  BAX    | Full Exit    | mvp-exit-sma_x
+  BBY    | Full Exit    | mvp-exit-rsi_mr
+  BBY    | Full Exit    | mvp-exit-rsi_mr
+  BEN    | Full Exit    | mvp-exit-rsi_mr
+  BEN    | Full Exit    | mvp-exit-rsi_mr
+  BF.B   | Full Exit    | mvp-exit-sma_x
+  BF.B   | Full Exit    | mvp-exit-sma_x
+  BG     | Full Exit    | mvp-exit-rsi_mr
+  BG     | Full Exit    | mvp-exit-rsi_mr
+  BK     | Full Exit    | mvp-exit-rsi_mr
+  BK     | Full Exit    | mvp-exit-rsi_mr
+  BKR    | Full Exit    | mvp-exit-rsi_mr
+  BKR    | Full Exit    | mvp-exit-rsi_mr
+  BMY    | Full Exit    | mvp-exit-sma_x
+  BMY    | Full Exit    | mvp-exit-sma_x
+  BRK.B  | Full Exit    | mvp-exit-rsi_mr
+  BRK.B  | Full Exit    | mvp-exit-rsi_mr
+  BRO    | Full Exit    | mvp-exit-sma_x
+  BRO    | Full Exit    | mvp-exit-sma_x
+  BXP    | Full Exit    | mvp-exit-rsi_mr
+  BXP    | Full Exit    | mvp-exit-rsi_mr
+  C      | Full Exit    | mvp-exit-rsi_mr
+  C      | Full Exit    | mvp-exit-rsi_mr
+  CAG    | Full Exit    | mvp-exit-sma_x
+  CAG    | Full Exit    | mvp-exit-sma_x
+  CAH    | Full Exit    | mvp-exit-sma_x
+  CAH    | Full Exit    | mvp-exit-sma_x
+  CARR   | Full Exit    | mvp-exit-sma_x
+  CARR   | Full Exit    | mvp-exit-sma_x
+  CB     | Full Exit    | mvp-exit-sma_x
+  CB     | Full Exit    | mvp-exit-sma_x
+  CBRE   | Full Exit    | mvp-exit-rsi_mr
+  CBRE   | Full Exit    | mvp-exit-rsi_mr
+  CCL    | Full Exit    | mvp-exit-rsi_mr
+  CCL    | Full Exit    | mvp-exit-rsi_mr
+  CDW    | Full Exit    | mvp-exit-sma_x
+  CDW    | Full Exit    | mvp-exit-sma_x
+  CF     | Full Exit    | mvp-exit-sma_x
+  CF     | Full Exit    | mvp-exit-sma_x
+  CFG    | Full Exit    | mvp-exit-rsi_mr
+  CFG    | Full Exit    | mvp-exit-rsi_mr
+  CHD    | Full Exit    | mvp-exit-sma_x
+  CHD    | Full Exit    | mvp-exit-sma_x
+  CHRW   | Full Exit    | mvp-exit-rsi_mr
+  CHRW   | Full Exit    | mvp-exit-rsi_mr
+  CHTR   | Full Exit    | mvp-exit-sma_x
+  CHTR   | Full Exit    | mvp-exit-sma_x
+  CI     | Full Exit    | mvp-exit-rsi_mr
+  CI     | Full Exit    | mvp-exit-rsi_mr
+  CL     | Full Exit    | mvp-exit-sma_x
+  CL     | Full Exit    | mvp-exit-sma_x
+  CLX    | Full Exit    | mvp-exit-sma_x
+  CLX    | Full Exit    | mvp-exit-sma_x
+  CMCSA  | Full Exit    | mvp-exit-sma_x
+  CMCSA  | Full Exit    | mvp-exit-sma_x
+  CMG    | Full Exit    | mvp-exit-sma_x
+  CMG    | Full Exit    | mvp-exit-sma_x
+  CMI    | Full Exit    | mvp-exit-rsi_mr
+  CMI    | Full Exit    | mvp-exit-rsi_mr
+  CNC    | Full Exit    | mvp-exit-sma_x
+  CNC    | Full Exit    | mvp-exit-sma_x
+  COF    | Full Exit    | mvp-exit-rsi_mr
+  COF    | Full Exit    | mvp-exit-rsi_mr
+  COO    | Full Exit    | mvp-exit-sma_x
+  COO    | Full Exit    | mvp-exit-sma_x
+  COP    | Full Exit    | mvp-exit-rsi_mr
+  COP    | Full Exit    | mvp-exit-rsi_mr
+  COST   | Full Exit    | mvp-exit-sma_x
+  COST   | Full Exit    | mvp-exit-sma_x
+  CPAY   | Full Exit    | mvp-exit-sma_x
+  CPAY   | Full Exit    | mvp-exit-sma_x
+  CPB    | Full Exit    | mvp-exit-sma_x
+  CPB    | Full Exit    | mvp-exit-sma_x
+  CPRT   | Full Exit    | mvp-exit-rsi_mr
+  CPRT   | Full Exit    | mvp-exit-rsi_mr
+  CPT    | Full Exit    | mvp-exit-rsi_mr
+  CPT    | Full Exit    | mvp-exit-rsi_mr
+  CRL    | Full Exit    | mvp-exit-rsi_mr
+  CRL    | Full Exit    | mvp-exit-rsi_mr
+  CRM    | Full Exit    | mvp-exit-rsi_mr
+  CRM    | Full Exit    | mvp-exit-rsi_mr
+  CRWD   | Full Exit    | mvp-exit-sma_x
+  CRWD   | Full Exit    | mvp-exit-sma_x
+  CTRA   | Full Exit    | mvp-exit-rsi_mr
+  CTRA   | Full Exit    | mvp-exit-rsi_mr
+  CTSH   | Full Exit    | mvp-exit-sma_x
+  CTSH   | Full Exit    | mvp-exit-sma_x
+  CTVA   | Full Exit    | mvp-exit-rsi_mr
+  CTVA   | Full Exit    | mvp-exit-rsi_mr
+  CVS    | Full Exit    | mvp-exit-rsi_mr
+  CVS    | Full Exit    | mvp-exit-rsi_mr
+  CVX    | Full Exit    | mvp-exit-rsi_mr
+  CVX    | Full Exit    | mvp-exit-rsi_mr
+  CZR    | Full Exit    | mvp-exit-sma_x
+  CZR    | Full Exit    | mvp-exit-sma_x
+  DAL    | Full Exit    | mvp-exit-rsi_mr
+  DAL    | Full Exit    | mvp-exit-rsi_mr
+  DAY    | Full Exit    | mvp-exit-rsi_mr
+  DAY    | Full Exit    | mvp-exit-rsi_mr
+  DD     | Full Exit    | mvp-exit-rsi_mr
+  DD     | Full Exit    | mvp-exit-rsi_mr
+  DECK   | Full Exit    | mvp-exit-rsi_mr
+  DECK   | Full Exit    | mvp-exit-rsi_mr
+  DGX    | Full Exit    | mvp-exit-rsi_mr
+  DGX    | Full Exit    | mvp-exit-rsi_mr
+  DHI    | Full Exit    | mvp-exit-rsi_mr
+  DHI    | Full Exit    | mvp-exit-rsi_mr
+  DOC    | Full Exit    | mvp-exit-rsi_mr
+  DOC    | Full Exit    | mvp-exit-rsi_mr
+  DOW    | Full Exit    | mvp-exit-sma_x
+  DOW    | Full Exit    | mvp-exit-sma_x
+  DPZ    | Full Exit    | mvp-exit-sma_x
+  DPZ    | Full Exit    | mvp-exit-sma_x
+  DRI    | Full Exit    | mvp-exit-sma_x
+  DRI    | Full Exit    | mvp-exit-sma_x
+  DVA    | Full Exit    | mvp-exit-sma_x
+  DVA    | Full Exit    | mvp-exit-sma_x
+  DVN    | Full Exit    | mvp-exit-rsi_mr
+  DVN    | Full Exit    | mvp-exit-rsi_mr
+  DXCM   | Full Exit    | mvp-exit-sma_x
+  DXCM   | Full Exit    | mvp-exit-sma_x
+  EA     | Full Exit    | mvp-exit-rsi_mr
+  EA     | Full Exit    | mvp-exit-rsi_mr
+  ED     | Full Exit    | mvp-exit-sma_x
+  ED     | Full Exit    | mvp-exit-sma_x
+  EFX    | Full Exit    | mvp-exit-sma_x
+  EFX    | Full Exit    | mvp-exit-sma_x
+  EG     | Full Exit    | mvp-exit-rsi_mr
+  EG     | Full Exit    | mvp-exit-rsi_mr
+  EIX    | Full Exit    | mvp-exit-rsi_mr
+  EIX    | Full Exit    | mvp-exit-rsi_mr
+  ELV    | Full Exit    | mvp-exit-rsi_mr
+  ELV    | Full Exit    | mvp-exit-rsi_mr
+  EMN    | Full Exit    | mvp-exit-sma_x
+  EMN    | Full Exit    | mvp-exit-sma_x
+  ENPH   | Full Exit    | mvp-exit-rsi_mr
+  ENPH   | Full Exit    | mvp-exit-rsi_mr
+  EOG    | Full Exit    | mvp-exit-rsi_mr
+  EOG    | Full Exit    | mvp-exit-rsi_mr
+  EPAM   | Full Exit    | mvp-exit-rsi_mr
+  EPAM   | Full Exit    | mvp-exit-rsi_mr
+  EQIX   | Full Exit    | mvp-exit-sma_x
+  EQIX   | Full Exit    | mvp-exit-sma_x
+  EQR    | Full Exit    | mvp-exit-rsi_mr
+  EQR    | Full Exit    | mvp-exit-rsi_mr
+  EQT    | Full Exit    | mvp-exit-sma_x
+  EQT    | Full Exit    | mvp-exit-sma_x
+  ERIE   | Full Exit    | mvp-exit-sma_x
+  ERIE   | Full Exit    | mvp-exit-sma_x
+  ESS    | Full Exit    | mvp-exit-sma_x
+  ESS    | Full Exit    | mvp-exit-sma_x
+  EW     | Full Exit    | mvp-exit-rsi_mr
+  EW     | Full Exit    | mvp-exit-rsi_mr
+  EXE    | Full Exit    | mvp-exit-sma_x
+  EXE    | Full Exit    | mvp-exit-sma_x
+  EXPD   | Full Exit    | mvp-exit-rsi_mr
+  EXPD   | Full Exit    | mvp-exit-rsi_mr
+  EXPE   | Full Exit    | mvp-exit-rsi_mr
+  EXPE   | Full Exit    | mvp-exit-rsi_mr
+  EXR    | Full Exit    | mvp-exit-rsi_mr
+  EXR    | Full Exit    | mvp-exit-rsi_mr
+  F      | Full Exit    | mvp-exit-rsi_mr
+  F      | Full Exit    | mvp-exit-rsi_mr
+  FANG   | Full Exit    | mvp-exit-rsi_mr
+  FANG   | Full Exit    | mvp-exit-rsi_mr
+  FAST   | Full Exit    | mvp-exit-rsi_mr
+  FAST   | Full Exit    | mvp-exit-rsi_mr
+  FCX    | Full Exit    | mvp-exit-rsi_mr
+  FCX    | Full Exit    | mvp-exit-rsi_mr
+  FDS    | Full Exit    | mvp-exit-sma_x
+  FDS    | Full Exit    | mvp-exit-sma_x
+  FE     | Full Exit    | mvp-exit-rsi_mr
+  FE     | Full Exit    | mvp-exit-rsi_mr
+  FI     | Full Exit    | mvp-exit-sma_x
+  FI     | Full Exit    | mvp-exit-sma_x
+  FICO   | Full Exit    | mvp-exit-rsi_mr
+  FICO   | Full Exit    | mvp-exit-rsi_mr
+  FIS    | Full Exit    | mvp-exit-sma_x
+  FIS    | Full Exit    | mvp-exit-sma_x
+  FITB   | Full Exit    | mvp-exit-rsi_mr
+  FITB   | Full Exit    | mvp-exit-rsi_mr
+  FOX    | Full Exit    | mvp-exit-rsi_mr
+  FOX    | Full Exit    | mvp-exit-rsi_mr
+  FOXA   | Full Exit    | mvp-exit-rsi_mr
+  FOXA   | Full Exit    | mvp-exit-rsi_mr
+  FRT    | Full Exit    | mvp-exit-rsi_mr
+  FRT    | Full Exit    | mvp-exit-rsi_mr
+  FTNT   | Full Exit    | mvp-exit-sma_x
+  FTNT   | Full Exit    | mvp-exit-sma_x
+  FTV    | Full Exit    | mvp-exit-sma_x
+  FTV    | Full Exit    | mvp-exit-sma_x
+  GD     | Full Exit    | mvp-exit-rsi_mr
+  GD     | Full Exit    | mvp-exit-rsi_mr
+  GDDY   | Full Exit    | mvp-exit-sma_x
+  GDDY   | Full Exit    | mvp-exit-sma_x
+  GE     | Full Exit    | mvp-exit-rsi_mr
+  GE     | Full Exit    | mvp-exit-rsi_mr
+  GIS    | Full Exit    | mvp-exit-sma_x
+  GIS    | Full Exit    | mvp-exit-sma_x
+  GL     | Full Exit    | mvp-exit-rsi_mr
+  GL     | Full Exit    | mvp-exit-rsi_mr
+  GLW    | Full Exit    | mvp-exit-rsi_mr
+  GLW    | Full Exit    | mvp-exit-rsi_mr
+  GM     | Full Exit    | mvp-exit-rsi_mr
+  GM     | Full Exit    | mvp-exit-rsi_mr
+  GOOG   | Full Exit    | mvp-exit-rsi_mr
+  GOOG   | Full Exit    | mvp-exit-rsi_mr
+  GPC    | Full Exit    | mvp-exit-rsi_mr
+  GPC    | Full Exit    | mvp-exit-rsi_mr
+  GPN    | Full Exit    | mvp-exit-rsi_mr
+  GPN    | Full Exit    | mvp-exit-rsi_mr
+  GRMN   | Full Exit    | mvp-exit-rsi_mr
+  GRMN   | Full Exit    | mvp-exit-rsi_mr
+  GS     | Full Exit    | mvp-exit-rsi_mr
+  GS     | Full Exit    | mvp-exit-rsi_mr
+  GWW    | Full Exit    | mvp-exit-sma_x
+  GWW    | Full Exit    | mvp-exit-sma_x
+  HAL    | Full Exit    | mvp-exit-rsi_mr
+  HAL    | Full Exit    | mvp-exit-rsi_mr
+  HAS    | Full Exit    | mvp-exit-rsi_mr
+  HAS    | Full Exit    | mvp-exit-rsi_mr
+  HBAN   | Full Exit    | mvp-exit-rsi_mr
+  HBAN   | Full Exit    | mvp-exit-rsi_mr
+  HCA    | Full Exit    | mvp-exit-rsi_mr
+  HCA    | Full Exit    | mvp-exit-rsi_mr
+  HD     | Full Exit    | mvp-exit-rsi_mr
+  HD     | Full Exit    | mvp-exit-rsi_mr
+  HIG    | Full Exit    | mvp-exit-rsi_mr
+  HIG    | Full Exit    | mvp-exit-rsi_mr
+  HII    | Full Exit    | mvp-exit-rsi_mr
+  HII    | Full Exit    | mvp-exit-rsi_mr
+  HLT    | Full Exit    | mvp-exit-rsi_mr
+  HLT    | Full Exit    | mvp-exit-rsi_mr
+  HON    | Full Exit    | mvp-exit-sma_x
+  HON    | Full Exit    | mvp-exit-sma_x
+  HPE    | Full Exit    | mvp-exit-rsi_mr
+  HPE    | Full Exit    | mvp-exit-rsi_mr
+  HPQ    | Full Exit    | mvp-exit-rsi_mr
+  HPQ    | Full Exit    | mvp-exit-rsi_mr
+  HRL    | Full Exit    | mvp-exit-sma_x
+  HRL    | Full Exit    | mvp-exit-sma_x
+  HSIC   | Full Exit    | mvp-exit-sma_x
+  HSIC   | Full Exit    | mvp-exit-sma_x
+  HST    | Full Exit    | mvp-exit-rsi_mr
+  HST    | Full Exit    | mvp-exit-rsi_mr
+  HSY    | Full Exit    | mvp-exit-rsi_mr
+  HSY    | Full Exit    | mvp-exit-rsi_mr
+  HUM    | Full Exit    | mvp-exit-rsi_mr
+  HUM    | Full Exit    | mvp-exit-rsi_mr
+  IBM    | Full Exit    | mvp-exit-sma_x
+  IBM    | Full Exit    | mvp-exit-sma_x
+  IDXX   | Full Exit    | mvp-exit-rsi_mr
+  IDXX   | Full Exit    | mvp-exit-rsi_mr
+  IEX    | Full Exit    | mvp-exit-sma_x
+  IEX    | Full Exit    | mvp-exit-sma_x
+  IFF    | Full Exit    | mvp-exit-sma_x
+  IFF    | Full Exit    | mvp-exit-sma_x
+  INCY   | Full Exit    | mvp-exit-rsi_mr
+  INCY   | Full Exit    | mvp-exit-rsi_mr
+  INTC   | Full Exit    | mvp-exit-rsi_mr
+  INTC   | Full Exit    | mvp-exit-rsi_mr
+  INVH   | Full Exit    | mvp-exit-sma_x
+  INVH   | Full Exit    | mvp-exit-sma_x
+  IP     | Full Exit    | mvp-exit-sma_x
+  IP     | Full Exit    | mvp-exit-sma_x
+  IPG    | Full Exit    | mvp-exit-rsi_mr
+  IPG    | Full Exit    | mvp-exit-rsi_mr
+  IQV    | Full Exit    | mvp-exit-rsi_mr
+  IQV    | Full Exit    | mvp-exit-rsi_mr
+  IR     | Full Exit    | mvp-exit-sma_x
+  IR     | Full Exit    | mvp-exit-sma_x
+  IRM    | Full Exit    | mvp-exit-sma_x
+  IRM    | Full Exit    | mvp-exit-sma_x
+  ISRG   | Full Exit    | mvp-exit-sma_x
+  ISRG   | Full Exit    | mvp-exit-sma_x
+  IT     | Full Exit    | mvp-exit-sma_x
+  IT     | Full Exit    | mvp-exit-sma_x
+  ITW    | Full Exit    | mvp-exit-rsi_mr
+  ITW    | Full Exit    | mvp-exit-rsi_mr
+  IVZ    | Full Exit    | mvp-exit-rsi_mr
+  IVZ    | Full Exit    | mvp-exit-rsi_mr
+  JKHY   | Full Exit    | mvp-exit-sma_x
+  JKHY   | Full Exit    | mvp-exit-sma_x
+  JNJ    | Full Exit    | mvp-exit-rsi_mr
+  JNJ    | Full Exit    | mvp-exit-rsi_mr
+  JPM    | Full Exit    | mvp-exit-rsi_mr
+  JPM    | Full Exit    | mvp-exit-rsi_mr
+  K      | Full Exit    | mvp-exit-sma_x
+  K      | Full Exit    | mvp-exit-sma_x
+  KDP    | Full Exit    | mvp-exit-sma_x
+  KDP    | Full Exit    | mvp-exit-sma_x
+  KEY    | Full Exit    | mvp-exit-rsi_mr
+  KEY    | Full Exit    | mvp-exit-rsi_mr
+  KIM    | Full Exit    | mvp-exit-rsi_mr
+  KIM    | Full Exit    | mvp-exit-rsi_mr
+  KMB    | Full Exit    | mvp-exit-sma_x
+  KMB    | Full Exit    | mvp-exit-sma_x
+  KMI    | Full Exit    | mvp-exit-sma_x
+  KMI    | Full Exit    | mvp-exit-sma_x
+  KMX    | Full Exit    | mvp-exit-rsi_mr
+  KMX    | Full Exit    | mvp-exit-rsi_mr
+  KO     | Full Exit    | mvp-exit-sma_x
+  KO     | Full Exit    | mvp-exit-sma_x
+  KVUE   | Full Exit    | mvp-exit-sma_x
+  KVUE   | Full Exit    | mvp-exit-sma_x
+  L      | Full Exit    | mvp-exit-rsi_mr
+  L      | Full Exit    | mvp-exit-rsi_mr
+  LDOS   | Full Exit    | mvp-exit-rsi_mr
+  LDOS   | Full Exit    | mvp-exit-rsi_mr
+  LEN    | Full Exit    | mvp-exit-rsi_mr
+  LEN    | Full Exit    | mvp-exit-rsi_mr
+  LH     | Full Exit    | mvp-exit-rsi_mr
+  LH     | Full Exit    | mvp-exit-rsi_mr
+  LHX    | Full Exit    | mvp-exit-rsi_mr
+  LHX    | Full Exit    | mvp-exit-rsi_mr
+  LKQ    | Full Exit    | mvp-exit-sma_x
+  LKQ    | Full Exit    | mvp-exit-sma_x
+  LLY    | Full Exit    | mvp-exit-sma_x
+  LLY    | Full Exit    | mvp-exit-sma_x
+  LMT    | Full Exit    | mvp-exit-rsi_mr
+  LMT    | Full Exit    | mvp-exit-rsi_mr
+  LOW    | Full Exit    | mvp-exit-rsi_mr
+  LOW    | Full Exit    | mvp-exit-rsi_mr
+  LULU   | Full Exit    | mvp-exit-sma_x
+  LULU   | Full Exit    | mvp-exit-sma_x
+  LUV    | Full Exit    | mvp-exit-rsi_mr
+  LUV    | Full Exit    | mvp-exit-rsi_mr
+  LVS    | Full Exit    | mvp-exit-rsi_mr
+  LVS    | Full Exit    | mvp-exit-rsi_mr
+  LW     | Full Exit    | mvp-exit-rsi_mr
+  LW     | Full Exit    | mvp-exit-rsi_mr
+  LYB    | Full Exit    | mvp-exit-sma_x
+  LYB    | Full Exit    | mvp-exit-sma_x
+  LYV    | Full Exit    | mvp-exit-rsi_mr
+  LYV    | Full Exit    | mvp-exit-rsi_mr
+  MA     | Full Exit    | mvp-exit-rsi_mr
+  MA     | Full Exit    | mvp-exit-rsi_mr
+  MAA    | Full Exit    | mvp-exit-rsi_mr
+  MAA    | Full Exit    | mvp-exit-rsi_mr
+  MAS    | Full Exit    | mvp-exit-rsi_mr
+  MAS    | Full Exit    | mvp-exit-rsi_mr
+  MCD    | Full Exit    | mvp-exit-rsi_mr
+  MCD    | Full Exit    | mvp-exit-rsi_mr
+  MCK    | Full Exit    | mvp-exit-sma_x
+  MCK    | Full Exit    | mvp-exit-sma_x
+  MDLZ   | Full Exit    | mvp-exit-sma_x
+  MDLZ   | Full Exit    | mvp-exit-sma_x
+  MDT    | Full Exit    | mvp-exit-rsi_mr
+  MDT    | Full Exit    | mvp-exit-rsi_mr
+  MET    | Full Exit    | mvp-exit-rsi_mr
+  MET    | Full Exit    | mvp-exit-rsi_mr
+  MGM    | Full Exit    | mvp-exit-rsi_mr
+  MGM    | Full Exit    | mvp-exit-rsi_mr
+  MHK    | Full Exit    | mvp-exit-rsi_mr
+  MHK    | Full Exit    | mvp-exit-rsi_mr
+  MKC    | Full Exit    | mvp-exit-sma_x
+  MKC    | Full Exit    | mvp-exit-sma_x
+  MKTX   | Full Exit    | mvp-exit-sma_x
+  MKTX   | Full Exit    | mvp-exit-sma_x
+  MLM    | Full Exit    | mvp-exit-rsi_mr
+  MLM    | Full Exit    | mvp-exit-rsi_mr
+  MMC    | Full Exit    | mvp-exit-sma_x
+  MMC    | Full Exit    | mvp-exit-sma_x
+  MO     | Full Exit    | mvp-exit-rsi_mr
+  MO     | Full Exit    | mvp-exit-rsi_mr
+  MOH    | Full Exit    | mvp-exit-sma_x
+  MOH    | Full Exit    | mvp-exit-sma_x
+  MOS    | Full Exit    | mvp-exit-sma_x
+  MOS    | Full Exit    | mvp-exit-sma_x
+  MPC    | Full Exit    | mvp-exit-rsi_mr
+  MPC    | Full Exit    | mvp-exit-rsi_mr
+  MPWR   | Full Exit    | mvp-exit-rsi_mr
+  MPWR   | Full Exit    | mvp-exit-rsi_mr
+  MRNA   | Full Exit    | mvp-exit-sma_x
+  MRNA   | Full Exit    | mvp-exit-sma_x
+  MS     | Full Exit    | mvp-exit-rsi_mr
+  MS     | Full Exit    | mvp-exit-rsi_mr
+  MSI    | Full Exit    | mvp-exit-rsi_mr
+  MSI    | Full Exit    | mvp-exit-rsi_mr
+  MTB    | Full Exit    | mvp-exit-rsi_mr
+  MTB    | Full Exit    | mvp-exit-rsi_mr
+  MTCH   | Full Exit    | mvp-exit-rsi_mr
+  MTCH   | Full Exit    | mvp-exit-rsi_mr
+  MTD    | Full Exit    | mvp-exit-rsi_mr
+  MTD    | Full Exit    | mvp-exit-rsi_mr
+  NCLH   | Full Exit    | mvp-exit-rsi_mr
+  NCLH   | Full Exit    | mvp-exit-rsi_mr
+  NDSN   | Full Exit    | mvp-exit-rsi_mr
+  NDSN   | Full Exit    | mvp-exit-rsi_mr
+  NEM    | Full Exit    | mvp-exit-rsi_mr
+  NEM    | Full Exit    | mvp-exit-rsi_mr
+  NKE    | Full Exit    | mvp-exit-rsi_mr
+  NKE    | Full Exit    | mvp-exit-rsi_mr
+  NOC    | Full Exit    | mvp-exit-rsi_mr
+  NOC    | Full Exit    | mvp-exit-rsi_mr
+  NOW    | Full Exit    | mvp-exit-sma_x
+  NOW    | Full Exit    | mvp-exit-sma_x
+  NTAP   | Full Exit    | mvp-exit-rsi_mr
+  NTAP   | Full Exit    | mvp-exit-rsi_mr
+  NTRS   | Full Exit    | mvp-exit-rsi_mr
+  NTRS   | Full Exit    | mvp-exit-rsi_mr
+  NUE    | Full Exit    | mvp-exit-rsi_mr
+  NUE    | Full Exit    | mvp-exit-rsi_mr
+  NVR    | Full Exit    | mvp-exit-rsi_mr
+  NVR    | Full Exit    | mvp-exit-rsi_mr
+  NXPI   | Full Exit    | mvp-exit-rsi_mr
+  NXPI   | Full Exit    | mvp-exit-rsi_mr
+  O      | Full Exit    | mvp-exit-rsi_mr
+  O      | Full Exit    | mvp-exit-rsi_mr
+  ODFL   | Full Exit    | mvp-exit-sma_x
+  ODFL   | Full Exit    | mvp-exit-sma_x
+  OKE    | Full Exit    | mvp-exit-sma_x
+  OKE    | Full Exit    | mvp-exit-sma_x
+  OMC    | Full Exit    | mvp-exit-rsi_mr
+  OMC    | Full Exit    | mvp-exit-rsi_mr
+  ORLY   | Full Exit    | mvp-exit-rsi_mr
+  ORLY   | Full Exit    | mvp-exit-rsi_mr
+  OTIS   | Full Exit    | mvp-exit-sma_x
+  OTIS   | Full Exit    | mvp-exit-sma_x
+  OXY    | Full Exit    | mvp-exit-rsi_mr
+  OXY    | Full Exit    | mvp-exit-rsi_mr
+  PANW   | Full Exit    | mvp-exit-rsi_mr
+  PANW   | Full Exit    | mvp-exit-rsi_mr
+  PAYC   | Full Exit    | mvp-exit-sma_x
+  PAYC   | Full Exit    | mvp-exit-sma_x
+  PAYX   | Full Exit    | mvp-exit-sma_x
+  PAYX   | Full Exit    | mvp-exit-sma_x
+  PCG    | Full Exit    | mvp-exit-rsi_mr
+  PCG    | Full Exit    | mvp-exit-rsi_mr
+  PEP    | Full Exit    | mvp-exit-rsi_mr
+  PEP    | Full Exit    | mvp-exit-rsi_mr
+  PFG    | Full Exit    | mvp-exit-rsi_mr
+  PFG    | Full Exit    | mvp-exit-rsi_mr
+  PG     | Full Exit    | mvp-exit-sma_x
+  PG     | Full Exit    | mvp-exit-sma_x
+  PGR    | Full Exit    | mvp-exit-sma_x
+  PGR    | Full Exit    | mvp-exit-sma_x
+  PH     | Full Exit    | mvp-exit-rsi_mr
+  PH     | Full Exit    | mvp-exit-rsi_mr
+  PHM    | Full Exit    | mvp-exit-rsi_mr
+  PHM    | Full Exit    | mvp-exit-rsi_mr
+  PKG    | Full Exit    | mvp-exit-rsi_mr
+  PKG    | Full Exit    | mvp-exit-rsi_mr
+  PLD    | Full Exit    | mvp-exit-rsi_mr
+  PLD    | Full Exit    | mvp-exit-rsi_mr
+  PM     | Full Exit    | mvp-exit-sma_x
+  PM     | Full Exit    | mvp-exit-sma_x
+  PNC    | Full Exit    | mvp-exit-rsi_mr
+  PNC    | Full Exit    | mvp-exit-rsi_mr
+  PNR    | Full Exit    | mvp-exit-rsi_mr
+  PNR    | Full Exit    | mvp-exit-rsi_mr
+  PODD   | Full Exit    | mvp-exit-rsi_mr
+  PODD   | Full Exit    | mvp-exit-rsi_mr
+  PPG    | Full Exit    | mvp-exit-sma_x
+  PPG    | Full Exit    | mvp-exit-sma_x
+  PRU    | Full Exit    | mvp-exit-rsi_mr
+  PRU    | Full Exit    | mvp-exit-rsi_mr
+  PSA    | Full Exit    | mvp-exit-rsi_mr
+  PSA    | Full Exit    | mvp-exit-rsi_mr
+  PSX    | Full Exit    | mvp-exit-rsi_mr
+  PSX    | Full Exit    | mvp-exit-rsi_mr
+  PTC    | Full Exit    | mvp-exit-rsi_mr
+  PTC    | Full Exit    | mvp-exit-rsi_mr
+  PYPL   | Full Exit    | mvp-exit-sma_x
+  PYPL   | Full Exit    | mvp-exit-sma_x
+  QCOM   | Full Exit    | mvp-exit-rsi_mr
+  QCOM   | Full Exit    | mvp-exit-rsi_mr
+  RCL    | Full Exit    | mvp-exit-rsi_mr
+  RCL    | Full Exit    | mvp-exit-rsi_mr
+  REG    | Full Exit    | mvp-exit-rsi_mr
+  REG    | Full Exit    | mvp-exit-rsi_mr
+  RF     | Full Exit    | mvp-exit-rsi_mr
+  RF     | Full Exit    | mvp-exit-rsi_mr
+  RJF    | Full Exit    | mvp-exit-rsi_mr
+  RJF    | Full Exit    | mvp-exit-rsi_mr
+  RL     | Full Exit    | mvp-exit-rsi_mr
+  RL     | Full Exit    | mvp-exit-rsi_mr
+  ROP    | Full Exit    | mvp-exit-sma_x
+  ROP    | Full Exit    | mvp-exit-sma_x
+  ROST   | Full Exit    | mvp-exit-rsi_mr
+  ROST   | Full Exit    | mvp-exit-rsi_mr
+  RSG    | Full Exit    | mvp-exit-sma_x
+  RSG    | Full Exit    | mvp-exit-sma_x
+  RTX    | Full Exit    | mvp-exit-rsi_mr
+  RTX    | Full Exit    | mvp-exit-rsi_mr
+  RVTY   | Full Exit    | mvp-exit-sma_x
+  RVTY   | Full Exit    | mvp-exit-sma_x
+  SBAC   | Full Exit    | mvp-exit-sma_x
+  SBAC   | Full Exit    | mvp-exit-sma_x
+  SHW    | Full Exit    | mvp-exit-rsi_mr
+  SHW    | Full Exit    | mvp-exit-rsi_mr
+  SLB    | Full Exit    | mvp-exit-rsi_mr
+  SLB    | Full Exit    | mvp-exit-rsi_mr
+  SPG    | Full Exit    | mvp-exit-rsi_mr
+  SPG    | Full Exit    | mvp-exit-rsi_mr
+  SRE    | Full Exit    | mvp-exit-rsi_mr
+  SRE    | Full Exit    | mvp-exit-rsi_mr
+  STE    | Full Exit    | mvp-exit-rsi_mr
+  STE    | Full Exit    | mvp-exit-rsi_mr
+  STLD   | Full Exit    | mvp-exit-sma_x
+  STLD   | Full Exit    | mvp-exit-sma_x
+  STT    | Full Exit    | mvp-exit-rsi_mr
+  STT    | Full Exit    | mvp-exit-rsi_mr
+  STX    | Full Exit    | mvp-exit-rsi_mr
+  STX    | Full Exit    | mvp-exit-rsi_mr
+  STZ    | Full Exit    | mvp-exit-sma_x
+  STZ    | Full Exit    | mvp-exit-sma_x
+  SW     | Full Exit    | mvp-exit-rsi_mr
+  SW     | Full Exit    | mvp-exit-rsi_mr
+  SYF    | Full Exit    | mvp-exit-rsi_mr
+  SYF    | Full Exit    | mvp-exit-rsi_mr
+  T      | Full Exit    | mvp-exit-rsi_mr
+  T      | Full Exit    | mvp-exit-rsi_mr
+  TAP    | Full Exit    | mvp-exit-sma_x
+  TAP    | Full Exit    | mvp-exit-sma_x
+  TDG    | Full Exit    | mvp-exit-sma_x
+  TDG    | Full Exit    | mvp-exit-sma_x
+  TEL    | Full Exit    | mvp-exit-rsi_mr
+  TEL    | Full Exit    | mvp-exit-rsi_mr
+  TER    | Full Exit    | mvp-exit-rsi_mr
+  TER    | Full Exit    | mvp-exit-rsi_mr
+  TFC    | Full Exit    | mvp-exit-rsi_mr
+  TFC    | Full Exit    | mvp-exit-rsi_mr
+  TJX    | Full Exit    | mvp-exit-rsi_mr
+  TJX    | Full Exit    | mvp-exit-rsi_mr
+  TKO    | Full Exit    | mvp-exit-rsi_mr
+  TKO    | Full Exit    | mvp-exit-rsi_mr
+  TMO    | Full Exit    | mvp-exit-rsi_mr
+  TMO    | Full Exit    | mvp-exit-rsi_mr
+  TMUS   | Full Exit    | mvp-exit-rsi_mr
+  TMUS   | Full Exit    | mvp-exit-rsi_mr
+  TPL    | Full Exit    | mvp-exit-sma_x
+  TPL    | Full Exit    | mvp-exit-sma_x
+  TRGP   | Full Exit    | mvp-exit-rsi_mr
+  TRGP   | Full Exit    | mvp-exit-rsi_mr
+  TRV    | Full Exit    | mvp-exit-rsi_mr
+  TRV    | Full Exit    | mvp-exit-rsi_mr
+  TSCO   | Full Exit    | mvp-exit-rsi_mr
+  TSCO   | Full Exit    | mvp-exit-rsi_mr
+  TTD    | Full Exit    | mvp-exit-sma_x
+  TTD    | Full Exit    | mvp-exit-sma_x
+  TXN    | Full Exit    | mvp-exit-rsi_mr
+  TXN    | Full Exit    | mvp-exit-rsi_mr
+  UAL    | Full Exit    | mvp-exit-rsi_mr
+  UAL    | Full Exit    | mvp-exit-rsi_mr
+  UDR    | Full Exit    | mvp-exit-sma_x
+  UDR    | Full Exit    | mvp-exit-sma_x
+  UHS    | Full Exit    | mvp-exit-rsi_mr
+  UHS    | Full Exit    | mvp-exit-rsi_mr
+  UNH    | Full Exit    | mvp-exit-rsi_mr
+  UNH    | Full Exit    | mvp-exit-rsi_mr
+  UNP    | Full Exit    | mvp-exit-sma_x
+  UNP    | Full Exit    | mvp-exit-sma_x
+  UPS    | Full Exit    | mvp-exit-sma_x
+  UPS    | Full Exit    | mvp-exit-sma_x
+  URI    | Full Exit    | mvp-exit-rsi_mr
+  URI    | Full Exit    | mvp-exit-rsi_mr
+  USB    | Full Exit    | mvp-exit-rsi_mr
+  USB    | Full Exit    | mvp-exit-rsi_mr
+  V      | Full Exit    | mvp-exit-rsi_mr
+  V      | Full Exit    | mvp-exit-rsi_mr
+  VICI   | Full Exit    | mvp-exit-rsi_mr
+  VICI   | Full Exit    | mvp-exit-rsi_mr
+  VLO    | Full Exit    | mvp-exit-rsi_mr
+  VLO    | Full Exit    | mvp-exit-rsi_mr
+  VMC    | Full Exit    | mvp-exit-rsi_mr
+  VMC    | Full Exit    | mvp-exit-rsi_mr
+  VRSK   | Full Exit    | mvp-exit-sma_x
+  VRSK   | Full Exit    | mvp-exit-sma_x
+  VRSN   | Full Exit    | mvp-exit-sma_x
+  VRSN   | Full Exit    | mvp-exit-sma_x
+  VRTX   | Full Exit    | mvp-exit-sma_x
+  VRTX   | Full Exit    | mvp-exit-sma_x
+  VTRS   | Full Exit    | mvp-exit-rsi_mr
+  VTRS   | Full Exit    | mvp-exit-rsi_mr
+  VZ     | Full Exit    | mvp-exit-rsi_mr
+  VZ     | Full Exit    | mvp-exit-rsi_mr
+  WAB    | Full Exit    | mvp-exit-sma_x
+  WAB    | Full Exit    | mvp-exit-sma_x
+  WAT    | Full Exit    | mvp-exit-sma_x
+  WAT    | Full Exit    | mvp-exit-sma_x
+  WBA    | Full Exit    | mvp-exit-rsi_mr
+  WBA    | Full Exit    | mvp-exit-rsi_mr
+  WDAY   | Full Exit    | mvp-exit-sma_x
+  WDAY   | Full Exit    | mvp-exit-sma_x
+  WDC    | Full Exit    | mvp-exit-rsi_mr
+  WDC    | Full Exit    | mvp-exit-rsi_mr
+  WELL   | Full Exit    | mvp-exit-rsi_mr
+  WELL   | Full Exit    | mvp-exit-rsi_mr
+  WFC    | Full Exit    | mvp-exit-rsi_mr
+  WFC    | Full Exit    | mvp-exit-rsi_mr
+  WM     | Full Exit    | mvp-exit-sma_x
+  WM     | Full Exit    | mvp-exit-sma_x
+  WMB    | Full Exit    | mvp-exit-sma_x
+  WMB    | Full Exit    | mvp-exit-sma_x
+  WRB    | Full Exit    | mvp-exit-rsi_mr
+  WRB    | Full Exit    | mvp-exit-rsi_mr
+  WST    | Full Exit    | mvp-exit-rsi_mr
+  WST    | Full Exit    | mvp-exit-rsi_mr
+  WY     | Full Exit    | mvp-exit-sma_x
+  WY     | Full Exit    | mvp-exit-sma_x
+  WYNN   | Full Exit    | mvp-exit-rsi_mr
+  WYNN   | Full Exit    | mvp-exit-rsi_mr
+  XOM    | Full Exit    | mvp-exit-rsi_mr
+  XOM    | Full Exit    | mvp-exit-rsi_mr
+  YUM    | Full Exit    | mvp-exit-sma_x
+  YUM    | Full Exit    | mvp-exit-sma_x
+  ZBH    | Full Exit    | mvp-exit-rsi_mr
+  ZBH    | Full Exit    | mvp-exit-rsi_mr
+  ZTS    | Full Exit    | mvp-exit-rsi_mr
+  ZTS    | Full Exit    | mvp-exit-rsi_mr
+
+BLOCKED BUY ORDERS (308):
+  AEE    | Market Gate Block | market_gate_block
+  AEE    | Market Gate Block | market_gate_block
+  AEP    | Market Gate Block | market_gate_block
+  AEP    | Market Gate Block | market_gate_block
+  ALL    | Market Gate Block | market_gate_block
+  ALL    | Market Gate Block | market_gate_block
+  AMAT   | Market Gate Block | market_gate_block
+  AMAT   | Market Gate Block | market_gate_block
+  AMD    | Market Gate Block | market_gate_block
+  AMD    | Market Gate Block | market_gate_block
+  AME    | Market Gate Block | market_gate_block
+  AME    | Market Gate Block | market_gate_block
+  AMGN   | Market Gate Block | market_gate_block
+  AMGN   | Market Gate Block | market_gate_block
+  AMP    | Market Gate Block | market_gate_block
+  AMP    | Market Gate Block | market_gate_block
+  AMZN   | Market Gate Block | market_gate_block
+  AMZN   | Market Gate Block | market_gate_block
+  AON    | Market Gate Block | market_gate_block
+  AON    | Market Gate Block | market_gate_block
+  AOS    | Market Gate Block | market_gate_block
+  AOS    | Market Gate Block | market_gate_block
+  APD    | Market Gate Block | market_gate_block
+  APD    | Market Gate Block | market_gate_block
+  APH    | Market Gate Block | market_gate_block
+  APH    | Market Gate Block | market_gate_block
+  APO    | Market Gate Block | market_gate_block
+  APO    | Market Gate Block | market_gate_block
+  AVGO   | Market Gate Block | market_gate_block
+  AVGO   | Market Gate Block | market_gate_block
+  AWK    | Market Gate Block | market_gate_block
+  AWK    | Market Gate Block | market_gate_block
+  AXON   | Market Gate Block | market_gate_block
+  AXON   | Market Gate Block | market_gate_block
+  BDX    | Market Gate Block | market_gate_block
+  BDX    | Market Gate Block | market_gate_block
+  BIIB   | Market Gate Block | market_gate_block
+  BIIB   | Market Gate Block | market_gate_block
+  BKNG   | Market Gate Block | market_gate_block
+  BKNG   | Market Gate Block | market_gate_block
+  BLDR   | Market Gate Block | market_gate_block
+  BLDR   | Market Gate Block | market_gate_block
+  BLK    | Market Gate Block | market_gate_block
+  BLK    | Market Gate Block | market_gate_block
+  BR     | Market Gate Block | market_gate_block
+  BR     | Market Gate Block | market_gate_block
+  BSX    | Market Gate Block | market_gate_block
+  BSX    | Market Gate Block | market_gate_block
+  BX     | Market Gate Block | market_gate_block
+  BX     | Market Gate Block | market_gate_block
+  CAT    | Market Gate Block | market_gate_block
+  CAT    | Market Gate Block | market_gate_block
+  CBOE   | Market Gate Block | market_gate_block
+  CBOE   | Market Gate Block | market_gate_block
+  CCI    | Market Gate Block | market_gate_block
+  CCI    | Market Gate Block | market_gate_block
+  CDNS   | Market Gate Block | market_gate_block
+  CDNS   | Market Gate Block | market_gate_block
+  CEG    | Market Gate Block | market_gate_block
+  CEG    | Market Gate Block | market_gate_block
+  CINF   | Market Gate Block | market_gate_block
+  CINF   | Market Gate Block | market_gate_block
+  CME    | Market Gate Block | market_gate_block
+  CME    | Market Gate Block | market_gate_block
+  CMS    | Market Gate Block | market_gate_block
+  CMS    | Market Gate Block | market_gate_block
+  CNP    | Market Gate Block | market_gate_block
+  CNP    | Market Gate Block | market_gate_block
+  COIN   | Market Gate Block | market_gate_block
+  COIN   | Market Gate Block | market_gate_block
+  COR    | Market Gate Block | market_gate_block
+  COR    | Market Gate Block | market_gate_block
+  CSCO   | Market Gate Block | market_gate_block
+  CSCO   | Market Gate Block | market_gate_block
+  CSGP   | Market Gate Block | market_gate_block
+  CSGP   | Market Gate Block | market_gate_block
+  CSX    | Market Gate Block | market_gate_block
+  CSX    | Market Gate Block | market_gate_block
+  CTAS   | Market Gate Block | market_gate_block
+  CTAS   | Market Gate Block | market_gate_block
+  D      | Market Gate Block | market_gate_block
+  D      | Market Gate Block | market_gate_block
+  DASH   | Market Gate Block | market_gate_block
+  DASH   | Market Gate Block | market_gate_block
+  DDOG   | Market Gate Block | market_gate_block
+  DDOG   | Market Gate Block | market_gate_block
+  DELL   | Market Gate Block | market_gate_block
+  DELL   | Market Gate Block | market_gate_block
+  DG     | Market Gate Block | market_gate_block
+  DG     | Market Gate Block | market_gate_block
+  DHR    | Market Gate Block | market_gate_block
+  DHR    | Market Gate Block | market_gate_block
+  DIS    | Market Gate Block | market_gate_block
+  DIS    | Market Gate Block | market_gate_block
+  DLR    | Market Gate Block | market_gate_block
+  DLR    | Market Gate Block | market_gate_block
+  DLTR   | Market Gate Block | market_gate_block
+  DLTR   | Market Gate Block | market_gate_block
+  DOV    | Market Gate Block | market_gate_block
+  DOV    | Market Gate Block | market_gate_block
+  DTE    | Market Gate Block | market_gate_block
+  DTE    | Market Gate Block | market_gate_block
+  DUK    | Market Gate Block | market_gate_block
+  DUK    | Market Gate Block | market_gate_block
+  EBAY   | Market Gate Block | market_gate_block
+  EBAY   | Market Gate Block | market_gate_block
+  ECL    | Market Gate Block | market_gate_block
+  ECL    | Market Gate Block | market_gate_block
+  EL     | Market Gate Block | market_gate_block
+  EL     | Market Gate Block | market_gate_block
+  EMR    | Market Gate Block | market_gate_block
+  EMR    | Market Gate Block | market_gate_block
+  ES     | Market Gate Block | market_gate_block
+  ES     | Market Gate Block | market_gate_block
+  ETN    | Market Gate Block | market_gate_block
+  ETN    | Market Gate Block | market_gate_block
+  ETR    | Market Gate Block | market_gate_block
+  ETR    | Market Gate Block | market_gate_block
+  EVRG   | Market Gate Block | market_gate_block
+  EVRG   | Market Gate Block | market_gate_block
+  EXC    | Market Gate Block | market_gate_block
+  EXC    | Market Gate Block | market_gate_block
+  FDX    | Market Gate Block | market_gate_block
+  FDX    | Market Gate Block | market_gate_block
+  FFIV   | Market Gate Block | market_gate_block
+  FFIV   | Market Gate Block | market_gate_block
+  FSLR   | Market Gate Block | market_gate_block
+  FSLR   | Market Gate Block | market_gate_block
+  GEHC   | Market Gate Block | market_gate_block
+  GEHC   | Market Gate Block | market_gate_block
+  GEN    | Market Gate Block | market_gate_block
+  GEN    | Market Gate Block | market_gate_block
+  GEV    | Market Gate Block | market_gate_block
+  GEV    | Market Gate Block | market_gate_block
+  GILD   | Market Gate Block | market_gate_block
+  GILD   | Market Gate Block | market_gate_block
+  GNRC   | Market Gate Block | market_gate_block
+  GNRC   | Market Gate Block | market_gate_block
+  HOLX   | Market Gate Block | market_gate_block
+  HOLX   | Market Gate Block | market_gate_block
+  HUBB   | Market Gate Block | market_gate_block
+  HUBB   | Market Gate Block | market_gate_block
+  HWM    | Market Gate Block | market_gate_block
+  HWM    | Market Gate Block | market_gate_block
+  IBKR   | Market Gate Block | market_gate_block
+  IBKR   | Market Gate Block | market_gate_block
+  ICE    | Market Gate Block | market_gate_block
+  ICE    | Market Gate Block | market_gate_block
+  INTU   | Market Gate Block | market_gate_block
+  INTU   | Market Gate Block | market_gate_block
+  J      | Market Gate Block | market_gate_block
+  J      | Market Gate Block | market_gate_block
+  JBHT   | Market Gate Block | market_gate_block
+  JBHT   | Market Gate Block | market_gate_block
+  JBL    | Market Gate Block | market_gate_block
+  JBL    | Market Gate Block | market_gate_block
+  JCI    | Market Gate Block | market_gate_block
+  JCI    | Market Gate Block | market_gate_block
+  KEYS   | Market Gate Block | market_gate_block
+  KEYS   | Market Gate Block | market_gate_block
+  KKR    | Market Gate Block | market_gate_block
+  KKR    | Market Gate Block | market_gate_block
+  KLAC   | Market Gate Block | market_gate_block
+  KLAC   | Market Gate Block | market_gate_block
+  KR     | Market Gate Block | market_gate_block
+  KR     | Market Gate Block | market_gate_block
+  LII    | Market Gate Block | market_gate_block
+  LII    | Market Gate Block | market_gate_block
+  LIN    | Market Gate Block | market_gate_block
+  LIN    | Market Gate Block | market_gate_block
+  LNT    | Market Gate Block | market_gate_block
+  LNT    | Market Gate Block | market_gate_block
+  LRCX   | Market Gate Block | market_gate_block
+  LRCX   | Market Gate Block | market_gate_block
+  MAR    | Market Gate Block | market_gate_block
+  MAR    | Market Gate Block | market_gate_block
+  MCHP   | Market Gate Block | market_gate_block
+  MCHP   | Market Gate Block | market_gate_block
+  MCO    | Market Gate Block | market_gate_block
+  MCO    | Market Gate Block | market_gate_block
+  META   | Market Gate Block | market_gate_block
+  META   | Market Gate Block | market_gate_block
+  MMM    | Market Gate Block | market_gate_block
+  MMM    | Market Gate Block | market_gate_block
+  MNST   | Market Gate Block | market_gate_block
+  MNST   | Market Gate Block | market_gate_block
+  MRK    | Market Gate Block | market_gate_block
+  MRK    | Market Gate Block | market_gate_block
+  MSCI   | Market Gate Block | market_gate_block
+  MSCI   | Market Gate Block | market_gate_block
+  MU     | Market Gate Block | market_gate_block
+  MU     | Market Gate Block | market_gate_block
+  NDAQ   | Market Gate Block | market_gate_block
+  NDAQ   | Market Gate Block | market_gate_block
+  NEE    | Market Gate Block | market_gate_block
+  NEE    | Market Gate Block | market_gate_block
+  NFLX   | Market Gate Block | market_gate_block
+  NFLX   | Market Gate Block | market_gate_block
+  NI     | Market Gate Block | market_gate_block
+  NI     | Market Gate Block | market_gate_block
+  NRG    | Market Gate Block | market_gate_block
+  NRG    | Market Gate Block | market_gate_block
+  NSC    | Market Gate Block | market_gate_block
+  NSC    | Market Gate Block | market_gate_block
+  NWS    | Market Gate Block | market_gate_block
+  NWS    | Market Gate Block | market_gate_block
+  NWSA   | Market Gate Block | market_gate_block
+  NWSA   | Market Gate Block | market_gate_block
+  ON     | Market Gate Block | market_gate_block
+  ON     | Market Gate Block | market_gate_block
+  ORCL   | Market Gate Block | market_gate_block
+  ORCL   | Market Gate Block | market_gate_block
+  PCAR   | Market Gate Block | market_gate_block
+  PCAR   | Market Gate Block | market_gate_block
+  PEG    | Market Gate Block | market_gate_block
+  PEG    | Market Gate Block | market_gate_block
+  PFE    | Market Gate Block | market_gate_block
+  PFE    | Market Gate Block | market_gate_block
+  PLTR   | Market Gate Block | market_gate_block
+  PLTR   | Market Gate Block | market_gate_block
+  PNW    | Market Gate Block | market_gate_block
+  PNW    | Market Gate Block | market_gate_block
+  POOL   | Market Gate Block | market_gate_block
+  POOL   | Market Gate Block | market_gate_block
+  PPL    | Market Gate Block | market_gate_block
+  PPL    | Market Gate Block | market_gate_block
+  PWR    | Market Gate Block | market_gate_block
+  PWR    | Market Gate Block | market_gate_block
+  REGN   | Market Gate Block | market_gate_block
+  REGN   | Market Gate Block | market_gate_block
+  RMD    | Market Gate Block | market_gate_block
+  RMD    | Market Gate Block | market_gate_block
+  ROK    | Market Gate Block | market_gate_block
+  ROK    | Market Gate Block | market_gate_block
+  ROL    | Market Gate Block | market_gate_block
+  ROL    | Market Gate Block | market_gate_block
+  SBUX   | Market Gate Block | market_gate_block
+  SBUX   | Market Gate Block | market_gate_block
+  SCHW   | Market Gate Block | market_gate_block
+  SCHW   | Market Gate Block | market_gate_block
+  SJM    | Market Gate Block | market_gate_block
+  SJM    | Market Gate Block | market_gate_block
+  SMCI   | Market Gate Block | market_gate_block
+  SMCI   | Market Gate Block | market_gate_block
+  SNA    | Market Gate Block | market_gate_block
+  SNA    | Market Gate Block | market_gate_block
+  SNPS   | Market Gate Block | market_gate_block
+  SNPS   | Market Gate Block | market_gate_block
+  SO     | Market Gate Block | market_gate_block
+  SO     | Market Gate Block | market_gate_block
+  SOLV   | Market Gate Block | market_gate_block
+  SOLV   | Market Gate Block | market_gate_block
+  SPGI   | Market Gate Block | market_gate_block
+  SPGI   | Market Gate Block | market_gate_block
+  SWK    | Market Gate Block | market_gate_block
+  SWK    | Market Gate Block | market_gate_block
+  SWKS   | Market Gate Block | market_gate_block
+  SWKS   | Market Gate Block | market_gate_block
+  SYK    | Market Gate Block | market_gate_block
+  SYK    | Market Gate Block | market_gate_block
+  SYY    | Market Gate Block | market_gate_block
+  SYY    | Market Gate Block | market_gate_block
+  TDY    | Market Gate Block | market_gate_block
+  TDY    | Market Gate Block | market_gate_block
+  TECH   | Market Gate Block | market_gate_block
+  TECH   | Market Gate Block | market_gate_block
+  TGT    | Market Gate Block | market_gate_block
+  TGT    | Market Gate Block | market_gate_block
+  TPR    | Market Gate Block | market_gate_block
+  TPR    | Market Gate Block | market_gate_block
+  TRMB   | Market Gate Block | market_gate_block
+  TRMB   | Market Gate Block | market_gate_block
+  TROW   | Market Gate Block | market_gate_block
+  TROW   | Market Gate Block | market_gate_block
+  TT     | Market Gate Block | market_gate_block
+  TT     | Market Gate Block | market_gate_block
+  TTWO   | Market Gate Block | market_gate_block
+  TTWO   | Market Gate Block | market_gate_block
+  TXT    | Market Gate Block | market_gate_block
+  TXT    | Market Gate Block | market_gate_block
+  TYL    | Market Gate Block | market_gate_block
+  TYL    | Market Gate Block | market_gate_block
+  UBER   | Market Gate Block | market_gate_block
+  UBER   | Market Gate Block | market_gate_block
+  ULTA   | Market Gate Block | market_gate_block
+  ULTA   | Market Gate Block | market_gate_block
+  VLTO   | Market Gate Block | market_gate_block
+  VLTO   | Market Gate Block | market_gate_block
+  VST    | Market Gate Block | market_gate_block
+  VST    | Market Gate Block | market_gate_block
+  VTR    | Market Gate Block | market_gate_block
+  VTR    | Market Gate Block | market_gate_block
+  WBD    | Market Gate Block | market_gate_block
+  WBD    | Market Gate Block | market_gate_block
+  WEC    | Market Gate Block | market_gate_block
+  WEC    | Market Gate Block | market_gate_block
+  WMT    | Market Gate Block | market_gate_block
+  WMT    | Market Gate Block | market_gate_block
+  WSM    | Market Gate Block | market_gate_block
+  WSM    | Market Gate Block | market_gate_block
+  WTW    | Market Gate Block | market_gate_block
+  WTW    | Market Gate Block | market_gate_block
+  XEL    | Market Gate Block | market_gate_block
+  XEL    | Market Gate Block | market_gate_block
+  XYL    | Market Gate Block | market_gate_block
+  XYL    | Market Gate Block | market_gate_block
+  ZBRA   | Market Gate Block | market_gate_block
+  ZBRA   | Market Gate Block | market_gate_block
+
+FILTERED SYMBOLS DETAIL
+----------------------------------------
+  A      | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ABBV   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ABNB   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ABT    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ACGL   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ACN    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ADBE   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ADI    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ADM    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ADP    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ADSK   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  AEE    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AEP    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AES    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  AFL    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  AIG    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  AIZ    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  AJG    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  AKAM   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ALB    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ALGN   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ALL    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ALLE   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  AMAT   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AMCR   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  AMD    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AME    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AMGN   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AMP    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AMT    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  AMZN   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ANET   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  AON    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AOS    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  APA    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  APD    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  APH    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  APO    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  APTV   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ARE    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ATO    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  AVB    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  AVGO   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AVY    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  AWK    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AXON   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  AXP    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  AZO    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  BA     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  BAC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  BALL   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  BAX    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  BBY    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  BDX    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  BEN    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  BF.B   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  BG     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  BIIB   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  BK     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  BKNG   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  BKR    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  BLDR   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  BLK    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  BMY    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  BR     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  BRK.B  | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  BRO    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  BSX    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  BX     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  BXP    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  C      | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CAG    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CAH    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CARR   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CAT    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CB     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CBOE   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CBRE   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CCI    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CCL    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CDNS   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CDW    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CEG    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CF     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CFG    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CHD    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CHRW   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CHTR   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CI     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CINF   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CL     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CLX    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CMCSA  | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CME    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CMG    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CMI    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CMS    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CNC    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CNP    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  COF    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  COIN   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  COO    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  COP    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  COR    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  COST   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CPAY   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CPB    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CPRT   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CPT    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CRL    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CRM    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CRWD   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CSCO   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CSGP   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CSX    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CTAS   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  CTRA   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CTSH   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  CTVA   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CVS    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CVX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  CZR    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  D      | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DAL    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  DASH   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DAY    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  DD     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  DDOG   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DECK   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  DELL   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DG     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DGX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  DHI    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  DHR    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DIS    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DLR    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DLTR   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DOC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  DOV    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DOW    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  DPZ    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  DRI    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  DTE    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DUK    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  DVA    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  DVN    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  DXCM   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  EA     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EBAY   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ECL    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ED     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  EFX    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  EG     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EIX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EL     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ELV    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EMN    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  EMR    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ENPH   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EOG    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EPAM   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EQIX   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  EQR    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EQT    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ERIE   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ES     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ESS    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ETN    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ETR    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  EVRG   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  EW     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EXC    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  EXE    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  EXPD   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EXPE   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  EXR    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  F      | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  FANG   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  FAST   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  FCX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  FDS    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  FDX    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  FE     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  FFIV   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  FI     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  FICO   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  FIS    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  FITB   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  FOX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  FOXA   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  FRT    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  FSLR   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  FTNT   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  FTV    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  GD     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  GDDY   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  GE     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  GEHC   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  GEN    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  GEV    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  GILD   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  GIS    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  GL     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  GLW    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  GM     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  GNRC   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  GOOG   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  GPC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  GPN    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  GRMN   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  GS     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  GWW    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  HAL    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HAS    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HBAN   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HCA    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HD     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HIG    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HII    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HLT    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HOLX   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  HON    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  HPE    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HPQ    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HRL    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  HSIC   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  HST    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HSY    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HUBB   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  HUM    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  HWM    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  IBKR   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  IBM    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ICE    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  IDXX   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  IEX    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  IFF    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  INCY   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  INTC   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  INTU   | market_gate_block    | Buy signal blocked by bear market filter (RSI_MR)
+  INVH   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  IP     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  IPG    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  IQV    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  IR     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  IRM    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ISRG   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  IT     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ITW    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  IVZ    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  J      | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  JBHT   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  JBL    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  JCI    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  JKHY   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  JNJ    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  JPM    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  K      | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  KDP    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  KEY    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  KEYS   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  KIM    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  KKR    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  KLAC   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  KMB    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  KMI    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  KMX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  KO     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  KR     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  KVUE   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  L      | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  LDOS   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  LEN    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  LH     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  LHX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  LII    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  LIN    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  LKQ    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  LLY    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  LMT    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  LNT    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  LOW    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  LRCX   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  LULU   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  LUV    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  LVS    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  LW     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  LYB    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  LYV    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MA     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MAA    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MAR    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  MAS    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MCD    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MCHP   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  MCK    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  MCO    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  MDLZ   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  MDT    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MET    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  META   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  MGM    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MHK    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MKC    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  MKTX   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  MLM    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MMC    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  MMM    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  MNST   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  MO     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MOH    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  MOS    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  MPC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MPWR   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MRK    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  MRNA   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  MS     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MSCI   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  MSI    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MTB    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MTCH   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MTD    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  MU     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  NCLH   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  NDAQ   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  NDSN   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  NEE    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  NEM    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  NFLX   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  NI     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  NKE    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  NOC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  NOW    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  NRG    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  NSC    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  NTAP   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  NTRS   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  NUE    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  NVR    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  NWS    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  NWSA   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  NXPI   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  O      | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ODFL   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  OKE    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  OMC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ON     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ORCL   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ORLY   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  OTIS   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  OXY    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PANW   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PAYC   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  PAYX   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  PCAR   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  PCG    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PEG    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  PEP    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PFE    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  PFG    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PG     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  PGR    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  PH     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PHM    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PKG    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PLD    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PLTR   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  PM     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  PNC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PNR    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PNW    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  PODD   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  POOL   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  PPG    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  PPL    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  PRU    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PSA    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PSX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PTC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  PWR    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  PYPL   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  QCOM   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  RCL    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  REG    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  REGN   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  RF     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  RJF    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  RL     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  RMD    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ROK    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ROL    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ROP    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ROST   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  RSG    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  RTX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  RVTY   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  SBAC   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  SBUX   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SCHW   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SHW    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  SJM    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SLB    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  SMCI   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SNA    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SNPS   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SO     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SOLV   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SPG    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  SPGI   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SRE    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  STE    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  STLD   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  STT    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  STX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  STZ    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  SW     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  SWK    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SWKS   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SYF    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  SYK    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  SYY    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  T      | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TAP    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  TDG    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  TDY    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  TECH   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  TEL    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TER    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TFC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TGT    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  TJX    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TKO    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TMO    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TMUS   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TPL    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  TPR    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  TRGP   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TRMB   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  TROW   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  TRV    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TSCO   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TT     | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  TTD    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  TTWO   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  TXN    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  TXT    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  TYL    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  UAL    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  UBER   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  UDR    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  UHS    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ULTA   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  UNH    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  UNP    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  UPS    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  URI    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  USB    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  V      | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  VICI   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  VLO    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  VLTO   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  VMC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  VRSK   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  VRSN   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  VRTX   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  VST    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  VTR    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  VTRS   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  VZ     | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  WAB    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  WAT    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  WBA    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  WBD    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  WDAY   | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  WDC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  WEC    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  WELL   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  WFC    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  WM     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  WMB    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  WMT    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  WRB    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  WSM    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  WST    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  WTW    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  WY     | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  WYNN   | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  XEL    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  XOM    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  XYL    | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  YUM    | no_position_to_sell  | Sell signal but no current position (SMA_X)
+  ZBH    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+  ZBRA   | market_gate_block    | Buy signal blocked by bear market filter (SMA_X)
+  ZTS    | no_position_to_sell  | Sell signal but no current position (RSI_MR)
+
+================================================================================
+End of Report
