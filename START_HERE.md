@@ -1,36 +1,36 @@
-# 🚀 RapidTrader - START HERE
+# RapidTrader - Getting Started
 
-**Welcome to RapidTrader - Your Complete Algorithmic Trading System!**
+**End-of-Day Algorithmic Trading System**
 
-🎯 **System Status**: 100% Complete & Ready for Production Trading
+**Status**: Complete and ready for production trading
 
-## 🌟 What is RapidTrader?
+## Overview
 
-RapidTrader is a **production-ready End-of-Day (EOD) algorithmic trading system** featuring:
+RapidTrader is a production-ready EOD algorithmic trading system featuring:
 
-- **📈 Complete Trading Strategies**: RSI mean-reversion + SMA crossover with confirmation
-- **🛡️ Advanced Risk Management**: Market filter, sector caps, position sizing, stop cooldowns  
-- **📊 Enterprise Data**: 505 S&P 500 symbols with 125K+ bars via Polygon.io
-- **⚙️ Full Automation**: Complete EOD workflow (ingest → trade → report)
-- **🏭 Production Ready**: All components implemented, tested, and operational
+- **Trading Strategies**: RSI mean-reversion + SMA crossover with confirmation
+- **Risk Management**: Market filter, sector caps, position sizing, stop cooldowns
+- **Data Pipeline**: 505 S&P 500 symbols with 125K+ bars via Alpaca Markets (free)
+- **Automation**: Complete EOD workflow (ingest, trade, report)
 
-## ⚡ Quick Start (5 minutes)
+## Quick Start
 
-### 1. Get Your Polygon.io API Key
-- Go to: https://polygon.io/
-- Sign up for account (Stocks Starter recommended for unlimited calls)
-- Copy your API key
+### 1. Get Your Free Alpaca API Key
+- Go to: https://alpaca.markets/
+- Sign up for free paper trading account (no credit card required)
+- Navigate to "Your API Keys" in dashboard
+- Generate and copy both API Key and Secret Key
 
 ### 2. Setup Environment
 ```bash
 # Clone and setup
 git clone <repository-url>
-cd rapidtrader-starter-v4.1
+cd rapid-trader
 python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install -e .
 
-# Configure environment (see docs/POLYGON_SETUP.md for details)
-cp .env.example .env  # Add your API keys
+# Configure environment (see SETUP_ENV_GUIDE.md for details)
+cp .env.example .env  # Add your Alpaca API keys
 ```
 
 ### 3. Run Complete Trading System
@@ -41,7 +41,7 @@ python -m rapidtrader.jobs.eod_ingest --days 300
 # Generate trading signals and create orders
 python -m rapidtrader.jobs.eod_trade --mode dry_run
 
-# Generate daily performance report  
+# Generate daily performance report
 python -m rapidtrader.jobs.eod_report
 ```
 
@@ -55,83 +55,78 @@ python tools/testing/test_indicator_accuracy.py
 python scripts/seed_sp500.py
 ```
 
-**🎉 Congratulations!** You now have a complete algorithmic trading system running with:
-- ✅ Real market data from 505 S&P 500 symbols
-- ✅ Trading signals generated with RSI + SMA strategies  
-- ✅ Risk management and position sizing
-- ✅ Daily performance reports
+After completing these steps, you will have:
+- Real market data from 505 S&P 500 symbols
+- Trading signals generated with RSI + SMA strategies
+- Risk management and position sizing
+- Daily performance reports
 
-## 📚 What's Next?
+## Documentation
 
-### 📖 Understanding the System
-- **📊 System Overview**: [docs/rapidtrader_mvp_spec.md](docs/rapidtrader_mvp_spec.md) - Complete technical specification
-- **📈 Trading Concepts**: [docs/technical_trading_primer.md](docs/technical_trading_primer.md) - Technical analysis primer
-- **📚 Documentation Hub**: [docs/README.md](docs/README.md) - All documentation organized
+### Understanding the System
+- **System Overview**: [docs/rapidtrader_mvp_spec.md](docs/rapidtrader_mvp_spec.md) - Complete technical specification
+- **Trading Concepts**: [docs/technical_trading_primer.md](docs/technical_trading_primer.md) - Technical analysis primer
+- **Documentation Hub**: [docs/README.md](docs/README.md) - All documentation organized
 
-### ⚙️ Setup & Configuration
-- **🔧 Environment Setup**: [docs/environment-setup.md](docs/environment-setup.md) - Development environment
-- **🗄️ Database Setup**: [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) - Database configuration
-- **🔌 API Setup**: [docs/POLYGON_SETUP.md](docs/POLYGON_SETUP.md) - Polygon.io configuration
+### Setup and Configuration
+- **Environment Setup**: [SETUP_ENV_GUIDE.md](SETUP_ENV_GUIDE.md) - API keys and environment configuration
+- **Database Setup**: [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) - Database configuration
+- **Development Environment**: [docs/environment-setup.md](docs/environment-setup.md) - Development tools
 
-### 🚀 Operating the System
-- **📋 Daily Operations**: [docs/runbook.md](docs/runbook.md) - Day-to-day operational procedures
-- **🎛️ System Monitoring**: Monitor job execution and system health
-- **📊 Performance Analysis**: Review daily reports and trading metrics
+### Operating the System
+- **Daily Operations**: [docs/runbook.md](docs/runbook.md) - Day-to-day operational procedures
 
-## 🎯 System Status: **100% Complete & Operational**
+## Implementation Status
 
-### ✅ **Fully Implemented Features**
-- **✅ Complete Trading System**: RSI mean-reversion + SMA crossover strategies
-- **✅ Risk Management**: Market filter, sector caps, position sizing, stop cooldowns
-- **✅ Data Pipeline**: 505 S&P 500 symbols with 125K+ historical bars
-- **✅ Job Framework**: Complete EOD automation (ingest → trade → report)
-- **✅ Database**: All 7 tables operational with comprehensive data model
-- **✅ Production Ready**: Tested, validated, and ready for live trading
+**Fully Implemented Features**:
+- Complete trading system with RSI mean-reversion + SMA crossover strategies
+- Risk management: market filter, sector caps, position sizing, stop cooldowns
+- Data pipeline: 505 S&P 500 symbols with 125K+ historical bars from Alpaca
+- Job framework: complete EOD automation (ingest, trade, report)
+- Database: all 7 tables operational with comprehensive data model
 
-**🎉 The system is complete!** All core functionality has been implemented and tested.
-
-## 🛠️ Usage Workflow
+## Usage Workflow
 
 ### For New Users
-1. **Environment Setup** → [docs/environment-setup.md](docs/environment-setup.md)
-2. **API Configuration** → [docs/POLYGON_SETUP.md](docs/POLYGON_SETUP.md) + [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md)
-3. **Run the System** → Follow Quick Start above
-4. **Daily Operations** → [docs/runbook.md](docs/runbook.md)
+1. **Environment Setup**: [SETUP_ENV_GUIDE.md](SETUP_ENV_GUIDE.md) - Get Alpaca API keys
+2. **Database Configuration**: [docs/SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) - Setup database
+3. **Run the System**: Follow Quick Start above
+4. **Daily Operations**: [docs/runbook.md](docs/runbook.md)
 
 ### For System Customization
-1. **Study Architecture** → [docs/rapidtrader_mvp_spec.md](docs/rapidtrader_mvp_spec.md)
-2. **Understand Implementation** → [docs/MINIMAL_CORE_PACK.md](docs/MINIMAL_CORE_PACK.md)
-3. **Modify Strategies** → See `rapidtrader/strategies/` modules
-4. **Adjust Risk Controls** → See `rapidtrader/risk/` modules
+1. **Study Architecture**: [docs/rapidtrader_mvp_spec.md](docs/rapidtrader_mvp_spec.md)
+2. **Understand Implementation**: [docs/MINIMAL_CORE_PACK.md](docs/MINIMAL_CORE_PACK.md)
+3. **Modify Strategies**: See `rapidtrader/strategies/` modules
+4. **Adjust Risk Controls**: See `rapidtrader/risk/` modules
 
-## 🔧 System Architecture Overview
+## System Architecture
 
 ```
 Data Sources     RapidTrader Core        Database
-┌─────────────┐  ┌─────────────────┐    ┌─────────────┐
-│ Polygon.io  │──│ • Indicators    │────│ PostgreSQL  │
-│ Wikipedia   │  │ • Strategies    │    │ / Supabase  │
-│             │  │ • Risk Mgmt     │    │             │
-└─────────────┘  │ • Jobs          │    └─────────────┘
-                 └─────────────────┘
-                         │
-                 ┌─────────────────┐
-                 │ Outputs         │
-                 │ • Orders        │
-                 │ • Reports       │
-                 │ • Alerts        │
-                 └─────────────────┘
++-----------+    +---------------+       +-----------+
+| Alpaca    |----| - Indicators  |-------| PostgreSQL|
+| (FREE)    |    | - Strategies  |       | / Supabase|
+| FMP (opt) |    | - Risk Mgmt   |       |           |
++-----------+    | - Jobs        |       +-----------+
+                 +---------------+
+                        |
+                 +---------------+
+                 | Outputs       |
+                 | - Orders      |
+                 | - Reports     |
+                 | - Alerts      |
+                 +---------------+
 ```
 
-## 💡 Key Design Principles
+## Design Principles
 
-### Simple & Focused
+### Simple and Focused
 - **EOD-only**: No real-time complexity
 - **S&P 500 only**: Liquid, well-known stocks
 - **Minimal dependencies**: Easy to understand and maintain
 
-### Enterprise-Grade Data
-- **Professional data source**: Polygon.io for institutional-quality market data
+### Free Professional Data
+- **Zero-cost data source**: Alpaca provides institutional-quality market data for free
 - **Complete coverage**: 505 S&P 500 symbols with 125K+ historical bars
 - **Real-time updates**: Daily data ingestion keeps system current
 
@@ -141,20 +136,20 @@ Data Sources     RapidTrader Core        Database
 - **Database persistence**: Full audit trail of all signals and orders
 - **Risk management**: Multi-layer risk controls and position limits
 
-## 📞 Getting Help
+## Getting Help
 
 ### Documentation Navigation
-1. **START_HERE.md** ← You are here  
-2. **[docs/README.md](docs/README.md)** - Documentation hub
-3. **[docs/environment-setup.md](docs/environment-setup.md)** - Setup guide
+1. **START_HERE.md** - You are here
+2. **[SETUP_ENV_GUIDE.md](SETUP_ENV_GUIDE.md)** - Environment and API setup
+3. **[docs/README.md](docs/README.md)** - Documentation hub
 4. **[docs/rapidtrader_mvp_spec.md](docs/rapidtrader_mvp_spec.md)** - Complete specification
 5. **[docs/runbook.md](docs/runbook.md)** - Operations guide
 
 ### Common Questions
-- **"How do I get started?"** → Follow the Quick Start above
-- **"How does the system work?"** → Read [docs/rapidtrader_mvp_spec.md](docs/rapidtrader_mvp_spec.md)
-- **"How do I operate it daily?"** → Check [docs/runbook.md](docs/runbook.md)
-- **"Can I customize strategies?"** → See `rapidtrader/strategies/` modules
+- **"How do I get started?"** - Follow the Quick Start above
+- **"How does the system work?"** - Read [docs/rapidtrader_mvp_spec.md](docs/rapidtrader_mvp_spec.md)
+- **"How do I operate it daily?"** - Check [docs/runbook.md](docs/runbook.md)
+- **"Can I customize strategies?"** - See `rapidtrader/strategies/` modules
 
 ### System Organization
 - **docs/**: All user documentation and guides
@@ -162,6 +157,9 @@ Data Sources     RapidTrader Core        Database
 - **scripts/**: Setup and utility scripts
 - **tools/**: Testing and validation utilities
 
----
+## Cost Savings
 
-**🎉 Ready to start systematic trading?** Your complete algorithmic trading system awaits! 🚀
+RapidTrader now uses **100% free market data** from Alpaca:
+- **Alpaca Paper Trading**: Free historical and real-time data
+- **Optional FMP**: Free 250 requests/day for sector data
+- **Total Monthly Cost**: $0 (previously $199/month)

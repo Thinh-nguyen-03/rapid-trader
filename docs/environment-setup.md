@@ -1,24 +1,23 @@
-# Environment Setup Guide
+# Development Environment Setup
 
-Complete setup instructions for RapidTrader development environment.
-
-**🎯 Current Status**: ✅ **COMPLETE & OPERATIONAL** - Full algorithmic trading system ready for production use.
+Complete setup guide for RapidTrader development environment.
 
 ## Prerequisites
 
 - Python 3.11 or higher
 - PostgreSQL or Supabase account
 - Git
+- Alpaca paper trading account (free)
 
-## Development Setup
+## Quick Setup
 
-### 1. Clone and Setup Virtual Environment
+### 1. Clone and Create Virtual Environment
 
 ```bash
 git clone <repository-url>
-cd rapidtrader-starter-v4.1
+cd rapid-trader
 python -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
 ```
 
 ### 2. Install Dependencies
@@ -28,167 +27,181 @@ pip install --upgrade pip
 pip install -e .
 ```
 
-### 3. Database Setup
+This installs:
+- alpaca-py (market data & trading)
+- pandas-market-calendars (market holidays)
+- requests (FMP API)
+- SQLAlchemy, pandas, numpy (core dependencies)
 
-#### Option A: Supabase (Recommended)
-1. Create account at https://supabase.com
-2. Create new project
-3. Copy connection string
-4. Run database schema
+### 3. Configure Environment
 
-#### Option B: Local PostgreSQL
-1. Install PostgreSQL
-2. Create database
-3. Configure connection
+See [SETUP_ENV_GUIDE.md](../SETUP_ENV_GUIDE.md) for detailed API setup instructions.
 
-### 4. Environment Configuration
-
-Create `.env` file:
+Quick `.env` template:
 ```bash
 # Database
-RT_DB_URL=postgresql+psycopg://user:pass@host:port/database
+RT_DB_URL=postgresql+psycopg://postgres:postgres@localhost:5432/rapidtrader
 
-# API Keys
-RT_POLYGON_API_KEY=your_polygon_api_key_here
+# Alpaca API (required - free)
+RT_ALPACA_API_KEY=your_alpaca_api_key
+RT_ALPACA_SECRET_KEY=your_alpaca_secret_key
+RT_ALPACA_PAPER=True
+RT_ALPACA_ENDPOINT=https://paper-api.alpaca.markets
 
-# Trading Parameters
-RT_START_CAPITAL=100000.0
-RT_PCT_PER_TRADE=0.05
-RT_DAILY_RISK_CAP=0.005
-RT_MAX_EXPOSURE_PER_SECTOR=0.30
-
-# Market Filter
-RT_MARKET_FILTER_ENABLE=1
-RT_MARKET_FILTER_SMA=200
-RT_MARKET_FILTER_SYMBOL=SPY
-
-# Signal Confirmation
-RT_ENABLE_SIGNAL_CONFIRM=1
-RT_CONFIRM_WINDOW=3
-RT_CONFIRM_MIN_COUNT=2
-
-# ATR Stops
-RT_ENABLE_ATR_STOP=1
-RT_ATR_LOOKBACK=14
-RT_ATR_STOP_K=3.0
-RT_COOLDOWN_DAYS_ON_STOP=1
+# FMP API (optional - for sector data)
+RT_FMP_API_KEY=your_fmp_key_or_leave_blank
 ```
 
-### 5. Database Schema
+### 4. Database Setup
 
+#### Option A: Supabase (Recommended)
+See [SUPABASE_SETUP.md](SUPABASE_SETUP.md) for complete instructions.
+
+#### Option B: Local PostgreSQL
 ```bash
-# Apply database schema
-python scripts/setup_db.sql
+# Install PostgreSQL
+# Create database
+createdb rapidtrader
+
+# Run schema (if you have setup script)
+psql rapidtrader < scripts/schema.sql
 ```
 
-### 6. Verify Installation ✅ **COMPLETE**
+### 5. Verify Installation
 
 ```bash
+# Test Alpaca connection
+python test_alpaca_migration.py
+
 # Test database connectivity
 python tools/testing/test_database_connection.py
 
-# Validate indicator accuracy with real market data
-python tools/testing/test_indicator_accuracy.py
-
-# Seed S&P 500 symbols (already complete - 505 symbols loaded)
-python scripts/seed_sp500.py
+# Load S&P 500 symbols
+python scripts/update_database.py --quick
 ```
-
-### ✅ **Current Validation Status**
-- **Database**: ✅ Supabase operational with all tables created
-- **Indicators**: ✅ ALL TESTS PASSED - SMA, RSI, ATR validated with 70 AAPL bars
-- **Data Pipeline**: ✅ 125,092 historical bars collected across 505 symbols
-- **API Integration**: ✅ Polygon.io connectivity verified
-- **Configuration**: ✅ All RT_ parameters operational
 
 ## Development Tools
 
-### Testing ✅ **VALIDATED**
-```bash
-# Core system testing (all validated)
-python tools/testing/test_database_connection.py    # ✅ Database connectivity 
-python tools/testing/test_indicator_accuracy.py     # ✅ All indicators tested
-
-# Future testing (when strategies implemented)
-python -m pytest tests/
-```
-
 ### Code Quality
+
 ```bash
-# Install development dependencies
-pip install black flake8 mypy
+# Install dev dependencies
+pip install black flake8 mypy pytest
 
 # Format code
 black rapidtrader/
 
-# Lint code
+# Lint
 flake8 rapidtrader/
 
-# Type checking
+# Type check
 mypy rapidtrader/
 ```
 
-### Database Management
-```bash
-# Backup database
-pg_dump $RT_DB_URL > backup.sql
+### Testing
 
-# Restore database
-psql $RT_DB_URL < backup.sql
+```bash
+# Test database
+python tools/testing/test_database_connection.py
+
+# Test indicators
+python tools/testing/test_indicator_accuracy.py
+
+# Run unit tests (if available)
+pytest tests/
 ```
 
-## Common Issues
+### Database Management
 
-### 1. Database Connection Errors
-- Verify connection string format
-- Check firewall settings
-- Ensure database exists
+```bash
+# Backup database
+pg_dump $RT_DB_URL > backup_$(date +%Y%m%d).sql
 
-### 2. Missing Dependencies
-- Activate virtual environment
-- Reinstall with `pip install -e .`
+# Restore database
+psql $RT_DB_URL < backup_20260123.sql
 
-### 3. API Key Issues
-- Verify Polygon.io API key is valid
-- Check rate limits (1,000/month free tier)
-- Ensure .env file is loaded
+# Check data
+python scripts/update_database.py --quick
+```
 
-### 4. Import Errors
-- Install package in development mode: `pip install -e .`
-- Check Python path
-- Verify __init__.py files exist
+## IDE Configuration
 
-## IDE Setup
+### VS Code (Recommended)
 
-### VS Code
-Recommended extensions:
-- Python
-- PostgreSQL
+**Extensions:**
+- Python (Microsoft)
+- PostgreSQL (Chris Kolkman)
 - GitLens
 - Python Docstring Generator
 
-### PyCharm
-1. Open project
-2. Configure Python interpreter to use virtual environment
-3. Set up database connection
-4. Configure code style (Black)
+**.vscode/settings.json:**
+```json
+{
+  "python.formatting.provider": "black",
+  "python.linting.enabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.testing.pytestEnabled": true
+}
+```
 
-## Production Deployment
+### PyCharm
+
+1. Open project folder
+2. Configure interpreter: Settings → Project → Python Interpreter → Select .venv
+3. Enable Black formatter: Settings → Tools → Black
+4. Configure database: Database tool window → Add PostgreSQL
+
+## Common Issues
+
+### Database Connection Failed
+- Check connection string format in `.env`
+- Verify PostgreSQL is running: `pg_isready`
+- Test with: `python tools/testing/test_database_connection.py`
+
+### API Authentication Error
+- Verify Alpaca credentials in `.env`
+- Test with: `python test_alpaca_migration.py`
+- Regenerate keys if needed at alpaca.markets
+
+### Import Errors
+- Ensure package installed: `pip install -e .`
+- Activate venv: `source .venv/bin/activate`
+- Check Python version: `python --version` (must be 3.11+)
+
+### Missing Dependencies
+```bash
+# Reinstall all dependencies
+pip install --upgrade pip
+pip install -e .
+```
+
+## Production Considerations
 
 ### Environment Variables
-Set all RT_* variables in production environment
+- Use secrets manager (AWS Secrets Manager, HashiCorp Vault)
+- Never commit `.env` to git
+- Rotate API keys quarterly
 
 ### Database
-- Use managed PostgreSQL service
+- Use managed PostgreSQL (AWS RDS, Supabase)
 - Enable SSL connections
-- Set up automated backups
+- Automated daily backups
+- Connection pooling
 
 ### Monitoring
-- Log important events
-- Monitor API usage
-- Track performance metrics
+- Log to structured format (JSON)
+- Monitor API rate limits
+- Track system health metrics
+- Alert on failures
 
 ### Security
-- Rotate API keys regularly
-- Use secure connection strings
-- Limit database permissions
+- Least privilege database access
+- Secure connection strings
+- Regular dependency updates: `pip list --outdated`
+
+## Next Steps
+
+1. **API Setup**: Complete [SETUP_ENV_GUIDE.md](../SETUP_ENV_GUIDE.md)
+2. **Database**: Configure using [SUPABASE_SETUP.md](SUPABASE_SETUP.md)
+3. **Operations**: Read [runbook.md](runbook.md) for daily procedures
+4. **Architecture**: Review [rapidtrader_mvp_spec.md](rapidtrader_mvp_spec.md)

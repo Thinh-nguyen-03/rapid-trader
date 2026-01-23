@@ -1,8 +1,9 @@
 """Kill Switch Risk Management for RapidTrader.
 
 Implements automated circuit breakers to pause new position entries when:
-1. Rolling 20-day Sharpe ratio falls below threshold (default: -1.0)
-2. Consecutive losing trades exceed threshold (default: 10)
+1. Portfolio drawdown exceeds threshold (default: -12%)
+2. Rolling 20-day Sharpe ratio falls below threshold (default: -1.0)
+3. Consecutive losing trades exceed threshold (default: 10)
 
 This prevents runaway losses during adverse market conditions or strategy breakdown.
 """
@@ -129,69 +130,121 @@ def compute_losing_streak(eng, lookback_days: int = 90) -> int:
     return min(streak, len(df))  # Cap at total number of trades
 
 
+def compute_portfolio_drawdown(eng, lookback_days: int = 90) -> float:
+    """Compute current portfolio drawdown from equity curve.
+
+    Args:
+        eng: Database engine
+        lookback_days: Number of days to analyze
+
+    Returns:
+        Current drawdown as negative fraction (e.g., -0.12 for 12% drawdown)
+    """
+    cutoff_date = date.today() - timedelta(days=lookback_days)
+
+    # Get daily portfolio values from positions and bars
+    # MVP: Estimate from order activity and market data
+    query = text("""
+        SELECT DISTINCT d FROM bars_daily
+        WHERE d >= :cutoff
+        ORDER BY d
+    """)
+
+    dates_df = pd.read_sql(query, eng, params={"cutoff": cutoff_date}, parse_dates=["d"])
+
+    if dates_df.empty or len(dates_df) < 2:
+        return 0.0
+
+    # MVP: Simulate equity curve from returns
+    # In production, this would use actual position values
+    returns = compute_daily_returns_from_orders(eng, lookback_days)
+
+    if returns.empty:
+        return 0.0
+
+    # Build equity curve starting at 1.0
+    equity = (1 + returns).cumprod()
+
+    if equity.empty:
+        return 0.0
+
+    # Calculate drawdown
+    rolling_max = equity.cummax()
+    drawdown = (equity - rolling_max) / rolling_max
+
+    current_drawdown = drawdown.iloc[-1] if len(drawdown) > 0 else 0.0
+
+    return float(current_drawdown)
+
+
 def evaluate_kill_switch(
+    drawdown_threshold: float = -0.12,
     sharpe_threshold: float = -1.0,
     losing_streak_threshold: int = 10,
     lookback_days: int = 60
 ) -> tuple[bool, str | None]:
     """Evaluate whether the kill switch should be activated.
-    
+
     Args:
+        drawdown_threshold: Maximum acceptable drawdown (e.g., -0.12 for -12%)
         sharpe_threshold: Minimum acceptable 20-day Sharpe ratio
         losing_streak_threshold: Maximum consecutive losing trades
         lookback_days: Days to look back for analysis
-        
+
     Returns:
         Tuple of (should_kill, reason)
     """
     eng = get_engine()
-    
+
+    # Check drawdown first (most critical)
+    current_drawdown = compute_portfolio_drawdown(eng, lookback_days)
+    if current_drawdown <= drawdown_threshold:
+        return True, f"Portfolio drawdown {current_drawdown:.1%} exceeds threshold {drawdown_threshold:.1%}"
+
     # Calculate rolling Sharpe ratio
     returns = compute_daily_returns_from_orders(eng, lookback_days)
-    
+
     current_sharpe = np.nan
     if len(returns) >= 20:
         sharpe_series = _rolling_sharpe(returns, window=20)
         current_sharpe = sharpe_series.iloc[-1]
-    
+
+    if pd.notna(current_sharpe) and current_sharpe < sharpe_threshold:
+        return True, f"Rolling 20-day Sharpe ratio {current_sharpe:.2f} below threshold {sharpe_threshold}"
+
     # Calculate losing streak
     losing_streak = compute_losing_streak(eng, lookback_days)
-    
-    # Determine if kill switch should activate
-    kill_reason = None
-    
-    if pd.notna(current_sharpe) and current_sharpe < sharpe_threshold:
-        kill_reason = f"Rolling 20-day Sharpe ratio {current_sharpe:.2f} below threshold {sharpe_threshold}"
-    elif losing_streak >= losing_streak_threshold:
-        kill_reason = f"Losing streak {losing_streak} trades exceeds threshold {losing_streak_threshold}"
-    
-    should_kill = kill_reason is not None
-    
-    return should_kill, kill_reason
+    if losing_streak >= losing_streak_threshold:
+        return True, f"Losing streak {losing_streak} trades exceeds threshold {losing_streak_threshold}"
+
+    return False, None
 
 
 def update_kill_switch_state(
     trade_date: date | None = None,
-    sharpe_threshold: float = -1.0, 
+    drawdown_threshold: float = -0.12,
+    sharpe_threshold: float = -1.0,
     losing_streak_threshold: int = 10
 ) -> tuple[bool, str | None]:
     """Update the kill switch state in the database.
-    
+
     Args:
         trade_date: Date to update (defaults to today)
+        drawdown_threshold: Maximum acceptable drawdown
         sharpe_threshold: Sharpe ratio threshold for kill switch
         losing_streak_threshold: Losing streak threshold for kill switch
-        
+
     Returns:
         Tuple of (kill_active, reason)
     """
     if trade_date is None:
         trade_date = date.today()
-    
+
     eng = get_engine()
-    
+
     # Evaluate kill switch conditions
     should_kill, kill_reason = evaluate_kill_switch(
+        drawdown_threshold=drawdown_threshold,
         sharpe_threshold=sharpe_threshold,
         losing_streak_threshold=losing_streak_threshold
     )

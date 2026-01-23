@@ -1,63 +1,75 @@
-""" S&P 500 data fetching. """
+"""Stock universe and sector classification management."""
 
 import pandas as pd
 from typing import List, Tuple, Dict
-from polygon import RESTClient
+import requests
+from alpaca.trading.client import TradingClient
+from alpaca.trading.requests import GetAssetsRequest
+from alpaca.trading.enums import AssetClass, AssetStatus
 from ..core.config import settings
 from sqlalchemy import text
 import time
 
-class PolygonClient:
-    def __init__(self, api_key: str):
-        self.api_key = api_key
-        self.client = RESTClient(api_key=api_key)
+
+class CompanyDataClient:
+    """Client for fetching company metadata from Alpaca and FMP APIs."""
+
+    def __init__(self, fmp_api_key: str = None, alpaca_api_key: str = None, alpaca_secret_key: str = None):
+        """
+        Initialize company data client.
+
+        Args:
+            fmp_api_key: Financial Modeling Prep API key (optional)
+            alpaca_api_key: Alpaca API key for asset listings
+            alpaca_secret_key: Alpaca secret key
+        """
+        self.fmp_api_key = fmp_api_key
+        self.alpaca_api_key = alpaca_api_key
+        self.alpaca_secret_key = alpaca_secret_key
+        if alpaca_api_key and alpaca_secret_key:
+            self.alpaca_client = TradingClient(api_key=alpaca_api_key, secret_key=alpaca_secret_key)
+        else:
+            self.alpaca_client = None
     
     def get_sp500_constituents(self) -> pd.DataFrame:
+        """
+        Fetch tradable US equities from Alpaca with sector classifications.
+
+        Returns:
+            DataFrame with columns: symbol, name, sector
+        """
         try:
-            tickers = []
-            for ticker in self.client.list_tickers(
-                market="stocks",
-                active=True,
-                limit=1000
-            ):
-                tickers.append(ticker)
-            
-            if not tickers:
-                raise ValueError("No ticker data received from Polygon.io")
-            
+            if not self.alpaca_client:
+                raise ValueError("Alpaca client not initialized")
+
+            request = GetAssetsRequest(asset_class=AssetClass.US_EQUITY, status=AssetStatus.ACTIVE)
+            assets = self.alpaca_client.get_all_assets(request)
+
+            if not assets:
+                raise ValueError("No assets received from Alpaca")
+
             ticker_data = []
-            for ticker in tickers:
-                ticker_data.append({
-                    'symbol': ticker.ticker,
-                    'name': getattr(ticker, 'name', ''),
-                    'market': getattr(ticker, 'market', ''),
-                    'type': getattr(ticker, 'type', ''),
-                    'active': getattr(ticker, 'active', True),
-                    'currency_name': getattr(ticker, 'currency_name', 'USD'),
-                    'locale': getattr(ticker, 'locale', 'us')
-                })
-            
+            for asset in assets:
+                if asset.tradable and asset.fractionable:
+                    ticker_data.append({
+                        'symbol': asset.symbol,
+                        'name': asset.name,
+                        'exchange': asset.exchange,
+                        'tradable': asset.tradable
+                    })
+
             df = pd.DataFrame(ticker_data)
-            
-            df = df[
-                (df['market'] == 'stocks') &
-                (df['active'] == True) &
-                (df['locale'] == 'us') &
-                (df['currency_name'].str.upper() == 'USD') &
-                (df['type'] == 'CS')  # Common Stock
-            ]
-            
             df['symbol'] = df['symbol'].str.strip().str.upper()
             df = df.dropna(subset=['symbol'])
             df = df[df['symbol'] != '']
-            
+
             df = self._apply_sector_mapping(df)
-            
-            print(f"Successfully fetched {len(df)} stocks from Polygon.io")
+
+            print(f"Successfully fetched {len(df)} stocks from Alpaca")
             return df[['symbol', 'name', 'sector']]
-            
+
         except Exception as e:
-            raise RuntimeError(f"Polygon.io API request failed: {e}")
+            raise RuntimeError(f"Alpaca API request failed: {e}")
     
     def _apply_sector_mapping(self, df: pd.DataFrame) -> pd.DataFrame:
         from ..core.db import get_engine
@@ -144,22 +156,26 @@ class PolygonClient:
         return symbols_needing_update
     
     def _update_sectors_automatically(self, symbols: List[str]):
-        """Automatically update sector data for given symbols."""
+        """
+        Update sector classifications for symbols using FMP API.
+
+        Args:
+            symbols: List of symbols to update (limited to 50 to prevent delays)
+        """
         from ..core.db import get_engine
         from datetime import date
-        
+
         if not symbols:
             return
-        
-        # Limit auto-updates to prevent long delays (max 50 symbols at once)
+
         if len(symbols) > 50:
             print(f"Large batch ({len(symbols)} symbols) - updating first 50 automatically")
             print(f"Run 'python scripts/update_sector_cache.py' to update remaining symbols")
             symbols = symbols[:50]
-        
+
         eng = get_engine()
         updated_count = 0
-        
+
         for symbol in symbols:
             try:
                 if symbol == 'SPY':
@@ -167,19 +183,27 @@ class PolygonClient:
                     sic_description = 'Investment Fund'
                     sic_code = None
                 else:
-                    # Fetch from Polygon API
-                    details = self.client.get_ticker_details(symbol)
-                    
-                    # Extract sector information
                     sector = 'Unknown'
-                    sic_description = getattr(details, 'sic_description', None) or ''
-                    sic_code = getattr(details, 'sic_code', None)
-                    
-                    # Try to determine sector from available data (use SIC code + description for best accuracy)
-                    if sic_description or sic_code:
+                    sic_description = ''
+                    sic_code = None
+
+                    if self.fmp_api_key:
+                        try:
+                            url = f"https://financialmodelingprep.com/api/v3/profile/{symbol}"
+                            params = {'apikey': self.fmp_api_key}
+                            response = requests.get(url, params=params, timeout=10)
+
+                            if response.status_code == 200:
+                                data = response.json()
+                                if data and len(data) > 0:
+                                    profile = data[0]
+                                    sector = profile.get('sector', 'Unknown')
+                                    sic_description = profile.get('industry', '')
+                        except Exception as e:
+                            print(f"Warning: FMP API request failed for {symbol}: {e}")
+
+                    if sector == 'Unknown' and (sic_description or sic_code):
                         sector = self._map_sic_to_sector(sic_description, str(sic_code) if sic_code else None)
-                    elif hasattr(details, 'sector') and details.sector:
-                        sector = details.sector
                 
                 # Upsert into database (include sic_code for consistency)
                 with eng.begin() as conn:
@@ -332,21 +356,28 @@ class PolygonClient:
 
 def get_sp500_symbols() -> List[Tuple[str, str]]:
     """
-    Get S&P 500 symbols and sectors from Polygon.io with dynamic sector mapping.
-        
+    Get S&P 500 symbols and sectors from Alpaca with dynamic sector mapping using FMP.
+
     Returns:
         List of (symbol, sector) tuples
     """
-    api_key = settings.RT_POLYGON_API_KEY
-    if not api_key:
-        raise ValueError("Polygon API key not provided. Set RT_POLYGON_API_KEY in config.")
-    
-    client = PolygonClient(api_key)
-        
+    alpaca_api_key = settings.RT_ALPACA_API_KEY
+    alpaca_secret_key = settings.RT_ALPACA_SECRET_KEY
+    fmp_api_key = settings.RT_FMP_API_KEY
+
+    if not alpaca_api_key or not alpaca_secret_key:
+        raise ValueError("Alpaca API credentials not provided. Set RT_ALPACA_API_KEY and RT_ALPACA_SECRET_KEY in config.")
+
+    client = CompanyDataClient(
+        fmp_api_key=fmp_api_key,
+        alpaca_api_key=alpaca_api_key,
+        alpaca_secret_key=alpaca_secret_key
+    )
+
     try:
-        # Get all US stocks from Polygon - this will now fetch sectors dynamically
+        # Get all US stocks from Alpaca - this will now fetch sectors dynamically
         df = client.get_sp500_constituents()
-        
+
         # For now, we'll use a curated list of major S&P 500 symbols
         # In production, you'd want to get the actual S&P 500 list from a reliable source
         major_sp500_symbols = {
@@ -361,33 +392,33 @@ def get_sp500_symbols() -> List[Tuple[str, str]]:
             'CSX', 'EQIX', 'PNC', 'NOC', 'SHW', 'CME', 'USB', 'WFC', 'MS', 'MCO', 'FDX',
             'NSC', 'APD', 'ECL', 'COP', 'REGN', 'FCX', 'ICE', 'SPY'  # SPY for market filter
         }
-        
-        # Filter to major S&P 500 symbols that exist in Polygon data
+
+        # Filter to major S&P 500 symbols that exist in Alpaca data
         available_symbols = set(df['symbol'].str.upper())
         valid_symbols = major_sp500_symbols.intersection(available_symbols)
-        
+
         sp500_df = df[df['symbol'].isin(valid_symbols)].copy()
-        
+
         # Convert to list of tuples
         result = []
         for _, row in sp500_df.iterrows():
             symbol = str(row['symbol']).strip()
             sector = str(row.get('sector', 'Unknown')).strip()
-        
-        if symbol and symbol != 'nan':
-            result.append((symbol, sector))
-        
+
+            if symbol and symbol != 'nan':
+                result.append((symbol, sector))
+
         # Ensure SPY is included (needed for market filter)
         spy_present = any(symbol == 'SPY' for symbol, _ in result)
         if not spy_present:
             result.append(('SPY', 'ETF'))
             print("Added SPY (market filter symbol) to symbol list")
-        
-        print(f"Using Polygon.io data for {len(result)} major S&P 500 symbols with dynamic sectors")
+
+        print(f"Using Alpaca data for {len(result)} major S&P 500 symbols with dynamic sectors")
         return result
-        
+
     except Exception as e:
-        raise RuntimeError(f"Error fetching S&P 500 symbols from Polygon.io: {e}")
+        raise RuntimeError(f"Error fetching S&P 500 symbols from Alpaca: {e}")
 
 def map_sector_name(sector: str) -> str:
     """

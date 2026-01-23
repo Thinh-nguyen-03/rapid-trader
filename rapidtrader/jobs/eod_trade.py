@@ -13,8 +13,16 @@ from ..core.config import settings
 from ..indicators.core import atr
 from ..strategies.rsi_mr import rsi_mean_reversion
 from ..strategies.sma_cross import sma_crossover
-from ..risk.sizing import shares_fixed_fractional, shares_atr_target
-from ..risk.controls import sector_exposure_ok
+from ..risk.sizing import shares_fixed_fractional, shares_atr_target, compute_position_size
+from ..risk.controls import (
+    sector_exposure_ok,
+    portfolio_heat_ok,
+    get_current_positions,
+    get_position_atr_values,
+    vix_scale_factor,
+    get_current_vix,
+    correlation_ok
+)
 from ..risk.stop_cooldown import stop_cooldown_active
 from ..core.market_state import is_bull_market
 from ..risk.kill_switch import is_kill_switch_active, update_kill_switch_state
@@ -229,8 +237,11 @@ def main():
         trade_date = get_last_session()
         print(f"Processing signals for {trade_date}")
         
-        # Update and check kill switch first
-        kill_active, kill_reason = update_kill_switch_state(trade_date)
+        # Update and check kill switch first (includes drawdown check)
+        kill_active, kill_reason = update_kill_switch_state(
+            trade_date,
+            drawdown_threshold=settings.RT_DRAWDOWN_THRESHOLD
+        )
         if kill_active:
             print(f"ALERT: Kill switch ACTIVE for {trade_date}: {kill_reason}")
             print("WARNING: No new entries allowed - system in protective mode")
@@ -273,7 +284,45 @@ def main():
         
         portfolio_value = get_portfolio_value()
         print(f"Portfolio value: ${portfolio_value:,.2f}")
-        
+
+        # Get current positions and their ATR values for risk checks
+        current_positions = get_current_positions()
+        position_symbols = [p['symbol'] for p in current_positions]
+        position_atr_values = get_position_atr_values(position_symbols, settings.RT_ATR_LOOKBACK)
+
+        # Check portfolio heat limit
+        portfolio_heat_blocked = False
+        if settings.RT_PORTFOLIO_HEAT_ENABLE:
+            heat_ok, current_heat = portfolio_heat_ok(
+                current_positions,
+                position_atr_values,
+                portfolio_value,
+                settings.RT_MAX_PORTFOLIO_HEAT
+            )
+            if not heat_ok:
+                print(f"WARNING: Portfolio heat {current_heat:.1%} exceeds limit {settings.RT_MAX_PORTFOLIO_HEAT:.1%}")
+                print("INFO: New entries blocked until heat reduces")
+                portfolio_heat_blocked = True
+            else:
+                print(f"INFO: Portfolio heat {current_heat:.1%} within limit")
+
+        # Get VIX for position scaling
+        vix_multiplier = 1.0
+        if settings.RT_VIX_SCALING_ENABLE:
+            current_vix = get_current_vix()
+            if current_vix is not None:
+                vix_multiplier = vix_scale_factor(
+                    current_vix,
+                    settings.RT_VIX_THRESHOLD_ELEVATED,
+                    settings.RT_VIX_THRESHOLD_HIGH,
+                    settings.RT_VIX_SCALE_ELEVATED,
+                    settings.RT_VIX_SCALE_HIGH
+                )
+                if vix_multiplier < 1.0:
+                    print(f"INFO: VIX at {current_vix:.1f}, position size scaled to {vix_multiplier:.0%}")
+            else:
+                print("INFO: VIX data not available, using full position size")
+
         # Process each symbol
         for symbol, sector in symbols_data:
             total_candidates += 1
@@ -331,63 +380,70 @@ def main():
                         # Gate buy orders when bear_gate is active
                         if bear_gate:
                             filtered_candidates += 1
-                            # Record blocked buy order for audit trail
-                            record_order(
-                                trade_date,
-                                symbol,
-                                "buy",
-                                0,  # 0 quantity indicates blocked order
-                                "market_gate_block"
-                            )
+                            record_order(trade_date, symbol, "buy", 0, "market_gate_block")
                             continue
-                        
-                        # Double-check kill switch for buy orders (extra safety)
+
+                        # Block if portfolio heat exceeded
+                        if portfolio_heat_blocked:
+                            filtered_candidates += 1
+                            record_order(trade_date, symbol, "buy", 0, "portfolio_heat_block")
+                            continue
+
+                        # Double-check kill switch for buy orders
                         kill_check, _ = is_kill_switch_active(trade_date)
                         if kill_check:
                             filtered_candidates += 1
                             continue
-                        
-                        # Calculate position size using both methods
+
+                        # Check correlation with existing positions
+                        if settings.RT_CORRELATION_CHECK_ENABLE and current_positions:
+                            corr_ok, correlated_with = correlation_ok(
+                                symbol,
+                                current_positions,
+                                settings.RT_CORRELATION_THRESHOLD,
+                                settings.RT_CORRELATION_LOOKBACK,
+                                settings.RT_CORRELATION_TOP_N
+                            )
+                            if not corr_ok:
+                                filtered_candidates += 1
+                                record_order(trade_date, symbol, "buy", 0, f"correlation_block:{correlated_with}")
+                                continue
+
+                        # Calculate position size with VIX scaling
                         atr_14 = float(atr(df["high"], df["low"], df["close"], settings.RT_ATR_LOOKBACK).iloc[-1])
-                        
-                        qty_ff = shares_fixed_fractional(
-                            portfolio_value, 
-                            settings.RT_PCT_PER_TRADE, 
-                            current_price
+
+                        quantity = compute_position_size(
+                            portfolio_value=portfolio_value,
+                            entry_px=current_price,
+                            atr_points=atr_14,
+                            pct_per_trade=settings.RT_PCT_PER_TRADE,
+                            daily_risk_cap=settings.RT_DAILY_RISK_CAP,
+                            k_atr=settings.RT_ATR_STOP_K,
+                            vix_multiplier=vix_multiplier
                         )
-                        
-                        qty_atr = shares_atr_target(
-                            portfolio_value,
-                            settings.RT_DAILY_RISK_CAP,
-                            atr_14,
-                            settings.RT_ATR_STOP_K
-                        )
-                        
-                        # Use smaller of the two sizes
-                        quantity = min(qty_ff, qty_atr)
-                        
+
                         if quantity > 0:
                             # Check sector exposure limits
                             current_sector_value = get_sector_value(sector or "")
                             candidate_value = quantity * current_price
-                            
+
                             if sector_exposure_ok(
                                 current_sector_value,
                                 portfolio_value,
                                 candidate_value,
                                 settings.RT_MAX_EXPOSURE_PER_SECTOR
                             ):
-                                # Create buy order
                                 record_order(
-                                    trade_date, 
-                                    symbol, 
-                                    "buy", 
-                                    quantity, 
+                                    trade_date,
+                                    symbol,
+                                    "buy",
+                                    quantity,
                                     f"mvp-entry-{strategy.lower()}"
                                 )
                                 orders_created += 1
                             else:
                                 filtered_candidates += 1
+                                record_order(trade_date, symbol, "buy", 0, "sector_exposure_block")
                         
                     elif final_signal == "sell":
                         # Allow sell/exit orders regardless of bear_gate (if config permits)

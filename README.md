@@ -1,110 +1,103 @@
 # RapidTrader
 
-**Complete End-of-Day Algorithmic Trading System**
+**End-of-Day Algorithmic Trading System**
 
-🎯 **Status**: 100% Complete & Operational - Full trading system ready for production use
+**Status**: Complete and operational
 
-## 🚀 What is RapidTrader?
+## Overview
 
 RapidTrader is a production-ready algorithmic trading system featuring:
 
-- **📈 Trading Strategies**: RSI mean-reversion + SMA crossover with 2-of-3 confirmation
-- **🛡️ Risk Management**: Market filter, sector caps (30%), position sizing, stop cooldowns
-- **📊 Data Pipeline**: 505 S&P 500 symbols with enterprise-grade Polygon.io data
-- **⚙️ Job Framework**: Complete EOD automation (ingest → trade → report)
-- **🗄️ Database**: Full PostgreSQL/Supabase integration with 7 tables
+- **Trading Strategies**: RSI mean-reversion and SMA crossover with 2-of-3 confirmation
+- **Risk Management**: Market filter, sector caps (30%), position sizing, stop cooldowns
+- **Data Pipeline**: 505 S&P 500 symbols with Alpaca Markets data
+- **Job Framework**: Complete EOD automation (ingest, trade, report)
+- **Database**: PostgreSQL/Supabase integration with 7 tables
 
-## ⚡ Quick Start
+## Quick Start
 
-1. **Get Polygon.io API Key**: https://polygon.io/ (Stocks Starter recommended)
+1. **Get Free Alpaca API Key**: https://alpaca.markets/ (Paper trading account - 100% free)
 
 2. **Setup Environment**:
    ```bash
    git clone <your-repo>
-   cd rapidtrader-starter-v4.1
+   cd rapid-trader
    python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
    pip install -e .
-   
-   # Configure API keys (see docs/POLYGON_SETUP.md)
-   cp .env.example .env  # Add your API keys
+
+   # Configure API keys (see SETUP_ENV_GUIDE.md)
+   cp .env.example .env  # Add your Alpaca API keys
    ```
 
 3. **Run Complete Trading System**:
    ```bash
    # Daily data ingestion
    python -m rapidtrader.jobs.eod_ingest --days 300
-   
+
    # Generate signals and create orders
    python -m rapidtrader.jobs.eod_trade --mode dry_run
-   
+
    # Generate daily report
    python -m rapidtrader.jobs.eod_report
    ```
 
-## 🏗️ System Components
+## System Components
 
 - **Strategies**: RSI mean-reversion + SMA crossover with confirmation logic
 - **Risk Controls**: SPY 200-SMA market filter, sector exposure limits
-- **Position Sizing**: Fixed-fractional + ATR-target sizing algorithms  
+- **Position Sizing**: Fixed-fractional + ATR-target sizing algorithms
 - **Data Quality**: 125K+ historical bars with real-time updates
 - **Automation**: Complete EOD workflow with job scheduling
-- **Minimal codebase**: Clean, focused implementation
 
-## 📚 Documentation
+## Documentation
 
-- **Getting Started**: See [`docs/README.md`](docs/README.md) for complete documentation
-- **Setup Guides**: [`docs/environment-setup.md`](docs/environment-setup.md), [`docs/POLYGON_SETUP.md`](docs/POLYGON_SETUP.md)
-- **Operations**: [`docs/runbook.md`](docs/runbook.md) for daily operational procedures
-- **System Architecture**: [`docs/rapidtrader_mvp_spec.md`](docs/rapidtrader_mvp_spec.md)
+- **Getting Started**: See [docs/README.md](docs/README.md) for complete documentation
+- **Setup Guide**: [SETUP_ENV_GUIDE.md](SETUP_ENV_GUIDE.md) - Environment and API setup
+- **Operations**: [docs/runbook.md](docs/runbook.md) for daily operational procedures
+- **System Architecture**: [docs/rapidtrader_mvp_spec.md](docs/rapidtrader_mvp_spec.md)
 
-## 🎯 Key Features
+## Key Features
 
-- ✅ **Production Ready**: Complete trading system with all components implemented
-- ✅ **Risk Managed**: Comprehensive risk controls and position sizing
-- ✅ **Data Quality**: Enterprise-grade Polygon.io market data
-- ✅ **Automated**: Full EOD workflow with job scheduling
-- ✅ **Validated**: All indicators tested with real market data
-- ✅ **Documented**: Complete operational and technical documentation
+- Production-ready trading system with all components implemented
+- Comprehensive risk controls and position sizing
+- Free institutional-quality market data via Alpaca
+- Full EOD workflow with job scheduling
+- All indicators tested with real market data
+- Complete operational and technical documentation
 
-## 📈 Trading System Features
+## Trading System
 
 ### Strategies
 - **RSI Mean-Reversion**: Buy oversold (RSI<30), sell at 55+ with 2-of-3 confirmation
 - **SMA Crossover**: 20/100 SMA crossover with 2-day confirmation
 - **Signal Confirmation**: Reduces false signals with confirmation logic
 
-### Risk Management  
+### Risk Management
 - **Market Filter**: SPY 200-SMA bull/bear detection (blocks entries in bear markets)
 - **Sector Caps**: Maximum 30% exposure per sector
 - **Position Sizing**: Fixed-fractional (5%) + ATR-target sizing
 - **Stop Management**: ATR-based stops with 1-day cooldown periods
 
-### Data & Infrastructure
+### Data and Infrastructure
 - **505 S&P 500 Symbols**: Complete universe with sector classification
 - **125K+ Historical Bars**: 1+ years of high-quality OHLCV data
 - **7-Table Database**: Comprehensive data model for signals, orders, positions
 - **Job Automation**: Daily data ingestion, signal generation, reporting
 
-## 🛠️ System Architecture
+## System Architecture
 
 - **EOD-Focused**: Designed for end-of-day systematic trading strategies
 - **Production-Ready**: Database persistence, error handling, comprehensive risk management
 - **Modular Design**: Clean separation between data, strategies, risk, and execution
-- **Enterprise Data**: Polygon.io integration for institutional-quality market data
+- **Free Market Data**: Alpaca integration for institutional-quality data (no cost)
 
-## 📊 Performance & Testing
-
-- ✅ **All Technical Indicators Validated**: Tested against real market data (70 AAPL bars)
-- ✅ **Complete Data Coverage**: 505 S&P 500 symbols with 125K+ historical bars
-- ✅ **Risk Controls Verified**: Market filter, sector caps, and stop management tested
-- ✅ **Production Infrastructure**: Supabase database operational with all tables
-
-## 🔧 Requirements
+## Requirements
 
 - Python 3.11+
 - PostgreSQL or Supabase account
-- Polygon.io API key (Stocks Starter plan recommended)
+- Alpaca API key (free paper trading account)
+- Optional: Financial Modeling Prep API key for sector data (free 250 req/day)
 
 ---
 
-**Ready to trade systematically?** See [`docs/README.md`](docs/README.md) to get started!
+See [docs/README.md](docs/README.md) for complete documentation.

@@ -1,81 +1,105 @@
-""" OHLCV data ingestion."""
+"""OHLCV data ingestion from Alpaca Markets API."""
 
 import pandas as pd
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from typing import List, Optional, Dict, Any
-from polygon import RESTClient
+from alpaca.data.historical import StockHistoricalDataClient
+from alpaca.data.requests import StockBarsRequest, StockLatestBarRequest
+from alpaca.data.timeframe import TimeFrame
 from sqlalchemy import text
 from ..core.db import get_engine
 from ..core.config import settings
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 
-class PolygonDataClient:
-    def __init__(self, api_key: str):
+
+class AlpacaDataClient:
+    """Client for fetching historical market data from Alpaca."""
+
+    def __init__(self, api_key: str, secret_key: str):
+        """Initialize Alpaca data client with API credentials."""
         self.api_key = api_key
-        self.client = RESTClient(api_key=api_key)
-    
+        self.secret_key = secret_key
+        self.client = StockHistoricalDataClient(api_key=api_key, secret_key=secret_key)
+
     def get_daily_bars(self, symbol: str, start_date: date, end_date: date) -> pd.DataFrame:
+        """
+        Fetch daily OHLCV bars for a symbol.
+
+        Args:
+            symbol: Stock ticker symbol
+            start_date: Start date for data fetch
+            end_date: End date for data fetch
+
+        Returns:
+            DataFrame with OHLCV data indexed by date
+        """
         try:
-            start_str = start_date.strftime('%Y-%m-%d')
-            end_str = end_date.strftime('%Y-%m-%d')
-            
-            # Fetch aggregates (daily bars) from Polygon
-            aggs = []
-            for agg in self.client.list_aggs(
-                ticker=symbol,
-                multiplier=1,
-                timespan="day",
-                from_=start_str,
-                to=end_str,
-                adjusted=True,  # Use adjusted prices
-                limit=50000
-            ):
-                aggs.append({
-                    'timestamp': agg.timestamp,
-                    'open': agg.open,
-                    'high': agg.high, 
-                    'low': agg.low,
-                    'close': agg.close,
-                    'volume': agg.volume,
-                    'vwap': getattr(agg, 'vwap', None),
-                    'transactions': getattr(agg, 'transactions', None)
-                })
-            
-            if not aggs:
+            start_dt = datetime.combine(start_date, datetime.min.time())
+            end_dt = datetime.combine(end_date, datetime.max.time())
+
+            request = StockBarsRequest(
+                symbol_or_symbols=symbol,
+                timeframe=TimeFrame.Day,
+                start=start_dt,
+                end=end_dt,
+                adjustment='all'
+            )
+
+            bars = self.client.get_stock_bars(request)
+
+            if bars.df.empty:
                 print(f"No data returned for {symbol}")
                 return pd.DataFrame()
-            
-            df = pd.DataFrame(aggs)
-            df['date'] = pd.to_datetime(df['timestamp'], unit='ms').dt.date
-            df = df.set_index('date')[['open', 'high', 'low', 'close', 'volume']]
+
+            df = bars.df
+
+            if isinstance(df.index, pd.MultiIndex):
+                df = df.reset_index(level=0, drop=True)
+
+            df.index = df.index.date
+            df.index.name = 'date'
+
+            df = df[['open', 'high', 'low', 'close', 'volume']]
             df.columns = ['Open', 'High', 'Low', 'Close', 'Volume']
+
             df = df[~df.index.duplicated(keep='last')]
             df = df.sort_index()
-            
+
             print(f"Retrieved {len(df)} bars for {symbol}")
             return df
-            
+
         except Exception as e:
             print(f"Error fetching data for {symbol}: {e}")
             return pd.DataFrame()
-    
+
     def get_previous_close(self, symbol: str) -> Optional[Dict[str, Any]]:
+        """
+        Get the most recent closing price and bar data for a symbol.
+
+        Args:
+            symbol: Stock ticker symbol
+
+        Returns:
+            Dictionary with latest bar data or None if unavailable
+        """
         try:
-            prev_close = self.client.get_previous_close_agg(ticker=symbol)
-            
-            if prev_close and hasattr(prev_close, 'close'):
+            request = StockLatestBarRequest(symbol_or_symbols=symbol)
+            latest = self.client.get_stock_latest_bar(request)
+
+            if symbol in latest:
+                bar = latest[symbol]
                 return {
                     'symbol': symbol,
-                    'close': prev_close.close,
-                    'high': getattr(prev_close, 'high', None),
-                    'low': getattr(prev_close, 'low', None),
-                    'open': getattr(prev_close, 'open', None),
-                    'volume': getattr(prev_close, 'volume', None),
-                    'timestamp': getattr(prev_close, 'timestamp', None)
+                    'close': bar.close,
+                    'high': bar.high,
+                    'low': bar.low,
+                    'open': bar.open,
+                    'volume': bar.volume,
+                    'timestamp': bar.timestamp.timestamp() * 1000 if bar.timestamp else None
                 }
             return None
-            
+
         except Exception as e:
             print(f"Error fetching previous close for {symbol}: {e}")
             return None
@@ -110,49 +134,60 @@ def upsert_bars(symbol: str, bars: pd.DataFrame) -> None:
                 continue
 
 def check_data_exists_for_date(symbols: List[str], target_date: date) -> Dict[str, bool]:
+    """
+    Check which symbols already have data for a specific date.
+
+    Args:
+        symbols: List of symbols to check
+        target_date: Date to check for existing data
+
+    Returns:
+        Dictionary mapping symbols to whether data exists
+    """
     if not symbols:
         return {}
-    
+
     eng = get_engine()
-    
+
     symbol_placeholders = ','.join([f':symbol_{i}' for i in range(len(symbols))])
     query = text(f"""
         SELECT symbol, COUNT(*) as count
-        FROM bars_daily 
-        WHERE symbol IN ({symbol_placeholders}) 
+        FROM bars_daily
+        WHERE symbol IN ({symbol_placeholders})
         AND d = :target_date
         GROUP BY symbol
     """)
-    
+
     params = {"target_date": target_date}
     for i, symbol in enumerate(symbols):
         params[f'symbol_{i}'] = symbol
-    
+
     try:
         with eng.begin() as conn:
             results = conn.execute(query, params).fetchall()
-            
+
         existing_data = {symbol: False for symbol in symbols}
         for symbol, count in results:
             existing_data[symbol] = count > 0
-            
+
         return existing_data
-        
+
     except Exception as e:
         print(f"ERROR: Failed to check existing data: {e}")
         return {symbol: False for symbol in symbols}
 
-def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None, 
+def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None,
                   skip_existing: bool = True, max_workers: int = 10) -> None:
     """Ingest OHLCV data for multiple symbols using parallel processing."""
     if not symbols:
         print("No symbols provided for ingestion")
         return
-    
-    api_key = settings.RT_POLYGON_API_KEY
-    if not api_key:
-        raise ValueError("Polygon API key not provided. Set RT_POLYGON_API_KEY in config.")
-    
+
+    api_key = settings.RT_ALPACA_API_KEY
+    secret_key = settings.RT_ALPACA_SECRET_KEY
+    if not api_key or not secret_key:
+        raise ValueError("Alpaca API credentials not provided. Set RT_ALPACA_API_KEY and RT_ALPACA_SECRET_KEY in config.")
+
     end_date = date.today()
     start_date = end_date - timedelta(days=days)
     
@@ -176,15 +211,13 @@ def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None
         print(f"SUCCESS: All symbols already have data for {target_date}")
         return
     
-    if settings.RT_POLYGON_RATE_LIMIT == 0:
-        # For small batches, use all available. For large batches, cap at 50 for stability
-        if len(symbols_to_process) <= 20:
-            max_workers = min(max_workers, len(symbols_to_process))
-        else:
-            max_workers = min(max_workers, 50, len(symbols_to_process))
+    # Alpaca has generous rate limits - use moderate parallelism
+    # For small batches, use all available. For large batches, cap at 20 for stability
+    if len(symbols_to_process) <= 20:
+        max_workers = min(max_workers, len(symbols_to_process))
     else:
-        max_workers = min(max_workers, 5, len(symbols_to_process))
-    
+        max_workers = min(max_workers, 20, len(symbols_to_process))
+
     print(f"Starting data ingestion from {start_date} to {end_date}")
     
     success_count = 0
@@ -195,7 +228,7 @@ def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None
     
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         future_to_symbol = {
-            executor.submit(_fetch_symbol_data, symbol, api_key, start_date, end_date): symbol 
+            executor.submit(_fetch_symbol_data, symbol, api_key, secret_key, start_date, end_date): symbol
             for symbol in symbols_to_process
         }
         
@@ -221,16 +254,16 @@ def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None
     if skipped_count > 0:
         print(f"INFO: {skipped_count} symbols skipped (data already exists), {total_processed} symbols processed")
 
-def _fetch_symbol_data(symbol: str, api_key: str, start_date: date, end_date: date) -> tuple:
+def _fetch_symbol_data(symbol: str, api_key: str, secret_key: str, start_date: date, end_date: date) -> tuple:
     try:
-        client = PolygonDataClient(api_key)
+        client = AlpacaDataClient(api_key, secret_key)
         df = client.get_daily_bars(symbol, start_date, end_date)
-        
+
         if not df.empty:
             return (symbol, df, True, None)
         else:
             return (symbol, pd.DataFrame(), False, f"No data available for {symbol}")
-            
+
     except Exception as e:
         return (symbol, pd.DataFrame(), False, str(e))
 
@@ -256,56 +289,58 @@ def get_latest_bar_date(symbol: str) -> Optional[date]:
 def update_symbol_data(symbol: str, days_back: int = 30) -> bool:
     try:
         latest_date = get_latest_bar_date(symbol)
-        
+
         if latest_date is None:
             print(f"No existing data for {symbol}, fetching full history")
             ingest_symbols([symbol], days=365)
             return True
-        
+
         today = date.today()
         start_date = max(latest_date + timedelta(days=1), today - timedelta(days=days_back))
-        
+
         if start_date >= today:
             print(f"{symbol} data is up to date")
             return True
-        
-        api_key = settings.RT_POLYGON_API_KEY
-        if not api_key:
-            raise ValueError("Polygon API key not provided")
-        
-        client = PolygonDataClient(api_key)
+
+        api_key = settings.RT_ALPACA_API_KEY
+        secret_key = settings.RT_ALPACA_SECRET_KEY
+        if not api_key or not secret_key:
+            raise ValueError("Alpaca API credentials not provided")
+
+        client = AlpacaDataClient(api_key, secret_key)
         df = client.get_daily_bars(symbol, start_date, today)
-        
+
         if not df.empty:
             upsert_bars(symbol, df)
         else:
             print(f"No new data available for {symbol}")
-        
+
         return True
-        
+
     except Exception as e:
         print(f"Error updating {symbol}: {e}")
         return False
 
 def refresh_spy_cache(days: int = 300) -> pd.Series:
     spy_symbol = settings.RT_MARKET_FILTER_SYMBOL
-    
-    api_key = settings.RT_POLYGON_API_KEY
-    if not api_key:
-        raise ValueError("Polygon API key not provided")
-    
-    client = PolygonDataClient(api_key)
-    
+
+    api_key = settings.RT_ALPACA_API_KEY
+    secret_key = settings.RT_ALPACA_SECRET_KEY
+    if not api_key or not secret_key:
+        raise ValueError("Alpaca API credentials not provided")
+
+    client = AlpacaDataClient(api_key, secret_key)
+
     end_date = date.today()
     start_date = end_date - timedelta(days=days)
-    
+
     df = client.get_daily_bars(spy_symbol, start_date, end_date)
-    
+
     if df.empty:
         raise RuntimeError(f"{spy_symbol} download failed")
-    
+
     upsert_bars(spy_symbol, df)
-    
+
     close_series = df["Close"].copy()
     close_series.index = pd.to_datetime(close_series.index)
 

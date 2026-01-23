@@ -2,9 +2,7 @@
 
 Comprehensive operational guide for running and maintaining the RapidTrader system.
 
-**🎯 Current Status**: 100% Complete - Full algorithmic trading system operational with all components implemented and tested.
-
-## 🚨 Emergency Procedures
+## Emergency Procedures
 
 ### System Down / Not Responding
 1. **Check system status**: Database connectivity, API health
@@ -15,7 +13,7 @@ Comprehensive operational guide for running and maintaining the RapidTrader syst
 
 ### Data Pipeline Failure
 1. **Identify scope**: Which symbols/dates are affected
-2. **Check data sources**: Polygon.io API status and rate limits
+2. **Check data sources**: Alpaca API status and connectivity
 3. **Manual re-run**: Execute failed jobs with specific parameters
 4. **Validate results**: Verify data completeness and quality
 5. **Update monitoring**: Adjust alerts if systematic issue
@@ -27,13 +25,13 @@ Comprehensive operational guide for running and maintaining the RapidTrader syst
 4. **Fix and rerun**: Address root cause and re-execute
 5. **Reconcile**: Ensure all positions and orders are correct
 
-## 📅 Daily Operations
+## Daily Operations
 
 ### Pre-Market Checklist (Before 9:30 AM ET)
 - [ ] **System Health**: All services running normally
 - [ ] **Data Validation**: Previous day's data complete
 - [ ] **Error Review**: Check overnight logs for issues
-- [ ] **API Status**: Verify Polygon.io API availability and rate limits
+- [ ] **API Status**: Verify Alpaca API connectivity
 - [ ] **Database Space**: Confirm adequate storage available
 - [ ] **Backup Status**: Verify automated backups completed
 
@@ -53,7 +51,7 @@ Comprehensive operational guide for running and maintaining the RapidTrader syst
 - [ ] **Report Generation**: Daily reports created and distributed
 - [ ] **Log Archive**: Clean up temporary files and logs
 
-## 📊 Monitoring and Alerting
+## Monitoring and Alerting
 
 ### Key Metrics to Monitor
 
@@ -118,35 +116,35 @@ grep "API call" /var/log/rapidtrader/api.log | wc -l
 #### Database Monitoring
 ```sql
 -- Check data completeness
-SELECT symbol, COUNT(*) as days_of_data 
-FROM bars_daily 
+SELECT symbol, COUNT(*) as days_of_data
+FROM bars_daily
 WHERE d >= CURRENT_DATE - INTERVAL '30 days'
-GROUP BY symbol 
+GROUP BY symbol
 HAVING COUNT(*) < 20;
 
 -- Review recent signals
-SELECT strategy, direction, COUNT(*) 
-FROM signals_daily 
+SELECT strategy, direction, COUNT(*)
+FROM signals_daily
 WHERE d = CURRENT_DATE - 1
 GROUP BY strategy, direction;
 
 -- Check system performance
-SELECT 
+SELECT
     AVG(EXTRACT(EPOCH FROM (finished_at - started_at))) as avg_runtime_seconds
-FROM job_log 
-WHERE job_name = 'eod_ingest' 
+FROM job_log
+WHERE job_name = 'eod_ingest'
     AND started_at >= CURRENT_DATE - INTERVAL '7 days';
 ```
 
-#### Health Check Scripts ✅ **CURRENT WORKING SCRIPTS**
+#### Health Check Scripts
 ```bash
-# Database connectivity (✅ Working)
+# Database connectivity
 python tools/testing/test_database_connection.py
 
-# Indicator accuracy validation (✅ All tests passed)
+# Indicator accuracy validation
 python tools/testing/test_indicator_accuracy.py
 
-# S&P 500 symbol management (✅ 505 symbols loaded)
+# S&P 500 symbol management
 python scripts/seed_sp500.py
 
 # Complete EOD workflow
@@ -155,17 +153,19 @@ python -m rapidtrader.jobs.eod_trade --mode dry_run
 python -m rapidtrader.jobs.eod_report
 ```
 
-### ✅ **Current Operational Status**
-- **Database**: ✅ Supabase operational with all 7 tables created
-- **Data Pipeline**: ✅ 125,092 historical bars across 505 S&P 500 symbols
-- **Technical Indicators**: ✅ ALL TESTS PASSED with real market data validation
-- **Trading Strategies**: ✅ RSI mean-reversion + SMA crossover with confirmation
-- **Risk Management**: ✅ Market filter, sector caps, position sizing, stop cooldowns
-- **Job Framework**: ✅ Complete EOD automation (ingest → trade → report)
-- **API Integration**: ✅ Polygon.io connectivity verified and working
-- **System Status**: ✅ 100% COMPLETE - Ready for production trading
+### Current Operational Status
 
-## 🔧 Maintenance Procedures
+| Component | Status |
+|-----------|--------|
+| Database | Supabase operational with all 7 tables |
+| Data Pipeline | 125,092 historical bars across 505 symbols |
+| Technical Indicators | Tested and validated |
+| Trading Strategies | RSI mean-reversion + SMA crossover |
+| Risk Management | Market filter, sector caps, position sizing |
+| Job Framework | Complete EOD automation |
+| API Integration | Polygon.io connectivity verified |
+
+## Maintenance Procedures
 
 ### Weekly Maintenance
 
@@ -215,13 +215,13 @@ python -m rapidtrader.jobs.eod_report
 - Evaluate new strategy opportunities
 - Update risk management rules
 
-## 🐛 Troubleshooting Guide
+## Troubleshooting Guide
 
 ### Common Issues
 
 #### "No data received for symbol XXX"
 **Cause**: Symbol may be delisted, suspended, or API issue
-**Solution**: 
+**Solution**:
 1. Check if symbol is still in S&P 500
 2. Verify symbol spelling and format
 3. Test API directly for the symbol
@@ -298,7 +298,7 @@ python -m rapidtrader.jobs.eod_report
 - Implement connection pooling
 - Review query execution plans
 
-## 📚 Reference Information
+## Reference Information
 
 ### Configuration Parameters
 
@@ -417,4 +417,4 @@ python scripts/db_maintenance.py --vacuum
 - **Error Tracking**: Sentry or similar
 - **Performance Monitoring**: New Relic or similar
 
-Remember: This runbook should be updated regularly as the system evolves. Always test procedures in a non-production environment before applying to production systems.
+This runbook should be updated regularly as the system evolves. Always test procedures in a non-production environment before applying to production systems.

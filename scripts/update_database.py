@@ -8,9 +8,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from rapidtrader.core.db import get_engine
 from rapidtrader.core.config import settings
-from rapidtrader.data.sp500_api import get_sp500_symbols, map_sector_name, PolygonClient
+from rapidtrader.data.sp500_api import get_sp500_symbols, map_sector_name, CompanyDataClient
 from sqlalchemy import text
 from dotenv import load_dotenv
+import requests
 
 load_dotenv()
 
@@ -34,7 +35,7 @@ def update_sic_database():
 
 def update_symbols_table(clear_existing: bool = False):
     try:
-        print("INFO: Fetching S&P 500 symbols from Polygon.io")
+        print("INFO: Fetching S&P 500 symbols from Alpaca")
         symbols = get_sp500_symbols()
         print(f"INFO: Retrieved {len(symbols)} symbols")
         
@@ -127,23 +128,27 @@ def update_sector_cache(clear_existing: bool = False):
             return False
         
         print(f"INFO: Refreshing sector data for {len(symbols)} symbols...")
-        
-        client = PolygonClient(settings.RT_POLYGON_API_KEY)
-        
+
+        client = CompanyDataClient(
+            fmp_api_key=settings.RT_FMP_API_KEY,
+            alpaca_api_key=settings.RT_ALPACA_API_KEY,
+            alpaca_secret_key=settings.RT_ALPACA_SECRET_KEY
+        )
+
         successful_updates = 0
         failed_updates = 0
         batch_size = 100
-        
+
         # Process symbols in batches
         for batch_start in range(0, len(symbols), batch_size):
             batch_end = min(batch_start + batch_size, len(symbols))
             batch_symbols = symbols[batch_start:batch_end]
-            
+
             print(f"INFO: Processing batch {batch_start//batch_size + 1} ({batch_start + 1}-{batch_end} of {len(symbols)})")
-            
+
             # Collect batch data
             batch_data = []
-            
+
             for symbol in batch_symbols:
                 try:
                     if symbol == 'SPY':
@@ -151,17 +156,29 @@ def update_sector_cache(clear_existing: bool = False):
                         sic_description = 'Investment Fund'
                         sic_code = None
                     else:
-                        details = client.client.get_ticker_details(symbol)
-                        
-                        sic_description = getattr(details, 'sic_description', None) or ''
-                        sic_code = getattr(details, 'sic_code', None)
-                        
-                        if sic_description or sic_code:
+                        sector = 'Unknown'
+                        sic_description = ''
+                        sic_code = None
+
+                        # Use FMP API for company profile
+                        if client.fmp_api_key:
+                            try:
+                                url = f"https://financialmodelingprep.com/api/v3/profile/{symbol}"
+                                params = {'apikey': client.fmp_api_key}
+                                response = requests.get(url, params=params, timeout=10)
+
+                                if response.status_code == 200:
+                                    data = response.json()
+                                    if data and len(data) > 0:
+                                        profile = data[0]
+                                        sector = profile.get('sector', 'Unknown')
+                                        sic_description = profile.get('industry', '')
+                            except Exception as e:
+                                print(f"Warning: FMP API failed for {symbol}: {e}")
+
+                        # Fallback to SIC database lookup
+                        if sector == 'Unknown' and (sic_description or sic_code):
                             sector = client._map_sic_to_sector(sic_description, str(sic_code) if sic_code else None)
-                        elif hasattr(details, 'sector') and details.sector:
-                            sector = details.sector
-                        else:
-                            sector = 'Unknown'
                     
                     batch_data.append({
                         "symbol": symbol,
@@ -280,14 +297,20 @@ Examples:
                        help="Clear existing data before updating")
     
     args = parser.parse_args()
-    
-    api_key = settings.RT_POLYGON_API_KEY
-    if not api_key:
-        print("ERROR: Polygon API key required!")
-        print("Set RT_POLYGON_API_KEY in your .env file")
-        print("Get Polygon key at: https://polygon.io/")
+
+    # Check for Alpaca credentials
+    if not settings.RT_ALPACA_API_KEY or not settings.RT_ALPACA_SECRET_KEY:
+        print("ERROR: Alpaca API credentials required!")
+        print("Set RT_ALPACA_API_KEY and RT_ALPACA_SECRET_KEY in your .env file")
+        print("Get Alpaca credentials at: https://alpaca.markets/")
         return 1
-    
+
+    # FMP is optional but recommended for sector data
+    if not settings.RT_FMP_API_KEY:
+        print("WARNING: FMP API key not found. Sector data updates will be limited.")
+        print("Get a free FMP key at: https://financialmodelingprep.com/")
+        print("(250 requests/day free tier)")
+
     update_sic = args.all or args.sic
     update_syms = args.all or args.quick or args.symbols
     update_secs = args.all or args.quick or args.sectors

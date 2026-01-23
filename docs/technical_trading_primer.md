@@ -2,11 +2,11 @@
 
 Essential technical analysis concepts and implementations used in the RapidTrader system.
 
-## 📈 Overview
+## Overview
 
 Technical analysis is the study of price and volume patterns to forecast future price movements. RapidTrader uses several key technical indicators to generate trading signals.
 
-## 🔧 Core Technical Indicators
+## Core Technical Indicators
 
 ### Simple Moving Average (SMA)
 
@@ -24,7 +24,6 @@ Where:
 #### Implementation
 ```python
 def sma(series: pd.Series, n: int) -> pd.Series:
-    """Calculate Simple Moving Average."""
     return series.rolling(window=n, min_periods=n).mean()
 ```
 
@@ -56,20 +55,17 @@ Average Loss = (Previous Average Loss × 13 + Current Loss) / 14
 #### Implementation
 ```python
 def rsi_wilder(close: pd.Series, window: int = 14) -> pd.Series:
-    """Calculate RSI using Wilder's smoothing method."""
     delta = close.diff()
     gain = delta.where(delta > 0, 0)
     loss = -delta.where(delta < 0, 0)
-    
-    # First calculation uses simple average
+
     avg_gain = gain.rolling(window=window, min_periods=window).mean()
     avg_loss = loss.rolling(window=window, min_periods=window).mean()
-    
-    # Subsequent calculations use Wilder's smoothing
+
     for i in range(window, len(gain)):
         avg_gain.iloc[i] = (avg_gain.iloc[i-1] * (window-1) + gain.iloc[i]) / window
         avg_loss.iloc[i] = (avg_loss.iloc[i-1] * (window-1) + loss.iloc[i]) / window
-    
+
     rs = avg_gain / avg_loss
     rsi = 100 - (100 / (1 + rs))
     return rsi
@@ -107,12 +103,11 @@ ATR = Average of True Range over n periods
 #### Implementation
 ```python
 def atr(high: pd.Series, low: pd.Series, close: pd.Series, n: int = 14) -> pd.Series:
-    """Calculate Average True Range."""
     prev_close = close.shift(1)
     tr1 = high - low
     tr2 = abs(high - prev_close)
     tr3 = abs(low - prev_close)
-    
+
     true_range = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
     return true_range.rolling(window=n, min_periods=n).mean()
 ```
@@ -129,7 +124,7 @@ def atr(high: pd.Series, low: pd.Series, close: pd.Series, n: int = 14) -> pd.Se
 - **Rising ATR**: Volatility expanding
 - **Falling ATR**: Volatility contracting
 
-## 📊 Trading Strategies
+## Trading Strategies
 
 ### RSI Mean-Reversion Strategy
 
@@ -144,22 +139,18 @@ Assumes prices revert to their mean after extreme moves. Uses RSI to identify ov
 #### Implementation
 ```python
 def rsi_mean_reversion(df: pd.DataFrame, window: int = 3, min_count: int = 2) -> pd.DataFrame:
-    """Generate RSI mean-reversion signals with confirmation."""
     rsi = rsi_wilder(df['close'])
-    
-    # Generate raw signals
+
     buy_raw = (rsi < 30).astype(int)
     sell_raw = (rsi > 70).astype(int)
-    
-    # Apply confirmation filter (2 of 3)
+
     buy_confirmed = buy_raw.rolling(window=window).sum() >= min_count
     sell_confirmed = sell_raw.rolling(window=window).sum() >= min_count
-    
-    # Generate final signals
+
     signals = pd.Series('hold', index=df.index)
     signals[buy_confirmed] = 'buy'
     signals[sell_confirmed] = 'sell'
-    
+
     return pd.DataFrame({'signal': signals, 'rsi': rsi})
 ```
 
@@ -181,22 +172,19 @@ Trend-following strategy based on the crossover of two moving averages of differ
 #### Implementation
 ```python
 def sma_crossover(df: pd.DataFrame, fast: int = 20, slow: int = 50) -> pd.DataFrame:
-    """Generate SMA crossover signals."""
     sma_fast = sma(df['close'], fast)
     sma_slow = sma(df['close'], slow)
-    
-    # Detect crossovers
+
     position = pd.Series(index=df.index, dtype=float)
-    position[sma_fast > sma_slow] = 1   # Long position
-    position[sma_fast < sma_slow] = -1  # Short position
+    position[sma_fast > sma_slow] = 1
+    position[sma_fast < sma_slow] = -1
     position = position.fillna(method='ffill').fillna(0)
-    
-    # Generate signals from position changes
+
     signals = pd.Series('hold', index=df.index)
     position_change = position.diff()
     signals[position_change > 0] = 'buy'
     signals[position_change < 0] = 'sell'
-    
+
     return pd.DataFrame({
         'signal': signals,
         'sma_fast': sma_fast,
@@ -215,7 +203,7 @@ def sma_crossover(df: pd.DataFrame, fast: int = 20, slow: int = 50) -> pd.DataFr
 - **Lagging**: Signals come after trend has started
 - **Drawdowns**: Can experience extended losing periods
 
-## 🎯 Signal Confirmation System
+## Signal Confirmation System
 
 ### 2-of-3 Confirmation
 
@@ -225,19 +213,16 @@ Reduces false signals by requiring multiple confirmations before acting on a sig
 #### Implementation
 ```python
 def signal_confirmation(signals: pd.Series, window: int = 3, min_count: int = 2) -> pd.Series:
-    """Apply 2-of-3 confirmation to trading signals."""
     buy_signals = (signals == 'buy').astype(int)
     sell_signals = (signals == 'sell').astype(int)
-    
-    # Count signals in rolling window
+
     buy_count = buy_signals.rolling(window=window).sum()
     sell_count = sell_signals.rolling(window=window).sum()
-    
-    # Apply confirmation threshold
+
     confirmed_signals = pd.Series('hold', index=signals.index)
     confirmed_signals[buy_count >= min_count] = 'buy'
     confirmed_signals[sell_count >= min_count] = 'sell'
-    
+
     return confirmed_signals
 ```
 
@@ -254,21 +239,17 @@ Combine signals from multiple strategies to increase confidence.
 #### Implementation
 ```python
 def multi_strategy_confirmation(rsi_signals: pd.Series, sma_signals: pd.Series) -> pd.DataFrame:
-    """Combine RSI and SMA strategy signals."""
-    # Score each signal type
     signal_scores = pd.DataFrame({
         'rsi_score': (rsi_signals == 'buy').astype(int) - (rsi_signals == 'sell').astype(int),
         'sma_score': (sma_signals == 'buy').astype(int) - (sma_signals == 'sell').astype(int)
     })
-    
-    # Calculate combined score
+
     combined_score = signal_scores.sum(axis=1)
-    
-    # Generate final signals
+
     final_signals = pd.Series('hold', index=rsi_signals.index)
-    final_signals[combined_score >= 1] = 'buy'   # At least one buy signal
-    final_signals[combined_score <= -1] = 'sell' # At least one sell signal
-    
+    final_signals[combined_score >= 1] = 'buy'
+    final_signals[combined_score <= -1] = 'sell'
+
     return pd.DataFrame({
         'signal': final_signals,
         'score': combined_score,
@@ -277,7 +258,7 @@ def multi_strategy_confirmation(rsi_signals: pd.Series, sma_signals: pd.Series) 
     })
 ```
 
-## 🛡️ Risk Management Applications
+## Risk Management Applications
 
 ### Position Sizing with ATR
 
@@ -286,21 +267,12 @@ Use ATR to determine appropriate position size based on volatility.
 
 #### Implementation
 ```python
-def atr_position_size(portfolio_value: float, risk_per_trade: float, 
+def atr_position_size(portfolio_value: float, risk_per_trade: float,
                      entry_price: float, atr_value: float, atr_multiplier: float = 3.0) -> int:
-    """Calculate position size based on ATR risk."""
-    # Calculate dollar risk per share (stop distance)
     risk_per_share = atr_value * atr_multiplier
-    
-    # Calculate total dollar risk for the trade
     total_risk = portfolio_value * risk_per_trade
-    
-    # Calculate number of shares
     shares = int(total_risk / risk_per_share)
-    
-    # Ensure position doesn't exceed available capital
     max_shares = int(portfolio_value / entry_price)
-    
     return min(shares, max_shares)
 ```
 
@@ -312,11 +284,10 @@ Use SPY's position relative to its 200-day SMA to determine market regime.
 #### Implementation
 ```python
 def market_regime_filter(spy_price: float, spy_sma200: float) -> str:
-    """Determine market regime for filtering trades."""
     if spy_price > spy_sma200:
-        return 'bull'  # Allow long trades
+        return 'bull'
     else:
-        return 'bear'  # Restrict new long positions
+        return 'bear'
 ```
 
 #### Application
@@ -324,7 +295,7 @@ def market_regime_filter(spy_price: float, spy_sma200: float) -> str:
 - **Bear Market**: SPY < SMA200, avoid new long positions
 - **Regime Change**: Alert when market regime changes
 
-## 📚 Best Practices
+## Best Practices
 
 ### Indicator Selection
 1. **Complementary Indicators**: Use indicators that measure different aspects (trend, momentum, volatility)
@@ -350,7 +321,7 @@ def market_regime_filter(spy_price: float, spy_sma200: float) -> str:
 3. **Ignoring Risk**: Focusing on returns without considering risk
 4. **Emotional Override**: Deviating from systematic rules based on feelings
 
-## 🔍 Advanced Concepts
+## Advanced Concepts
 
 ### Multi-Timeframe Analysis
 - **Higher Timeframe Trend**: Use daily/weekly charts for overall direction
@@ -367,7 +338,7 @@ def market_regime_filter(spy_price: float, spy_sma200: float) -> str:
 - **Time of Day**: Consider intraday patterns (opening gaps, closing effects)
 - **Day of Week**: Be aware of calendar effects (Monday blues, Friday rallies)
 
-## 📊 Performance Measurement
+## Performance Measurement
 
 ### Key Metrics
 1. **Win Rate**: Percentage of profitable trades

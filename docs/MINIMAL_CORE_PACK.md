@@ -1,31 +1,27 @@
-# RapidTrader MVP — Minimal Core Pack (Drop-In)
+# RapidTrader MVP - Minimal Core Pack (Drop-In)
 
-_A mentor-free, end-to-end "engine" you can paste into the repo to go from data → indicators → signals → risk checks → dry-run orders in one afternoon._
+A complete, drop-in engine for EOD algorithmic trading: data, indicators, signals, risk checks, and dry-run orders.
 
-**Save as:** `docs/MINIMAL_CORE_PACK.md`  
-**Targets:** EOD, long-only equities; RSI mean-reversion + SMA crossover; SPY 200-SMA market filter; 2-of-3 confirmation; ATR sizing; sector caps; stop cooldown hook.  
-**Current Status:** ✅ **100% COMPLETE & OPERATIONAL**  
-**System:** Full algorithmic trading system with strategies, risk management, and job automation implemented and tested.
+**Targets:** EOD, long-only equities; RSI mean-reversion + SMA crossover; SPY 200-SMA market filter; 2-of-3 confirmation; ATR sizing; sector caps; stop cooldown.
 
 ---
 
-## ✅ What you'll add (overview)
+## Overview
 
-1) ✅ **DB tables:** signals, orders, market state, positions, cooldown events - **COMPLETE**
-2) ✅ **Indicators:** `sma`, `rsi_wilder`, `atr` - **ALL TESTS PASSED** with real market data
-3) ✅ **Strategies:** RSI mean-reversion (2-of-3 confirm), SMA crossover (2-day confirm) - **COMPLETE**
-4) ✅ **Risk:** fixed-fractional & ATR-target sizing, sector cap check, stop-cooldown guard - **COMPLETE**
-5) ✅ **Market state:** SPY cache + gate (SPY ≥ SMA200) and "% filtered" metric - **COMPLETE**
-6) ✅ **Jobs:** `eod_ingest`, `eod_trade`, `eod_report` - **COMPLETE**
-7) ✅ **Config defaults** and **Polygon.io API integration** - **COMPLETE**
-
-**Status:** Complete algorithmic trading system (100%) ready for production use.
+Components included:
+1. **DB tables:** signals, orders, market state, positions, cooldown events
+2. **Indicators:** `sma`, `rsi_wilder`, `atr`
+3. **Strategies:** RSI mean-reversion (2-of-3 confirm), SMA crossover (2-day confirm)
+4. **Risk:** fixed-fractional and ATR-target sizing, sector cap check, stop-cooldown guard
+5. **Market state:** SPY cache + gate (SPY >= SMA200) and "% filtered" metric
+6. **Jobs:** `eod_ingest`, `eod_trade`, `eod_report`
+7. **Config defaults** and **Polygon.io API integration**
 
 ---
 
-## 0) Database — add just enough schema
+## 0) Database Schema
 
-Append to `scripts/setup_db.sql` (safe to re-run):
+Append to `scripts/setup_db.sql`:
 
 ```sql
 -- signals and orders (EOD, dry-run)
@@ -33,7 +29,7 @@ CREATE TABLE IF NOT EXISTS signals_daily (
   d DATE NOT NULL,
   symbol TEXT NOT NULL,
   strategy TEXT NOT NULL,
-  direction TEXT NOT NULL, -- buy/sell/hold
+  direction TEXT NOT NULL,
   strength DOUBLE PRECISION,
   PRIMARY KEY (d, symbol, strategy)
 );
@@ -42,14 +38,13 @@ CREATE TABLE IF NOT EXISTS orders_eod (
   id BIGSERIAL PRIMARY KEY,
   d DATE NOT NULL,
   symbol TEXT NOT NULL,
-  side TEXT NOT NULL,       -- buy/sell/exit
+  side TEXT NOT NULL,
   qty INTEGER NOT NULL,
-  type TEXT NOT NULL,       -- market, limit, stop (MVP uses 'market')
+  type TEXT NOT NULL,
   reason TEXT,
   created_at TIMESTAMPTZ DEFAULT now()
 );
 
--- minimal positions (optional now, useful later)
 CREATE TABLE IF NOT EXISTS positions (
   symbol TEXT PRIMARY KEY,
   qty DOUBLE PRECISION NOT NULL DEFAULT 0,
@@ -57,7 +52,6 @@ CREATE TABLE IF NOT EXISTS positions (
   sector TEXT
 );
 
--- market state cache (SPY filter + metrics)
 CREATE TABLE IF NOT EXISTS market_state (
   d DATE PRIMARY KEY,
   spy_close DOUBLE PRECISION,
@@ -68,17 +62,16 @@ CREATE TABLE IF NOT EXISTS market_state (
   pct_entries_filtered DOUBLE PRECISION
 );
 
--- cooldown events (STOP_HIT, etc.)
 CREATE TABLE IF NOT EXISTS symbol_events (
   symbol TEXT NOT NULL,
   d DATE NOT NULL,
-  event TEXT NOT NULL,  -- e.g., STOP_HIT
+  event TEXT NOT NULL,
   details JSONB,
   PRIMARY KEY (symbol, d, event)
 );
 ```
 
-Apply it:
+Apply:
 
 ```bash
 docker exec -i rapidtrader-db psql -U postgres -d rapidtrader < scripts/setup_db.sql
@@ -86,37 +79,15 @@ docker exec -i rapidtrader-db psql -U postgres -d rapidtrader < scripts/setup_db
 
 ---
 
-## 1) Indicators ✅ COMPLETE & VALIDATED
+## 1) Indicators
 
-_Save as: `rapidtrader/indicators/core.py` - **ALREADY IMPLEMENTED & TESTED**_
+**File:** `rapidtrader/indicators/core.py`
 
-**✅ Implementation Status:**
-- ✅ **SMA**: Perfect accuracy, all tests passed
-- ✅ **RSI**: Wilder's method, validated against 70 AAPL bars
-- ✅ **ATR**: Wilder's smoothing, production ready
-- ✅ **Testing**: Comprehensive validation with real market data from Polygon.io
-- ✅ **Edge Cases**: Proper NaN handling for insufficient data
-
-**Validation Results (from `python tools/testing/test_indicator_accuracy.py`):**
-```
-🎉 ALL TESTS PASSED!
-✅ SMA: Production ready (tested periods: 10, 20, 50)  
-✅ RSI: Production ready (range: 0.0-72.9, values: 0-100)
-✅ ATR: Production ready (range: $3.30-$5.39, all positive)
-✅ Edge Cases: Proper handling of insufficient data
-```
-
-**Real Market Data Validation:**
-- **Symbol**: AAPL (70 bars from Polygon.io)
-- **Price Range**: $195.27 - $233.33  
-- **Date Range**: 2025-05-20 to 2025-08-28
-- **Accuracy**: 100% match with reference implementations
-
-_All indicators are ready for strategy implementation._
+Validated with real market data from Polygon.io. All tests passed.
 
 ---
 
-## 2) Strategies (signals only)
+## 2) Strategies
 
 **File:** `rapidtrader/strategies/confirmation.py`
 
@@ -169,7 +140,7 @@ def sma_crossover(df: pd.DataFrame, fast=20, slow=100, confirm_days=2) -> pd.Dat
 
 ---
 
-## 3) Risk: sizing, exposure cap, cooldown
+## 3) Risk: Sizing, Exposure Cap, Cooldown
 
 **File:** `rapidtrader/risk/sizing.py`
 
@@ -235,7 +206,7 @@ def stop_cooldown_active(symbol: str, d: date, cooldown_days: int = 1) -> bool:
 
 ---
 
-## 4) Data ingest (yfinance → Postgres)
+## 4) Data Ingest
 
 **File:** `rapidtrader/data/ingest.py`
 
@@ -267,7 +238,7 @@ def ingest_symbols(symbols: list[str], days: int = 365):
 
 ---
 
-## 5) Market state (SPY cache)
+## 5) Market State (SPY Cache)
 
 **File:** `rapidtrader/core/market_state.py`
 
@@ -291,7 +262,7 @@ def refresh_spy_cache(days: int = 300):
 
 ---
 
-## 6) Jobs — EOD ingest, trade, report
+## 6) Jobs - EOD Ingest, Trade, Report
 
 **File:** `rapidtrader/jobs/eod_ingest.py`
 
@@ -313,126 +284,18 @@ def main():
     ingest_symbols(syms, days=args.days)
     refresh_spy_cache(days=args.days)
     print(f"Ingested {len(syms)} symbols & refreshed SPY.")
+
 if __name__ == "__main__":
     main()
 ```
 
 **File:** `rapidtrader/jobs/eod_trade.py`
 
-```python
-import argparse
-import pandas as pd
-from datetime import date
-from sqlalchemy import text
-from ..core.db import get_engine
-from ..core.config import settings
-from ..indicators.core import atr
-from ..strategies.rsi_mr import rsi_mean_reversion
-from ..strategies.sma_cross import sma_crossover
-from ..risk.sizing import shares_fixed_fractional, shares_atr_target
-from ..risk.controls import sector_exposure_ok
-from ..risk.stop_cooldown import stop_cooldown_active
-
-def get_bars(symbol: str, lookback: int = 250) -> pd.DataFrame:
-    eng = get_engine()
-    q = text("SELECT d, open, high, low, close, volume FROM bars_daily WHERE symbol=:s ORDER BY d")
-    df = pd.read_sql(q, eng, params={"s": symbol}, parse_dates=["d"]).set_index("d")
-    return df.tail(lookback)
-
-def last_session() -> date:
-    eng = get_engine()
-    return eng.execute(text("SELECT MAX(d) FROM bars_daily")).scalar_one()
-
-def market_gate(d: date) -> bool:
-    eng = get_engine()
-    row = eng.execute(text("SELECT bull_gate FROM market_state WHERE d=:d"), {"d": d}).first()
-    return bool(row[0]) if row else False
-
-def portfolio_value() -> float:
-    return settings.RT_START_CAPITAL  # simple for MVP
-
-def sector_value(eng, sector: str) -> float:
-    row = eng.execute(text("SELECT COALESCE(SUM(qty*avg_px),0) FROM positions WHERE sector=:sec"), {"sec": sector}).first()
-    return float(row[0] or 0.0)
-
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("--mode", choices=["dry_run"], default="dry_run")
-    args = ap.parse_args()
-
-    eng = get_engine()
-    d = last_session()
-    if settings.RT_MARKET_FILTER_ENABLE and not market_gate(d):
-        print(f"{d}: Market filter OFF — no new entries.")
-        return 0
-
-    rows = eng.execute(text("SELECT symbol, sector FROM symbols")).all()
-    total, filtered = 0, 0
-    pv = portfolio_value()
-
-    for sym, sector in rows:
-        total += 1
-        if stop_cooldown_active(sym, d, settings.RT_COOLDOWN_DAYS_ON_STOP):
-            filtered += 1
-            continue
-
-        df = get_bars(sym, 250)
-        if len(df) < 200:
-            filtered += 1
-            continue
-
-        rsi_sig = rsi_mean_reversion(df, window=settings.RT_CONFIRM_WINDOW, min_count=settings.RT_CONFIRM_MIN_COUNT).iloc[-1]["signal"]
-        sma_sig = sma_crossover(df).iloc[-1]["signal"]
-
-        signal, strat = "hold", None
-        if "sell" in (rsi_sig, sma_sig):
-            signal, strat = "sell", "RSI_MR" if rsi_sig=="sell" else "SMA_X"
-        elif "buy" in (rsi_sig, sma_sig):
-            signal, strat = "buy", "RSI_MR" if rsi_sig=="buy" else "SMA_X"
-        else:
-            continue
-
-        close_px = float(df["close"].iloc[-1])
-        atr14 = float(atr(df["high"], df["low"], df["close"], settings.RT_ATR_LOOKBACK).iloc[-1])
-        qty_ff  = shares_fixed_fractional(pv, settings.RT_PCT_PER_TRADE, close_px)
-        qty_atr = shares_atr_target(pv, settings.RT_DAILY_RISK_CAP, atr14, settings.RT_ATR_STOP_K)
-        qty = min(qty_ff, qty_atr)
-
-        sec_val = sector_value(eng, sector or "")
-        candidate_value = qty * close_px
-        if not sector_exposure_ok(sec_val, pv, candidate_value, settings.RT_MAX_EXPOSURE_PER_SECTOR):
-            filtered += 1
-            continue
-
-        with eng.begin() as c:
-            c.execute(text("""
-                INSERT INTO signals_daily(d,symbol,strategy,direction,strength)
-                VALUES(:d,:s,:strat,:dir,:str)
-                ON CONFLICT (d,symbol,strategy) DO UPDATE SET direction=:dir, strength=:str
-            """), {"d": d, "s": sym, "strat": strat or "NA", "dir": signal, "str": 1.0})
-
-            if signal == "buy" and qty > 0:
-                c.execute(text("""
-                    INSERT INTO orders_eod(d,symbol,side,qty,type,reason)
-                    VALUES(:d,:s,'buy',:q,'market','mvp-entry')
-                """), {"d": d, "s": sym, "q": int(qty)})
-            elif signal == "sell":
-                c.execute(text("""
-                    INSERT INTO orders_eod(d,symbol,side,qty,type,reason)
-                    VALUES(:d,:s,'sell',0,'market','mvp-exit')
-                """), {"d": d, "s": sym})
-
-    pct = 0.0 if total == 0 else 100.0*filtered/total
-    with eng.begin() as c:
-        c.execute(text("""
-            UPDATE market_state SET total_candidates=:t, filtered_candidates=:f, pct_entries_filtered=:p WHERE d=:d
-        """), {"t": total, "f": filtered, "p": pct, "d": d})
-    print(f"{d}: candidates={total}, filtered={filtered} ({pct:.1f}%), orders recorded.")
-    return 0
-
-if __name__ == "__main__":
-    raise SystemExit(main())
-```
+See full implementation in main codebase. Key logic:
+- Check market gate (SPY >= SMA200)
+- For each symbol: check cooldown, generate RSI/SMA signals, calculate position size
+- Apply sector exposure limits
+- Record signals and create orders
 
 **File:** `rapidtrader/jobs/eod_report.py`
 
@@ -448,18 +311,20 @@ def main():
     print(f"Report for {d}: % entries filtered = {ms:.1f}%")
     for sym, side, qty, typ, reason in orders:
         print(f" - {sym}: {side} {qty} ({typ}) [{reason}]")
+
 if __name__ == "__main__":
     main()
 ```
 
 ---
 
-## 7) Config defaults
+## 7) Config Defaults
 
-Ensure **`rapidtrader/core/config.py`** includes:
+**File:** `rapidtrader/core/config.py`
 
 ```python
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=False)
     RT_DB_URL: str = "postgresql+psycopg://postgres:postgres@localhost:5432/rapidtrader"
@@ -477,44 +342,45 @@ class Settings(BaseSettings):
     RT_PCT_PER_TRADE: float = 0.05
     RT_DAILY_RISK_CAP: float = 0.005
     RT_MAX_EXPOSURE_PER_SECTOR: float = 0.30
+
 settings = Settings()
 ```
 
 ---
 
-## 8) How to run (end-to-end)
+## 8) How to Run
 
 ```bash
-# 0) Ensure deps installed and DB is up
+# 0) Setup environment
 python -m venv .venv && source .venv/bin/activate
 pip install --upgrade pip
 pip install -e .
 pip install ".[dev]"
 docker compose up -d
 
-# 1) Apply DB and seed symbols
+# 1) Apply DB schema and seed symbols
 docker exec -i rapidtrader-db psql -U postgres -d rapidtrader < scripts/setup_db.sql
 python scripts/seed_sp500.py
 
-# 2) Ingest ~300 days & refresh SPY cache
+# 2) Ingest data and refresh SPY cache
 python -m rapidtrader.jobs.eod_ingest --days 300
 
-# 3) EOD trade (dry-run) and report
+# 3) Run EOD trade (dry-run) and report
 python -m rapidtrader.jobs.eod_trade --mode dry_run
 python -m rapidtrader.jobs.eod_report
 ```
 
 **Smoke test acceptance:**
-- `market_state` has today’s row with `bull_gate` set.  
-- `orders_eod` has ≥0 rows (some buys/sells depending on market state).  
-- `signals_daily` populated for symbols that triggered.  
-- Console print shows `% entries filtered` by the market gate and cooldown.
+- `market_state` has today's row with `bull_gate` set
+- `orders_eod` has rows (buys/sells depending on market state)
+- `signals_daily` populated for symbols that triggered
+- Console shows `% entries filtered` by market gate and cooldown
 
 ---
 
-## Notes & next steps
+## Notes
 
-- This is **EOD dry-run only**; paper/live routing (Alpaca) slots in where orders are recorded.  
-- Add **ATR stop storage** (`stop_loss_px`) when you wire up positions & fills.  
-- Add **cost knobs** (commission, slippage) to your backtester for realistic performance.  
-- Cache **SPY SMA200** once per day; log **% of entries filtered** to monitor market filter impact.
+- This is EOD dry-run only; paper/live routing (Alpaca) slots in where orders are recorded
+- Add ATR stop storage (`stop_loss_px`) when wiring up positions and fills
+- Add cost knobs (commission, slippage) to backtester for realistic performance
+- Cache SPY SMA200 once per day; log % of entries filtered to monitor market filter impact
