@@ -49,17 +49,14 @@ def update_symbols_table(clear_existing: bool = False):
             print("INFO: Updating symbols table...")
             for symbol, sector in symbols:
                 clean_sector = map_sector_name(sector)
-                
-                # Escape single quotes in sector name
-                clean_sector_escaped = clean_sector.replace("'", "''")
-                
-                conn.execute(text(f"""
-                    INSERT INTO symbols (symbol, sector, is_active) 
-                    VALUES ('{symbol}', '{clean_sector_escaped}', true)
-                    ON CONFLICT (symbol) DO UPDATE SET 
-                        sector = '{clean_sector_escaped}', 
+
+                conn.execute(text("""
+                    INSERT INTO symbols (symbol, sector, is_active)
+                    VALUES (:symbol, :sector, true)
+                    ON CONFLICT (symbol) DO UPDATE SET
+                        sector = EXCLUDED.sector,
                         is_active = true
-                """))
+                """), {"symbol": symbol, "sector": clean_sector})
             
             total_count = conn.execute(text("SELECT COUNT(*) FROM symbols WHERE is_active = true")).scalar()
             
@@ -203,22 +200,21 @@ def update_sector_cache(clear_existing: bool = False):
                 try:
                     with eng.begin() as conn:
                         for data in batch_data:
-                            # Escape single quotes in text fields
-                            symbol = data["symbol"].replace("'", "''")
-                            sector = data["sector"].replace("'", "''")
-                            sic_description = data["sic_description"].replace("'", "''")
-                            sic_code = data["sic_code"] if data["sic_code"] is not None else "NULL"
-                            
-                            conn.execute(text(f"""
+                            conn.execute(text("""
                                 INSERT INTO sector_cache (symbol, sector, sic_description, sic_code, last_updated)
-                                VALUES ('{symbol}', '{sector}', '{sic_description}', {sic_code}, CURRENT_DATE)
+                                VALUES (:symbol, :sector, :sic_description, :sic_code, CURRENT_DATE)
                                 ON CONFLICT (symbol) DO UPDATE SET
-                                    sector = '{sector}',
-                                    sic_description = '{sic_description}',
-                                    sic_code = {sic_code},
+                                    sector = EXCLUDED.sector,
+                                    sic_description = EXCLUDED.sic_description,
+                                    sic_code = EXCLUDED.sic_code,
                                     last_updated = CURRENT_DATE
-                            """))
-                    
+                            """), {
+                                "symbol": data["symbol"],
+                                "sector": data["sector"],
+                                "sic_description": data["sic_description"],
+                                "sic_code": data["sic_code"]
+                            })
+
                     print(f"INFO: Saved batch of {len(batch_data)} records to database")
                     
                 except Exception as e:

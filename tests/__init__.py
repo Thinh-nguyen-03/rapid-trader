@@ -1,0 +1,1 @@
+"""RapidTrader test suite."""

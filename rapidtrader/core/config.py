@@ -63,4 +63,9 @@ class Settings(BaseSettings):
     RT_CORRELATION_LOOKBACK: int = 60
     RT_CORRELATION_TOP_N: int = 3
 
+    # Logging
+    RT_LOG_LEVEL: str = "INFO"
+    RT_LOG_JSON: bool = False
+    RT_LOG_FILE: str = ""
+
 settings = Settings()

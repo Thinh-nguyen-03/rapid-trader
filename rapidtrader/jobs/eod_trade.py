@@ -7,9 +7,13 @@ applies risk management controls, and creates dry-run orders.
 import argparse
 import pandas as pd
 from datetime import date
+from pathlib import Path
 from sqlalchemy import text
 from ..core.db import get_engine
 from ..core.config import settings
+from ..core.logging_config import setup_logging, get_logger
+
+logger = get_logger(__name__)
 from ..indicators.core import atr
 from ..strategies.rsi_mr import rsi_mean_reversion
 from ..strategies.sma_cross import sma_crossover
@@ -229,13 +233,20 @@ def main():
     )
     
     args = parser.parse_args()
-    
+
+    # Initialize logging
+    setup_logging(
+        log_level=settings.RT_LOG_LEVEL,
+        json_logs=settings.RT_LOG_JSON,
+        log_file=Path(settings.RT_LOG_FILE) if settings.RT_LOG_FILE else None
+    )
+
     try:
-        print("Starting EOD trading job...")
-        
+        logger.info("job_started", job="eod_trade")
+
         # Get latest trading session
         trade_date = get_last_session()
-        print(f"Processing signals for {trade_date}")
+        logger.info("processing_signals", trade_date=str(trade_date))
         
         # Update and check kill switch first (includes drawdown check)
         kill_active, kill_reason = update_kill_switch_state(
@@ -243,23 +254,21 @@ def main():
             drawdown_threshold=settings.RT_DRAWDOWN_THRESHOLD
         )
         if kill_active:
-            print(f"ALERT: Kill switch ACTIVE for {trade_date}: {kill_reason}")
-            print("WARNING: No new entries allowed - system in protective mode")
+            logger.warning("kill_switch_active", trade_date=str(trade_date), reason=kill_reason)
             update_filtering_metrics(trade_date, 0, 0)
             return 0
-        
+
         # Check market filter but don't return early
         bear_gate = settings.RT_MARKET_FILTER_ENABLE and not is_bull_market(trade_date)
         if bear_gate:
-            # Get market state info for enhanced logging
             from ..core.market_state import get_market_state
             market_info = get_market_state(trade_date)
             spy_close = market_info.get('spy_close', 'N/A')
             spy_sma200 = market_info.get('spy_sma200', 'N/A')
-            print(f"{trade_date}: Market filter OFF — buys blocked, exits allowed.")
-            print(f"INFO: SPY close: {spy_close}, SMA200: {spy_sma200}")
+            logger.info("market_filter_active", buys_blocked=True, exits_allowed=True,
+                       spy_close=spy_close, spy_sma200=spy_sma200)
         else:
-            print(f"INFO: Kill switch OFF for {trade_date} - trading permitted")
+            logger.info("trading_permitted", trade_date=str(trade_date))
         
         # Get active symbols with sector information
         eng = get_engine()
@@ -271,10 +280,10 @@ def main():
             """)).all()
         
         if not symbols_data:
-            print("No active symbols found")
+            logger.warning("no_active_symbols")
             return 0
-        
-        print(f"Processing {len(symbols_data)} symbols...")
+
+        logger.info("processing_symbols", count=len(symbols_data))
         
         # Initialize counters
         total_candidates = 0
@@ -283,7 +292,7 @@ def main():
         orders_created = 0
         
         portfolio_value = get_portfolio_value()
-        print(f"Portfolio value: ${portfolio_value:,.2f}")
+        logger.info("portfolio_value", value=portfolio_value)
 
         # Get current positions and their ATR values for risk checks
         current_positions = get_current_positions()
@@ -300,11 +309,11 @@ def main():
                 settings.RT_MAX_PORTFOLIO_HEAT
             )
             if not heat_ok:
-                print(f"WARNING: Portfolio heat {current_heat:.1%} exceeds limit {settings.RT_MAX_PORTFOLIO_HEAT:.1%}")
-                print("INFO: New entries blocked until heat reduces")
+                logger.warning("portfolio_heat_exceeded", current=current_heat,
+                              limit=settings.RT_MAX_PORTFOLIO_HEAT)
                 portfolio_heat_blocked = True
             else:
-                print(f"INFO: Portfolio heat {current_heat:.1%} within limit")
+                logger.info("portfolio_heat_ok", current=current_heat)
 
         # Get VIX for position scaling
         vix_multiplier = 1.0
@@ -319,9 +328,9 @@ def main():
                     settings.RT_VIX_SCALE_HIGH
                 )
                 if vix_multiplier < 1.0:
-                    print(f"INFO: VIX at {current_vix:.1f}, position size scaled to {vix_multiplier:.0%}")
+                    logger.info("vix_scaling_applied", vix=current_vix, multiplier=vix_multiplier)
             else:
-                print("INFO: VIX data not available, using full position size")
+                logger.info("vix_data_unavailable")
 
         # Process each symbol
         for symbol, sector in symbols_data:
@@ -466,26 +475,28 @@ def main():
                                 orders_created += 1
                 
             except Exception as e:
-                print(f"Error processing {symbol}: {e}")
+                logger.error("symbol_processing_error", symbol=symbol, error=str(e))
                 filtered_candidates += 1
                 continue
         
         # Update filtering metrics
         update_filtering_metrics(trade_date, total_candidates, filtered_candidates)
-        
-        # Print summary
+
+        # Log summary
         pct_filtered = 100.0 * filtered_candidates / total_candidates if total_candidates > 0 else 0.0
-        print(f"\nEOD Trading Job Summary for {trade_date}:")
-        print(f"  Total candidates: {total_candidates}")
-        print(f"  Filtered out: {filtered_candidates} ({pct_filtered:.1f}%)")
-        print(f"  Signals generated: {signals_generated}")
-        print(f"  Orders created: {orders_created}")
-        
-        print("EOD trading job completed successfully")
+        logger.info("job_summary",
+                   trade_date=str(trade_date),
+                   total_candidates=total_candidates,
+                   filtered_candidates=filtered_candidates,
+                   pct_filtered=pct_filtered,
+                   signals_generated=signals_generated,
+                   orders_created=orders_created)
+
+        logger.info("job_completed", job="eod_trade")
         return 0
-        
+
     except Exception as e:
-        print(f"EOD trading job failed: {e}")
+        logger.exception("job_failed", job="eod_trade", error=str(e))
         return 1
 
 

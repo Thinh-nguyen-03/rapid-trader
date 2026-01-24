@@ -9,8 +9,11 @@ from alpaca.data.timeframe import TimeFrame
 from sqlalchemy import text
 from ..core.db import get_engine
 from ..core.config import settings
+from ..core.logging_config import get_logger
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
+
+logger = get_logger(__name__)
 
 
 class AlpacaDataClient:
@@ -49,7 +52,7 @@ class AlpacaDataClient:
             bars = self.client.get_stock_bars(request)
 
             if bars.df.empty:
-                print(f"No data returned for {symbol}")
+                logger.warning("no_data_returned", symbol=symbol)
                 return pd.DataFrame()
 
             df = bars.df
@@ -66,11 +69,11 @@ class AlpacaDataClient:
             df = df[~df.index.duplicated(keep='last')]
             df = df.sort_index()
 
-            print(f"Retrieved {len(df)} bars for {symbol}")
+            logger.debug("bars_retrieved", symbol=symbol, count=len(df))
             return df
 
         except Exception as e:
-            print(f"Error fetching data for {symbol}: {e}")
+            logger.error("fetch_error", symbol=symbol, error=str(e))
             return pd.DataFrame()
 
     def get_previous_close(self, symbol: str) -> Optional[Dict[str, Any]]:
@@ -101,13 +104,13 @@ class AlpacaDataClient:
             return None
 
         except Exception as e:
-            print(f"Error fetching previous close for {symbol}: {e}")
+            logger.error("previous_close_error", symbol=symbol, error=str(e))
             return None
 
 def upsert_bars(symbol: str, bars: pd.DataFrame) -> None:
     """Insert or update daily OHLCV bars in the database."""
     if bars.empty:
-        print(f"No data to upsert for {symbol}")
+        logger.warning("no_data_to_upsert", symbol=symbol)
         return
 
     eng = get_engine()
@@ -130,7 +133,7 @@ def upsert_bars(symbol: str, bars: pd.DataFrame) -> None:
                     "v": int(row["Volume"])
                 })
             except Exception as e:
-                print(f"Error inserting data for {symbol} on {d}: {e}")
+                logger.error("upsert_error", symbol=symbol, date=str(d), error=str(e))
                 continue
 
 def check_data_exists_for_date(symbols: List[str], target_date: date) -> Dict[str, bool]:
@@ -173,14 +176,14 @@ def check_data_exists_for_date(symbols: List[str], target_date: date) -> Dict[st
         return existing_data
 
     except Exception as e:
-        print(f"ERROR: Failed to check existing data: {e}")
+        logger.error("check_existing_data_error", error=str(e))
         return {symbol: False for symbol in symbols}
 
 def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None,
                   skip_existing: bool = True, max_workers: int = 10) -> None:
     """Ingest OHLCV data for multiple symbols using parallel processing."""
     if not symbols:
-        print("No symbols provided for ingestion")
+        logger.warning("no_symbols_provided")
         return
 
     api_key = settings.RT_ALPACA_API_KEY
@@ -196,19 +199,19 @@ def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None
     
     symbols_to_process = symbols
     skipped_count = 0
-    
+
     if skip_existing:
-        print(f"INFO: Checking for existing data for {target_date}")
+        logger.info("checking_existing_data", target_date=str(target_date))
         existing_data = check_data_exists_for_date(symbols, target_date)
-        
+
         symbols_to_process = [symbol for symbol in symbols if not existing_data.get(symbol, False)]
         skipped_count = len(symbols) - len(symbols_to_process)
-        
+
         if skipped_count > 0:
-            print(f"SUCCESS: Skipping symbols that already have data for {target_date}")
-    
+            logger.info("skipping_existing_symbols", count=skipped_count)
+
     if not symbols_to_process:
-        print(f"SUCCESS: All symbols already have data for {target_date}")
+        logger.info("all_symbols_have_data", target_date=str(target_date))
         return
     
     # Alpaca has generous rate limits - use moderate parallelism
@@ -218,7 +221,8 @@ def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None
     else:
         max_workers = min(max_workers, 20, len(symbols_to_process))
 
-    print(f"Starting data ingestion from {start_date} to {end_date}")
+    logger.info("starting_ingestion", start_date=str(start_date), end_date=str(end_date),
+               symbol_count=len(symbols_to_process), max_workers=max_workers)
     
     success_count = 0
     error_count = 0
@@ -250,9 +254,8 @@ def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None
                 error_count += 1
     
     total_processed = success_count + error_count
-    print(f"\nSUCCESS: Ingestion complete: {success_count} successful, {error_count} errors")
-    if skipped_count > 0:
-        print(f"INFO: {skipped_count} symbols skipped (data already exists), {total_processed} symbols processed")
+    logger.info("ingestion_complete", success=success_count, errors=error_count,
+               skipped=skipped_count, total_processed=total_processed)
 
 def _fetch_symbol_data(symbol: str, api_key: str, secret_key: str, start_date: date, end_date: date) -> tuple:
     try:
@@ -283,7 +286,7 @@ def get_latest_bar_date(symbol: str) -> Optional[date]:
             return None
             
     except Exception as e:
-        print(f"Error getting latest bar date for {symbol}: {e}")
+        logger.error("get_latest_bar_date_error", symbol=symbol, error=str(e))
         return None
 
 def update_symbol_data(symbol: str, days_back: int = 30) -> bool:
@@ -291,7 +294,7 @@ def update_symbol_data(symbol: str, days_back: int = 30) -> bool:
         latest_date = get_latest_bar_date(symbol)
 
         if latest_date is None:
-            print(f"No existing data for {symbol}, fetching full history")
+            logger.info("no_existing_data", symbol=symbol)
             ingest_symbols([symbol], days=365)
             return True
 
@@ -299,7 +302,7 @@ def update_symbol_data(symbol: str, days_back: int = 30) -> bool:
         start_date = max(latest_date + timedelta(days=1), today - timedelta(days=days_back))
 
         if start_date >= today:
-            print(f"{symbol} data is up to date")
+            logger.debug("data_up_to_date", symbol=symbol)
             return True
 
         api_key = settings.RT_ALPACA_API_KEY
@@ -313,12 +316,12 @@ def update_symbol_data(symbol: str, days_back: int = 30) -> bool:
         if not df.empty:
             upsert_bars(symbol, df)
         else:
-            print(f"No new data available for {symbol}")
+            logger.debug("no_new_data", symbol=symbol)
 
         return True
 
     except Exception as e:
-        print(f"Error updating {symbol}: {e}")
+        logger.error("update_symbol_error", symbol=symbol, error=str(e))
         return False
 
 def refresh_spy_cache(days: int = 300) -> pd.Series:
@@ -348,25 +351,25 @@ def refresh_spy_cache(days: int = 300) -> pd.Series:
 
 def validate_data_completeness(trade_date: date) -> bool:
     eng = get_engine()
-    
+
     with eng.begin() as conn:
         bars_count = conn.execute(text("""
             SELECT COUNT(*) FROM bars_daily WHERE d = :d
         """), {"d": trade_date}).scalar_one()
-        
+
         spy_data = conn.execute(text("""
             SELECT COUNT(*) FROM market_state WHERE d = :d
         """), {"d": trade_date}).scalar_one()
-        
+
         if bars_count == 0:
-            print(f"INFO: No bars data found for {trade_date}")
+            logger.warning("no_bars_data", trade_date=str(trade_date))
             return False
-            
+
         if spy_data == 0:
-            print(f"INFO: No SPY market state found for {trade_date}")
+            logger.warning("no_spy_market_state", trade_date=str(trade_date))
             return False
-            
-        print(f"INFO: Data validation passed: {bars_count} symbols, SPY state OK")
+
+        logger.info("data_validation_passed", bars_count=bars_count)
         return True
 
 def get_last_trading_session() -> date:

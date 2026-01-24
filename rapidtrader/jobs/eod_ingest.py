@@ -5,11 +5,16 @@ and refresh the SPY market state cache for trading decisions.
 """
 
 import argparse
+from pathlib import Path
 from sqlalchemy import text
 from ..core.db import get_engine
 from ..data.ingest import ingest_symbols
 from ..core.market_state import refresh_spy_cache
+from ..core.logging_config import setup_logging, get_logger
+from ..core.config import settings
 from datetime import date
+
+logger = get_logger(__name__)
 
 
 def get_active_symbols() -> list[str]:
@@ -71,45 +76,47 @@ def main():
     )
     
     args = parser.parse_args()
-    
+
+    # Initialize logging
+    setup_logging(
+        log_level=settings.RT_LOG_LEVEL,
+        json_logs=settings.RT_LOG_JSON,
+        log_file=Path(settings.RT_LOG_FILE) if settings.RT_LOG_FILE else None
+    )
+
     try:
-        print("Starting EOD data ingestion job...")
-        
+        logger.info("job_started", job="eod_ingest")
+
         if not args.spy_only:
-            # Get active symbols from database
             symbols = get_active_symbols()
-            print(f"Found {len(symbols)} active symbols to update")
-            
+            logger.info("found_active_symbols", count=len(symbols))
+
             if symbols:
                 skip_existing = args.skip_existing and not args.force_all
-                
-                print(f"INFO: Using PARALLEL ingestion")
-                print(f"INFO: {'Checking for existing data' if skip_existing else 'Processing all symbols'}")
-                
-                # Use parallel ingestion (always)
+                logger.info("ingestion_config", parallel=True, skip_existing=skip_existing)
+
                 ingest_symbols(
-                    symbols, 
+                    symbols,
                     days=args.days,
                     target_date=date.today(),
                     skip_existing=skip_existing,
                     max_workers=args.max_workers
                 )
-                    
-                print("SUCCESS: Symbol data ingestion complete")
+
+                logger.info("symbol_ingestion_complete")
             else:
-                print("WARNING: No active symbols found in database")
-        
+                logger.warning("no_active_symbols")
+
         if not args.symbols_only:
-            # Refresh SPY market state cache
-            print("Refreshing SPY market state cache...")
+            logger.info("refreshing_spy_cache")
             close_prices = refresh_spy_cache(days=args.days)
-            print(f"SPY cache refreshed with {len(close_prices)} days of data")
-        
-        print("EOD data ingestion job completed successfully")
+            logger.info("spy_cache_refreshed", days=len(close_prices))
+
+        logger.info("job_completed", job="eod_ingest")
         return 0
-        
+
     except Exception as e:
-        print(f"EOD ingestion job failed: {e}")
+        logger.exception("job_failed", job="eod_ingest", error=str(e))
         return 1
 
 

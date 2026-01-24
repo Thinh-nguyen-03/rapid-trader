@@ -13,6 +13,9 @@ import pandas as pd
 from datetime import date, timedelta
 from sqlalchemy import text
 from ..core.db import get_engine
+from ..core.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 
 def _rolling_sharpe(returns: pd.Series, window: int = 20, annualization_factor: float = 252) -> pd.Series:
@@ -39,95 +42,158 @@ def _rolling_sharpe(returns: pd.Series, window: int = 20, annualization_factor: 
     return sharpe
 
 
+def compute_daily_pnl_from_fills(eng, lookback_days: int = 60) -> pd.Series:
+    """Compute actual daily P&L from execution fills.
+
+    This calculates real profit/loss using entry and exit prices from fills.
+
+    Args:
+        eng: Database engine
+        lookback_days: Number of days to look back
+
+    Returns:
+        Series of daily P&L in dollars, indexed by date
+    """
+    cutoff_date = date.today() - timedelta(days=lookback_days)
+
+    # Get all completed trades (buy then sell) with actual execution prices
+    query = text("""
+        WITH ranked_fills AS (
+            SELECT
+                d,
+                symbol,
+                side,
+                qty,
+                avg_px,
+                ROW_NUMBER() OVER (PARTITION BY symbol, side ORDER BY d) as rn
+            FROM exec_fills
+            WHERE d >= :cutoff
+        ),
+        matched_trades AS (
+            SELECT
+                sell.d AS exit_date,
+                sell.symbol,
+                buy.avg_px AS entry_price,
+                sell.avg_px AS exit_price,
+                LEAST(buy.qty, sell.qty) AS quantity
+            FROM ranked_fills sell
+            INNER JOIN ranked_fills buy
+                ON sell.symbol = buy.symbol
+                AND sell.rn = buy.rn
+                AND buy.side = 'buy'
+                AND sell.side IN ('sell', 'exit')
+        )
+        SELECT
+            exit_date,
+            SUM((exit_price - entry_price) * quantity) AS daily_pnl
+        FROM matched_trades
+        GROUP BY exit_date
+        ORDER BY exit_date
+    """)
+
+    try:
+        df = pd.read_sql(query, eng, params={"cutoff": cutoff_date}, parse_dates=["exit_date"])
+    except Exception:
+        # Table might not exist yet or be empty
+        return pd.Series(dtype=float, name="pnl")
+
+    if df.empty:
+        return pd.Series(dtype=float, name="pnl")
+
+    pnl_series = df.set_index("exit_date")["daily_pnl"]
+    pnl_series.index.name = "date"
+
+    return pnl_series
+
+
 def compute_daily_returns_from_orders(eng, lookback_days: int = 60) -> pd.Series:
-    """Compute daily P&L returns from order history.
-    
-    This is a simplified MVP implementation that estimates returns.
-    In production, this should use actual fill prices from exec_fills table.
-    
+    """Compute daily P&L returns from actual execution fills.
+
     Args:
         eng: Database engine
         lookback_days: Number of days to look back for return calculation
-        
+
     Returns:
         Series of daily returns indexed by date
     """
-    cutoff_date = date.today() - timedelta(days=lookback_days)
-    
-    # Get recent orders to estimate P&L
-    query = text("""
-        SELECT d, symbol, side, qty, reason
-        FROM orders_eod 
-        WHERE d >= :cutoff
-        ORDER BY d, symbol
-    """)
-    
-    df = pd.read_sql(query, eng, params={"cutoff": cutoff_date}, parse_dates=["d"])
-    
-    if df.empty:
+    from ..core.config import settings
+
+    pnl = compute_daily_pnl_from_fills(eng, lookback_days)
+
+    if pnl.empty:
+        # No fills yet - return empty series
         return pd.Series(dtype=float, name="returns")
-    
-    # MVP: Simple proxy for returns
-    # In reality, this would calculate actual P&L from entry/exit prices
-    # For now, assume small random returns for demonstration
-    np.random.seed(42)  # Deterministic for testing
-    
-    daily_groups = df.groupby("d").size()
-    returns_data = {}
-    
-    for trade_date, order_count in daily_groups.items():
-        # Simplified: more orders = more volatility
-        # In production: actual P&L from (exit_price - entry_price) * qty
-        base_return = np.random.normal(0.001, 0.02)  # Small positive bias with volatility
-        returns_data[trade_date] = base_return
-    
-    returns = pd.Series(returns_data, name="returns")
-    returns.index.name = "date"
-    
+
+    # Convert P&L to returns using portfolio value
+    portfolio_value = settings.RT_START_CAPITAL
+
+    returns = pnl / portfolio_value
+    returns.name = "returns"
+
     return returns.sort_index()
 
 
 def compute_losing_streak(eng, lookback_days: int = 90) -> int:
-    """Compute the current losing streak from recent trades.
-    
+    """Compute current losing streak from actual trade P&L.
+
     Args:
         eng: Database engine
         lookback_days: Number of days to analyze for streaks
-        
+
     Returns:
         Number of consecutive losing trades
     """
     cutoff_date = date.today() - timedelta(days=lookback_days)
-    
-    # Get recent exit orders (sells) to determine wins/losses
+
+    # Get recent completed trades with actual P&L
     query = text("""
-        SELECT d, symbol, side, qty, reason
-        FROM orders_eod 
-        WHERE d >= :cutoff AND side IN ('sell', 'exit')
-        ORDER BY d DESC, symbol
+        WITH ranked_fills AS (
+            SELECT
+                d,
+                symbol,
+                side,
+                qty,
+                avg_px,
+                ROW_NUMBER() OVER (PARTITION BY symbol, side ORDER BY d) as rn
+            FROM exec_fills
+            WHERE d >= :cutoff
+        ),
+        trade_pnl AS (
+            SELECT
+                sell.d AS exit_date,
+                sell.symbol,
+                (sell.avg_px - buy.avg_px) * LEAST(buy.qty, sell.qty) AS pnl
+            FROM ranked_fills sell
+            INNER JOIN ranked_fills buy
+                ON sell.symbol = buy.symbol
+                AND sell.rn = buy.rn
+                AND buy.side = 'buy'
+                AND sell.side IN ('sell', 'exit')
+            ORDER BY sell.d DESC
+        )
+        SELECT exit_date, symbol, pnl
+        FROM trade_pnl
+        ORDER BY exit_date DESC
     """)
-    
-    df = pd.read_sql(query, eng, params={"cutoff": cutoff_date}, parse_dates=["d"])
-    
+
+    try:
+        df = pd.read_sql(query, eng, params={"cutoff": cutoff_date}, parse_dates=["exit_date"])
+    except Exception:
+        # Table might not exist yet
+        return 0
+
     if df.empty:
         return 0
-    
-    # MVP: Simplified streak calculation
-    # In production, this would use actual P&L from fills
-    # For now, assume some trades are losses based on pattern
-    np.random.seed(42)  # Deterministic
-    
+
+    # Count consecutive losses from most recent trade
     streak = 0
     for _, row in df.iterrows():
-        # Simplified: assume some probability of loss
-        is_loss = np.random.random() < 0.3  # 30% loss rate for demo
-        
-        if is_loss:
+        if row["pnl"] < 0:
             streak += 1
         else:
             break  # Streak broken by a win
-    
-    return min(streak, len(df))  # Cap at total number of trades
+
+    return streak
 
 
 def compute_portfolio_drawdown(eng, lookback_days: int = 90) -> float:
@@ -266,9 +332,9 @@ def update_kill_switch_state(
     
     # Log the decision
     if should_kill:
-        print(f"ALERT: Kill switch ACTIVATED for {trade_date}: {kill_reason}")
+        logger.warning("kill_switch_activated", trade_date=str(trade_date), reason=kill_reason)
     else:
-        print(f"INFO: Kill switch OFF for {trade_date} - trading permitted")
+        logger.info("kill_switch_off", trade_date=str(trade_date))
     
     return should_kill, kill_reason
 

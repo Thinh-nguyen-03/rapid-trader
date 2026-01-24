@@ -7,8 +7,11 @@ from alpaca.trading.client import TradingClient
 from alpaca.trading.requests import GetAssetsRequest
 from alpaca.trading.enums import AssetClass, AssetStatus
 from ..core.config import settings
+from ..core.logging_config import get_logger
 from sqlalchemy import text
 import time
+
+logger = get_logger(__name__)
 
 
 class CompanyDataClient:
@@ -65,10 +68,11 @@ class CompanyDataClient:
 
             df = self._apply_sector_mapping(df)
 
-            print(f"Successfully fetched {len(df)} stocks from Alpaca")
+            logger.info("stocks_fetched", count=len(df))
             return df[['symbol', 'name', 'sector']]
 
         except Exception as e:
+            logger.error("alpaca_api_failed", error=str(e))
             raise RuntimeError(f"Alpaca API request failed: {e}")
     
     def _apply_sector_mapping(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -95,7 +99,7 @@ class CompanyDataClient:
         
         # Auto-update missing or stale sectors (only for active symbols)
         if symbols_needing_update:
-            print(f"Auto-updating sector data for {len(symbols_needing_update)} active symbols...")
+            logger.info("auto_updating_sectors", count=len(symbols_needing_update))
             self._update_sectors_automatically(symbols_needing_update)
         
         # Now get cached sector data
@@ -113,8 +117,8 @@ class CompanyDataClient:
         cached_count = len(sector_map)
         total_count = len(df)
         coverage_pct = cached_count/total_count*100 if total_count > 0 else 0
-        
-        print(f"Sector cache coverage: {cached_count}/{total_count} symbols ({coverage_pct:.1f}%)")
+
+        logger.info("sector_cache_coverage", cached=cached_count, total=total_count, pct=coverage_pct)
         
         return df
     
@@ -169,8 +173,7 @@ class CompanyDataClient:
             return
 
         if len(symbols) > 50:
-            print(f"Large batch ({len(symbols)} symbols) - updating first 50 automatically")
-            print(f"Run 'python scripts/update_sector_cache.py' to update remaining symbols")
+            logger.warning("large_batch_truncated", original=len(symbols), truncated_to=50)
             symbols = symbols[:50]
 
         eng = get_engine()
@@ -200,28 +203,28 @@ class CompanyDataClient:
                                     sector = profile.get('sector', 'Unknown')
                                     sic_description = profile.get('industry', '')
                         except Exception as e:
-                            print(f"Warning: FMP API request failed for {symbol}: {e}")
+                            logger.warning("fmp_api_failed", symbol=symbol, error=str(e))
 
                     if sector == 'Unknown' and (sic_description or sic_code):
                         sector = self._map_sic_to_sector(sic_description, str(sic_code) if sic_code else None)
                 
                 # Upsert into database (include sic_code for consistency)
                 with eng.begin() as conn:
-                    # Escape single quotes in text fields
-                    symbol_escaped = symbol.replace("'", "''")
-                    sector_escaped = sector.replace("'", "''")
-                    sic_description_escaped = sic_description.replace("'", "''")
-                    sic_code_value = sic_code if sic_code is not None else "NULL"
-                    
-                    conn.execute(text(f"""
+                    conn.execute(text("""
                         INSERT INTO sector_cache (symbol, sector, sic_description, sic_code, last_updated)
-                        VALUES ('{symbol_escaped}', '{sector_escaped}', '{sic_description_escaped}', {sic_code_value}, '{date.today()}')
+                        VALUES (:symbol, :sector, :sic_description, :sic_code, :last_updated)
                         ON CONFLICT (symbol) DO UPDATE SET
-                            sector = '{sector_escaped}',
-                            sic_description = '{sic_description_escaped}',
-                            sic_code = {sic_code_value},
-                            last_updated = '{date.today()}'
-                    """))
+                            sector = EXCLUDED.sector,
+                            sic_description = EXCLUDED.sic_description,
+                            sic_code = EXCLUDED.sic_code,
+                            last_updated = EXCLUDED.last_updated
+                    """), {
+                        "symbol": symbol,
+                        "sector": sector,
+                        "sic_description": sic_description,
+                        "sic_code": sic_code,
+                        "last_updated": date.today()
+                    })
                 
                 updated_count += 1
                 
@@ -229,23 +232,20 @@ class CompanyDataClient:
                 time.sleep(0.12)  # ~8 requests per second
                 
             except Exception as e:
-                print(f"Warning: Could not update sector for {symbol}: {e}")
+                logger.warning("sector_update_failed", symbol=symbol, error=str(e))
                 
                 # Store as Unknown if we can't fetch data
                 with eng.begin() as conn:
-                    # Escape single quotes in symbol
-                    symbol_escaped = symbol.replace("'", "''")
-                    
-                    conn.execute(text(f"""
+                    conn.execute(text("""
                         INSERT INTO sector_cache (symbol, sector, sic_description, sic_code, last_updated)
-                        VALUES ('{symbol_escaped}', 'Unknown', '', NULL, '{date.today()}')
+                        VALUES (:symbol, 'Unknown', '', NULL, :last_updated)
                         ON CONFLICT (symbol) DO UPDATE SET
-                            last_updated = '{date.today()}'
-                    """))
+                            last_updated = :last_updated
+                    """), {"symbol": symbol, "last_updated": date.today()})
                 
                 continue
-        
-        print(f"Auto-updated {updated_count} sector records")
+
+        logger.info("sectors_auto_updated", count=updated_count)
     
     
     def _map_sic_to_sector(self, sic_description: str, sic_code: str = None) -> str:
@@ -273,21 +273,19 @@ class CompanyDataClient:
     def _get_sector_from_sic_database(self, sic_code: int) -> str:
         """Get sector from SIC database using exact SIC code lookup."""
         from ..core.db import get_engine
-        
-        # Create a fresh connection to avoid prepared statement conflicts
+
         eng = get_engine()
         conn = eng.connect()
         try:
-            # Use raw SQL to avoid prepared statement conflicts with Supabase
-            result = conn.execute(text(f"""
-                SELECT gics_sector 
-                FROM sic_codes 
-                WHERE sic_code = {sic_code}
-            """)).fetchone()
-            
+            result = conn.execute(text("""
+                SELECT gics_sector
+                FROM sic_codes
+                WHERE sic_code = :sic_code
+            """), {"sic_code": sic_code}).fetchone()
+
             if result:
                 return result[0]
-            
+
             return 'Unknown'
         finally:
             conn.close()
@@ -295,30 +293,26 @@ class CompanyDataClient:
     def _get_sector_from_sic_fuzzy(self, sic_description: str) -> str:
         """Get sector from SIC database using fuzzy description matching."""
         from ..core.db import get_engine
-        
+
         if not sic_description:
             return 'Unknown'
-        
-        # Create a fresh connection to avoid prepared statement conflicts
+
         eng = get_engine()
         conn = eng.connect()
         try:
-            # Escape single quotes in description
-            description_escaped = sic_description.replace("'", "''")
-            
             # Try exact description match first
-            result = conn.execute(text(f"""
-                SELECT gics_sector 
-                FROM sic_codes 
-                WHERE UPPER(sic_description) = UPPER('{description_escaped}')
-            """)).fetchone()
-            
+            result = conn.execute(text("""
+                SELECT gics_sector
+                FROM sic_codes
+                WHERE UPPER(sic_description) = UPPER(:description)
+            """), {"description": sic_description}).fetchone()
+
             if result:
                 return result[0]
-            
+
             # Try fuzzy matching with key terms from description
             sic_lower = sic_description.lower()
-            
+
             # Extract key terms for better matching
             key_terms = []
             if 'services' in sic_lower:
@@ -335,21 +329,19 @@ class CompanyDataClient:
                 key_terms.append('PREPACKAGED')
             if 'software' in sic_lower:
                 key_terms.append('SOFTWARE')
-            
+
             # Try matching with key terms
             for term in key_terms:
-                term_escaped = term.replace("'", "''")
-                fuzzy_result = conn.execute(text(f"""
+                fuzzy_result = conn.execute(text("""
                     SELECT gics_sector, sic_description
-                    FROM sic_codes 
-                    WHERE UPPER(sic_description) LIKE '%{term_escaped}%'
+                    FROM sic_codes
+                    WHERE UPPER(sic_description) LIKE '%' || :term || '%'
                     LIMIT 3
-                """)).fetchall()
-                
+                """), {"term": term}).fetchall()
+
                 if fuzzy_result:
-                    # Return the first match
                     return fuzzy_result[0][0]
-            
+
             return 'Unknown'
         finally:
             conn.close()
@@ -412,9 +404,9 @@ def get_sp500_symbols() -> List[Tuple[str, str]]:
         spy_present = any(symbol == 'SPY' for symbol, _ in result)
         if not spy_present:
             result.append(('SPY', 'ETF'))
-            print("Added SPY (market filter symbol) to symbol list")
+            logger.info("spy_added_to_list")
 
-        print(f"Using Alpaca data for {len(result)} major S&P 500 symbols with dynamic sectors")
+        logger.info("sp500_symbols_loaded", count=len(result))
         return result
 
     except Exception as e:
