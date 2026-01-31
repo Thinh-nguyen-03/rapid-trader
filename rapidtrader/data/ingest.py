@@ -1,5 +1,4 @@
 """OHLCV data ingestion from Alpaca Markets API."""
-
 import pandas as pd
 from datetime import date, timedelta, datetime
 from typing import List, Optional, Dict, Any
@@ -18,7 +17,7 @@ logger = get_logger(__name__)
 
 class AlpacaDataClient:
     """Client for fetching historical market data from Alpaca."""
-
+    
     def __init__(self, api_key: str, secret_key: str):
         """Initialize Alpaca data client with API credentials."""
         self.api_key = api_key
@@ -26,17 +25,7 @@ class AlpacaDataClient:
         self.client = StockHistoricalDataClient(api_key=api_key, secret_key=secret_key)
 
     def get_daily_bars(self, symbol: str, start_date: date, end_date: date) -> pd.DataFrame:
-        """
-        Fetch daily OHLCV bars for a symbol.
-
-        Args:
-            symbol: Stock ticker symbol
-            start_date: Start date for data fetch
-            end_date: End date for data fetch
-
-        Returns:
-            DataFrame with OHLCV data indexed by date
-        """
+        """Fetch daily OHLCV bars for a symbol."""
         try:
             start_dt = datetime.combine(start_date, datetime.min.time())
             end_dt = datetime.combine(end_date, datetime.max.time())
@@ -46,7 +35,8 @@ class AlpacaDataClient:
                 timeframe=TimeFrame.Day,
                 start=start_dt,
                 end=end_dt,
-                adjustment='all'
+                adjustment='all',
+                feed='iex'  # Use IEX feed for free tier
             )
 
             bars = self.client.get_stock_bars(request)
@@ -77,15 +67,7 @@ class AlpacaDataClient:
             return pd.DataFrame()
 
     def get_previous_close(self, symbol: str) -> Optional[Dict[str, Any]]:
-        """
-        Get the most recent closing price and bar data for a symbol.
-
-        Args:
-            symbol: Stock ticker symbol
-
-        Returns:
-            Dictionary with latest bar data or None if unavailable
-        """
+        """Get the most recent closing price and bar data for a symbol."""
         try:
             request = StockLatestBarRequest(symbol_or_symbols=symbol)
             latest = self.client.get_stock_latest_bar(request)
@@ -108,45 +90,42 @@ class AlpacaDataClient:
             return None
 
 def upsert_bars(symbol: str, bars: pd.DataFrame) -> None:
-    """Insert or update daily OHLCV bars in the database."""
+    """Insert or update daily OHLCV bars in the database using bulk insert."""
     if bars.empty:
         logger.warning("no_data_to_upsert", symbol=symbol)
         return
 
     eng = get_engine()
-    
-    with eng.begin() as c:
-        for d, row in bars.iterrows():
-            try:
-                c.execute(text("""
-                    INSERT INTO bars_daily(symbol, d, open, high, low, close, volume)
-                    VALUES (:s, :d, :o, :h, :l, :c, :v)
-                    ON CONFLICT (symbol, d) DO UPDATE SET 
-                        open = :o, high = :h, low = :l, close = :c, volume = :v
-                """), {
-                    "s": symbol, 
-                    "d": d, 
-                    "o": float(row["Open"]), 
-                    "h": float(row["High"]),
-                    "l": float(row["Low"]), 
-                    "c": float(row["Close"]), 
-                    "v": int(row["Volume"])
-                })
-            except Exception as e:
-                logger.error("upsert_error", symbol=symbol, date=str(d), error=str(e))
-                continue
+
+    # Build bulk insert values
+    values_list = []
+    for d, row in bars.iterrows():
+        values_list.append(
+            f"('{symbol}', '{d}', {float(row['Open'])}, {float(row['High'])}, "
+            f"{float(row['Low'])}, {float(row['Close'])}, {int(row['Volume'])})"
+        )
+
+    # Execute single bulk INSERT with ON CONFLICT
+    try:
+        with eng.begin() as c:
+            sql = f"""
+                INSERT INTO bars_daily(symbol, d, open, high, low, close, volume)
+                VALUES {', '.join(values_list)}
+                ON CONFLICT (symbol, d) DO UPDATE SET
+                    open = EXCLUDED.open,
+                    high = EXCLUDED.high,
+                    low = EXCLUDED.low,
+                    close = EXCLUDED.close,
+                    volume = EXCLUDED.volume
+            """
+            c.execute(text(sql))
+            logger.debug("bulk_upsert_complete", symbol=symbol, rows=len(bars))
+    except Exception as e:
+        logger.error("bulk_upsert_error", symbol=symbol, rows=len(bars), error=str(e))
+        raise
 
 def check_data_exists_for_date(symbols: List[str], target_date: date) -> Dict[str, bool]:
-    """
-    Check which symbols already have data for a specific date.
-
-    Args:
-        symbols: List of symbols to check
-        target_date: Date to check for existing data
-
-    Returns:
-        Dictionary mapping symbols to whether data exists
-    """
+    """Check which symbols already have data for a specific date."""
     if not symbols:
         return {}
 
@@ -235,23 +214,32 @@ def ingest_symbols(symbols: List[str], days: int = 365, target_date: date = None
             executor.submit(_fetch_symbol_data, symbol, api_key, secret_key, start_date, end_date): symbol
             for symbol in symbols_to_process
         }
-        
+
         for future in as_completed(future_to_symbol):
             symbol = future_to_symbol[future]
             completed_count += 1
-            
+
             try:
                 symbol_result, df, success, error_msg = future.result()
-                
+
                 if success and not df.empty:
                     with db_lock:
                         upsert_bars(symbol_result, df)
                     success_count += 1
+
+                    # Log progress every 10 symbols
+                    if completed_count % 10 == 0:
+                        logger.info("ingestion_progress",
+                                   completed=completed_count,
+                                   total=len(symbols_to_process),
+                                   success=success_count,
+                                   errors=error_count)
                 else:
                     error_count += 1
 
             except Exception as e:
                 error_count += 1
+                logger.error("symbol_processing_failed", symbol=symbol, error=str(e))
     
     total_processed = success_count + error_count
     logger.info("ingestion_complete", success=success_count, errors=error_count,
