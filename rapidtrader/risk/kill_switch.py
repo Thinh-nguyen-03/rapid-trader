@@ -5,9 +5,7 @@ Implements automated circuit breakers to pause new position entries when:
 2. Rolling 20-day Sharpe ratio falls below threshold (default: -1.0)
 3. Consecutive losing trades exceed threshold (default: 10)
 
-This prevents runaway losses during adverse market conditions or strategy breakdown.
-"""
-
+This prevents runaway losses during adverse market conditions or strategy breakdown."""
 import numpy as np
 import pandas as pd
 from datetime import date, timedelta
@@ -19,23 +17,12 @@ logger = get_logger(__name__)
 
 
 def _rolling_sharpe(returns: pd.Series, window: int = 20, annualization_factor: float = 252) -> pd.Series:
-    """Calculate rolling Sharpe ratio for a returns series.
-    
-    Args:
-        returns: Daily returns series
-        window: Rolling window size in days
-        annualization_factor: Factor to annualize returns (252 for daily)
-        
-    Returns:
-        Series of rolling Sharpe ratios
-    """
+    """Calculate rolling Sharpe ratio for a returns series."""
     if len(returns) < window:
         return pd.Series([np.nan] * len(returns), index=returns.index)
     
     rolling_mean = returns.rolling(window=window, min_periods=window).mean()
     rolling_std = returns.rolling(window=window, min_periods=window).std(ddof=1)
-    
-    # Avoid division by zero
     rolling_std = rolling_std.replace(0, np.nan)
     
     sharpe = (rolling_mean / rolling_std) * np.sqrt(annualization_factor)
@@ -43,20 +30,9 @@ def _rolling_sharpe(returns: pd.Series, window: int = 20, annualization_factor: 
 
 
 def compute_daily_pnl_from_fills(eng, lookback_days: int = 60) -> pd.Series:
-    """Compute actual daily P&L from execution fills.
-
-    This calculates real profit/loss using entry and exit prices from fills.
-
-    Args:
-        eng: Database engine
-        lookback_days: Number of days to look back
-
-    Returns:
-        Series of daily P&L in dollars, indexed by date
-    """
+    """Compute actual daily P&L from execution fills."""
     cutoff_date = date.today() - timedelta(days=lookback_days)
 
-    # Get all completed trades (buy then sell) with actual execution prices
     query = text("""
         WITH ranked_fills AS (
             SELECT
@@ -94,7 +70,6 @@ def compute_daily_pnl_from_fills(eng, lookback_days: int = 60) -> pd.Series:
     try:
         df = pd.read_sql(query, eng, params={"cutoff": cutoff_date}, parse_dates=["exit_date"])
     except Exception:
-        # Table might not exist yet or be empty
         return pd.Series(dtype=float, name="pnl")
 
     if df.empty:
@@ -105,47 +80,25 @@ def compute_daily_pnl_from_fills(eng, lookback_days: int = 60) -> pd.Series:
 
     return pnl_series
 
-
 def compute_daily_returns_from_orders(eng, lookback_days: int = 60) -> pd.Series:
-    """Compute daily P&L returns from actual execution fills.
-
-    Args:
-        eng: Database engine
-        lookback_days: Number of days to look back for return calculation
-
-    Returns:
-        Series of daily returns indexed by date
-    """
+    """Compute daily P&L returns from actual execution fills."""
     from ..core.config import settings
 
     pnl = compute_daily_pnl_from_fills(eng, lookback_days)
 
     if pnl.empty:
-        # No fills yet - return empty series
         return pd.Series(dtype=float, name="returns")
 
-    # Convert P&L to returns using portfolio value
     portfolio_value = settings.RT_START_CAPITAL
-
     returns = pnl / portfolio_value
     returns.name = "returns"
 
     return returns.sort_index()
 
-
 def compute_losing_streak(eng, lookback_days: int = 90) -> int:
-    """Compute current losing streak from actual trade P&L.
-
-    Args:
-        eng: Database engine
-        lookback_days: Number of days to analyze for streaks
-
-    Returns:
-        Number of consecutive losing trades
-    """
+    """Compute current losing streak from actual trade P&L."""
     cutoff_date = date.today() - timedelta(days=lookback_days)
 
-    # Get recent completed trades with actual P&L
     query = text("""
         WITH ranked_fills AS (
             SELECT
@@ -179,37 +132,24 @@ def compute_losing_streak(eng, lookback_days: int = 90) -> int:
     try:
         df = pd.read_sql(query, eng, params={"cutoff": cutoff_date}, parse_dates=["exit_date"])
     except Exception:
-        # Table might not exist yet
         return 0
 
     if df.empty:
         return 0
 
-    # Count consecutive losses from most recent trade
     streak = 0
     for _, row in df.iterrows():
         if row["pnl"] < 0:
             streak += 1
         else:
-            break  # Streak broken by a win
+            break
 
     return streak
 
-
 def compute_portfolio_drawdown(eng, lookback_days: int = 90) -> float:
-    """Compute current portfolio drawdown from equity curve.
-
-    Args:
-        eng: Database engine
-        lookback_days: Number of days to analyze
-
-    Returns:
-        Current drawdown as negative fraction (e.g., -0.12 for 12% drawdown)
-    """
+    """Compute current portfolio drawdown from equity curve."""
     cutoff_date = date.today() - timedelta(days=lookback_days)
 
-    # Get daily portfolio values from positions and bars
-    # MVP: Estimate from order activity and market data
     query = text("""
         SELECT DISTINCT d FROM bars_daily
         WHERE d >= :cutoff
@@ -221,20 +161,16 @@ def compute_portfolio_drawdown(eng, lookback_days: int = 90) -> float:
     if dates_df.empty or len(dates_df) < 2:
         return 0.0
 
-    # MVP: Simulate equity curve from returns
-    # In production, this would use actual position values
     returns = compute_daily_returns_from_orders(eng, lookback_days)
 
     if returns.empty:
         return 0.0
 
-    # Build equity curve starting at 1.0
     equity = (1 + returns).cumprod()
 
     if equity.empty:
         return 0.0
 
-    # Calculate drawdown
     rolling_max = equity.cummax()
     drawdown = (equity - rolling_max) / rolling_max
 
@@ -242,32 +178,19 @@ def compute_portfolio_drawdown(eng, lookback_days: int = 90) -> float:
 
     return float(current_drawdown)
 
-
 def evaluate_kill_switch(
     drawdown_threshold: float = -0.12,
     sharpe_threshold: float = -1.0,
     losing_streak_threshold: int = 10,
     lookback_days: int = 60
 ) -> tuple[bool, str | None]:
-    """Evaluate whether the kill switch should be activated.
-
-    Args:
-        drawdown_threshold: Maximum acceptable drawdown (e.g., -0.12 for -12%)
-        sharpe_threshold: Minimum acceptable 20-day Sharpe ratio
-        losing_streak_threshold: Maximum consecutive losing trades
-        lookback_days: Days to look back for analysis
-
-    Returns:
-        Tuple of (should_kill, reason)
-    """
+    """Evaluate whether the kill switch should be activated."""
     eng = get_engine()
 
-    # Check drawdown first (most critical)
     current_drawdown = compute_portfolio_drawdown(eng, lookback_days)
     if current_drawdown <= drawdown_threshold:
         return True, f"Portfolio drawdown {current_drawdown:.1%} exceeds threshold {drawdown_threshold:.1%}"
 
-    # Calculate rolling Sharpe ratio
     returns = compute_daily_returns_from_orders(eng, lookback_days)
 
     current_sharpe = np.nan
@@ -278,13 +201,11 @@ def evaluate_kill_switch(
     if pd.notna(current_sharpe) and current_sharpe < sharpe_threshold:
         return True, f"Rolling 20-day Sharpe ratio {current_sharpe:.2f} below threshold {sharpe_threshold}"
 
-    # Calculate losing streak
     losing_streak = compute_losing_streak(eng, lookback_days)
     if losing_streak >= losing_streak_threshold:
         return True, f"Losing streak {losing_streak} trades exceeds threshold {losing_streak_threshold}"
 
     return False, None
-
 
 def update_kill_switch_state(
     trade_date: date | None = None,
@@ -292,30 +213,18 @@ def update_kill_switch_state(
     sharpe_threshold: float = -1.0,
     losing_streak_threshold: int = 10
 ) -> tuple[bool, str | None]:
-    """Update the kill switch state in the database.
-
-    Args:
-        trade_date: Date to update (defaults to today)
-        drawdown_threshold: Maximum acceptable drawdown
-        sharpe_threshold: Sharpe ratio threshold for kill switch
-        losing_streak_threshold: Losing streak threshold for kill switch
-
-    Returns:
-        Tuple of (kill_active, reason)
-    """
+    """Update the kill switch state in the database."""
     if trade_date is None:
         trade_date = date.today()
 
     eng = get_engine()
 
-    # Evaluate kill switch conditions
     should_kill, kill_reason = evaluate_kill_switch(
         drawdown_threshold=drawdown_threshold,
         sharpe_threshold=sharpe_threshold,
         losing_streak_threshold=losing_streak_threshold
     )
     
-    # Update database state
     with eng.begin() as conn:
         conn.execute(text("""
             INSERT INTO system_state (d, kill_active, reason)
@@ -330,7 +239,6 @@ def update_kill_switch_state(
             "reason": kill_reason
         })
     
-    # Log the decision
     if should_kill:
         logger.warning("kill_switch_activated", trade_date=str(trade_date), reason=kill_reason)
     else:
@@ -338,16 +246,8 @@ def update_kill_switch_state(
     
     return should_kill, kill_reason
 
-
 def is_kill_switch_active(trade_date: date | None = None) -> tuple[bool, str | None]:
-    """Check if the kill switch is currently active.
-    
-    Args:
-        trade_date: Date to check (defaults to today)
-        
-    Returns:
-        Tuple of (is_active, reason)
-    """
+    """Check if the kill switch is currently active."""
     if trade_date is None:
         trade_date = date.today()
     
@@ -365,16 +265,8 @@ def is_kill_switch_active(trade_date: date | None = None) -> tuple[bool, str | N
     
     return bool(result[0]), result[1]
 
-
 def get_kill_switch_history(days: int = 30) -> pd.DataFrame:
-    """Get kill switch history for analysis.
-    
-    Args:
-        days: Number of days of history to retrieve
-        
-    Returns:
-        DataFrame with kill switch state history
-    """
+    """Get kill switch history for analysis."""
     eng = get_engine()
     cutoff_date = date.today() - timedelta(days=days)
     
@@ -393,7 +285,6 @@ def get_kill_switch_history(days: int = 30) -> pd.DataFrame:
     )
     
     return df
-
 
 if __name__ == "__main__":
     """Command-line interface for kill switch management."""
@@ -422,7 +313,6 @@ if __name__ == "__main__":
         )
     
     else:
-        # Show history by default
         df = get_kill_switch_history(args.history)
         if df.empty:
             print("No kill switch history found")

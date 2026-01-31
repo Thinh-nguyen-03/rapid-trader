@@ -6,16 +6,7 @@ from ..core.db import get_engine
 
 
 def stop_cooldown_active(symbol: str, current_date: date, cooldown_days: int = 1) -> bool:
-    """Check if a symbol is in cooldown period after stop loss.
-
-    Args:
-        symbol: Stock symbol to check
-        current_date: Current trading date
-        cooldown_days: Number of days to wait after stop (default 1)
-
-    Returns:
-        True if symbol is in cooldown period (can't enter new positions)
-    """
+    """Check if a symbol is in cooldown period after stop loss."""
     eng = get_engine()
     cooldown_start = current_date - timedelta(days=cooldown_days)
 
@@ -35,15 +26,8 @@ def stop_cooldown_active(symbol: str, current_date: date, cooldown_days: int = 1
 
     return result is not None
 
-
 def record_stop_event(symbol: str, event_date: date, stop_price: float = None):
-    """Record a stop loss event in the database.
-
-    Args:
-        symbol: Stock symbol that hit stop
-        event_date: Date when stop was triggered
-        stop_price: Price at which stop was hit (optional)
-    """
+    """Record a stop loss event in the database."""
     eng = get_engine()
     details = {"stop_price": stop_price} if stop_price is not None else None
 
