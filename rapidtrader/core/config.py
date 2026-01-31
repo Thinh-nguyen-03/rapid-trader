@@ -19,6 +19,12 @@ class Settings(BaseSettings):
     # FMP API - Company fundamentals and sector data (optional)
     RT_FMP_API_KEY: str = ""
 
+    # S&P 500 Constituents
+    RT_SP500_SOURCE: str = "ishares"
+    RT_SP500_ISHARES_URL: str = "https://www.ishares.com/us/products/239726/ishares-core-sp-500-etf/1467271812596.ajax?fileType=csv&fileName=IVV_holdings&dataType=fund"
+    RT_SP500_CACHE_TTL_DAYS: int = 7
+    RT_SP500_REQUEST_TIMEOUT: int = 30
+
     # Market Filter - SPY 200-day SMA trend filter
     RT_MARKET_FILTER_ENABLE: int = 1
     RT_MARKET_FILTER_SMA: int = 200

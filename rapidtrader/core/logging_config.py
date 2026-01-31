@@ -11,13 +11,7 @@ def setup_logging(
     json_logs: bool = False,
     log_file: Path | None = None
 ) -> None:
-    """Configure structured logging for the application.
-
-    Args:
-        log_level: Logging level (DEBUG, INFO, WARNING, ERROR, CRITICAL)
-        json_logs: If True, output JSON format (for production)
-        log_file: Optional file path for log output
-    """
+    """Configure structured logging for the application."""
     # Configure standard logging
     logging.basicConfig(
         format="%(message)s",
@@ -70,12 +64,5 @@ def setup_logging(
 
 
 def get_logger(name: str) -> structlog.BoundLogger:
-    """Get a logger instance for a module.
-
-    Args:
-        name: Logger name (usually __name__)
-
-    Returns:
-        Configured logger instance
-    """
+    """Get a logger instance for a module."""
     return structlog.get_logger(name)

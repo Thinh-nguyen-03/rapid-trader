@@ -9,12 +9,7 @@ class HolidayService:
     """Service for checking market holidays and trading days."""
 
     def __init__(self, exchange: str = 'NYSE'):
-        """
-        Initialize holiday service.
-
-        Args:
-            exchange: Exchange calendar to use (default: NYSE)
-        """
+        """Initialize holiday service."""
         self.exchange = exchange
         self.calendar = mcal.get_calendar(exchange)
         self._holidays_cache: Optional[List[Dict]] = None
@@ -27,16 +22,7 @@ class HolidayService:
         return datetime.now() - self._cache_timestamp < timedelta(hours=24)
 
     def get_upcoming_holidays(self, force_refresh: bool = False, days_ahead: int = 365) -> List[Dict]:
-        """
-        Get upcoming market holidays.
-
-        Args:
-            force_refresh: Force refresh of cached data
-            days_ahead: Number of days to look ahead (default: 365)
-
-        Returns:
-            List of holiday dictionaries with date and name
-        """
+        """Get upcoming market holidays."""
         if not force_refresh and self._is_cache_valid():
             return self._holidays_cache
 
@@ -108,16 +94,7 @@ class HolidayService:
         return None
 
     def get_holidays_in_range(self, start_date: date, end_date: date) -> List[Dict]:
-        """
-        Get holidays within a date range.
-
-        Args:
-            start_date: Range start date
-            end_date: Range end date
-
-        Returns:
-            List of holidays in the range
-        """
+        """Get holidays within a date range."""
         holidays = self.get_upcoming_holidays()
         filtered = []
 
@@ -132,15 +109,7 @@ class HolidayService:
         return filtered
 
     def is_trading_day(self, check_date: date) -> bool:
-        """
-        Check if a given date is a trading day.
-
-        Args:
-            check_date: Date to check
-
-        Returns:
-            True if trading day, False otherwise
-        """
+        """Check if a given date is a trading day."""
         # Check if weekend
         if check_date.weekday() >= 5:
             return False

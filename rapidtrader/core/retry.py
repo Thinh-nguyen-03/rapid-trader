@@ -25,19 +25,7 @@ def retry_api_call(
     max_wait: float = 30.0,
     exceptions: tuple = (requests.RequestException, ConnectionError, TimeoutError)
 ):
-    """Decorator for retrying API calls with exponential backoff.
-
-    Args:
-        max_attempts: Maximum number of retry attempts
-        min_wait: Minimum wait time between retries (seconds)
-        max_wait: Maximum wait time between retries (seconds)
-        exceptions: Tuple of exception types to retry on
-
-    Usage:
-        @retry_api_call(max_attempts=3)
-        def fetch_data():
-            return requests.get(url)
-    """
+    """Decorator for retrying API calls with exponential backoff."""
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @retry(
             stop=stop_after_attempt(max_attempts),
@@ -57,15 +45,7 @@ def with_circuit_breaker(
     failure_threshold: int = 5,
     recovery_timeout: float = 60.0
 ):
-    """Simple circuit breaker pattern for API calls.
-
-    After `failure_threshold` consecutive failures, the circuit opens
-    and immediately raises an exception for `recovery_timeout` seconds.
-
-    Args:
-        failure_threshold: Number of failures before opening circuit
-        recovery_timeout: Seconds to wait before allowing retries
-    """
+    """Circuit breaker pattern - opens after threshold failures, closes after timeout."""
     import time
 
     class CircuitState:
@@ -79,21 +59,18 @@ def with_circuit_breaker(
     def decorator(func: Callable[..., T]) -> Callable[..., T]:
         @wraps(func)
         def wrapper(*args, **kwargs) -> T:
-            # Check if circuit is open
             if state.is_open:
                 time_since_failure = time.time() - state.last_failure_time
                 if time_since_failure < recovery_timeout:
                     raise APIError(
                         f"Circuit breaker open - retry in {recovery_timeout - time_since_failure:.0f}s"
                     )
-                # Try to close circuit
                 state.is_open = False
                 state.failures = 0
                 logger.info("circuit_breaker_half_open", function=func.__name__)
 
             try:
                 result = func(*args, **kwargs)
-                # Success - reset failure count
                 state.failures = 0
                 return result
             except Exception as e:
@@ -113,15 +90,6 @@ def with_circuit_breaker(
 
 
 def handle_rate_limit(response: requests.Response, api_name: str = "API") -> None:
-    """Check for rate limit response and raise appropriate exception.
-
-    Args:
-        response: HTTP response to check
-        api_name: Name of the API for error messages
-
-    Raises:
-        RateLimitError: If rate limit is detected
-    """
     if response.status_code == 429:
         retry_after = response.headers.get('Retry-After')
         retry_seconds = int(retry_after) if retry_after else None
@@ -135,18 +103,7 @@ def safe_api_call(
     error_message: str = "API call failed",
     **kwargs
 ) -> T | None:
-    """Execute an API call safely, returning default on failure.
-
-    Args:
-        func: Function to call
-        *args: Arguments to pass to function
-        default: Default value to return on failure
-        error_message: Message to log on failure
-        **kwargs: Keyword arguments to pass to function
-
-    Returns:
-        Result of function or default value
-    """
+    """Execute API call safely, returning default on failure."""
     try:
         return func(*args, **kwargs)
     except Exception as e:

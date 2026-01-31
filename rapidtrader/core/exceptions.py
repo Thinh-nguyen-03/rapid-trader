@@ -1,7 +1,4 @@
-"""Custom exception classes for RapidTrader.
-
-Provides a hierarchy of exceptions for proper error handling and debugging.
-"""
+"""Custom exception hierarchy for RapidTrader."""
 
 
 class RapidTraderError(Exception):
@@ -13,7 +10,6 @@ class RapidTraderError(Exception):
         super().__init__(self.message)
 
 
-# Data Errors
 class DataError(RapidTraderError):
     """Base class for data-related errors."""
     pass
