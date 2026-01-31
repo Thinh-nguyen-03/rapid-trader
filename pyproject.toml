@@ -27,3 +27,6 @@ dev = [
     "faker>=19.2.0",
     "freezegun>=1.2.2",
 ]
+
+[tool.setuptools]
+packages = ["rapidtrader"]
