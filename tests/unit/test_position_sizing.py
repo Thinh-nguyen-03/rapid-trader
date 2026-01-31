@@ -119,7 +119,6 @@ class TestATRTargetSizing:
     def test_zero_atr_returns_large_position(self):
         """Test that zero ATR is handled (uses small epsilon)."""
         result = shares_atr_target(100000, 0.005, atr_points=0.0, k_atr=3.0)
-        # Should not crash, returns very large number due to epsilon
         assert result >= 0
 
     def test_negative_portfolio_returns_zero(self):
@@ -171,16 +170,13 @@ class TestComputePositionSize:
         result = compute_position_size(
             portfolio_value=100000,
             entry_px=50.0,
-            atr_points=0.5,  # Low ATR = large ATR-based size
+            atr_points=0.5,
             pct_per_trade=0.05,
             daily_risk_cap=0.005,
             k_atr=3.0,
             vix_multiplier=1.0
         )
 
-        # Fixed fractional: 100000 * 0.05 / 50 = 100
-        # ATR target: 100000 * 0.005 / (3 * 0.5) = 333
-        # Min = 100
         assert result == 100
 
     def test_vix_scaling_applied(self):
@@ -219,9 +215,7 @@ class TestComputePositionSize:
             vix_multiplier=1.0
         )
 
-        # Should return reasonable number of shares
         assert 0 < result < 500
-        # Verify the dollar value is roughly 5% of portfolio
         dollar_value = result * 175.0
         assert dollar_value <= 250000 * 0.05
 

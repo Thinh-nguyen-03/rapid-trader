@@ -18,7 +18,6 @@ def sample_ohlcv_data():
     np.random.seed(42)
     dates = pd.date_range(start='2023-01-01', periods=100, freq='D')
 
-    # Generate realistic price data with random walk
     base_price = 100.0
     prices = [base_price]
 
