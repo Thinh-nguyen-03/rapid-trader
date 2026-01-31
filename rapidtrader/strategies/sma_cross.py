@@ -11,17 +11,7 @@ def sma_crossover(
     slow: int = 100,
     confirm_days: int = 2
 ) -> pd.DataFrame:
-    """Generate SMA crossover signals with confirmation.
-
-    Args:
-        df: DataFrame with OHLCV data (requires 'close' column)
-        fast: Fast SMA period (default 20)
-        slow: Slow SMA period (default 100)
-        confirm_days: Days of confirmation required (default 2)
-
-    Returns:
-        DataFrame with columns: fast, slow, signal
-    """
+    """Generate SMA crossover signals with confirmation."""
     out = pd.DataFrame(index=df.index)
 
     out["fast"] = sma(df["close"], fast)

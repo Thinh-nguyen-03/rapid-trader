@@ -12,18 +12,7 @@ def rsi_mean_reversion(
     window: int = 3,
     min_count: int = 2
 ) -> pd.DataFrame:
-    """Generate RSI mean-reversion signals with confirmation.
-
-    Args:
-        df: DataFrame with OHLCV data (requires 'close' column)
-        buy_rsi: RSI threshold for buy signals (default 30.0)
-        sell_rsi: RSI threshold for sell signals (default 55.0)
-        window: Confirmation window in days (default 3)
-        min_count: Minimum confirmations required (default 2)
-
-    Returns:
-        DataFrame with columns: rsi, buy, sell, signal
-    """
+    """Generate RSI mean-reversion signals with confirmation."""
     out = pd.DataFrame(index=df.index)
 
     out["rsi"] = rsi_wilder(df["close"], window=14)
