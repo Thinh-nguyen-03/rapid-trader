@@ -33,10 +33,11 @@ def update_sic_database():
         print(f"ERROR: Failed to update SIC database: {e}")
         return False
 
-def update_symbols_table(clear_existing: bool = False):
+def update_symbols_table(clear_existing: bool = False, force_refresh: bool = False):
     try:
-        print("INFO: Fetching S&P 500 symbols from Alpaca")
-        symbols = get_sp500_symbols()
+        source = settings.RT_SP500_SOURCE
+        print(f"INFO: Fetching S&P 500 symbols (source: {source}, force_refresh: {force_refresh})")
+        symbols = get_sp500_symbols(force_refresh=force_refresh)
         print(f"INFO: Retrieved {len(symbols)} symbols")
         
         eng = get_engine()
@@ -61,8 +62,7 @@ def update_symbols_table(clear_existing: bool = False):
             total_count = conn.execute(text("SELECT COUNT(*) FROM symbols WHERE is_active = true")).scalar()
             
         print(f"SUCCESS: Updated symbols table with {total_count} active symbols")
-        
-        # Automatically clean up orphaned symbols from sector_cache
+
         print("INFO: Cleaning up orphaned symbols from sector_cache...")
         cleanup_sector_cache()
         
@@ -77,7 +77,6 @@ def cleanup_sector_cache():
     try:
         eng = get_engine()
         with eng.begin() as conn:
-            # Count symbols to be removed
             orphaned_count = conn.execute(text("""
                 SELECT COUNT(*) 
                 FROM sector_cache 
@@ -86,8 +85,7 @@ def cleanup_sector_cache():
             
             if orphaned_count > 0:
                 print(f"INFO: Removing {orphaned_count} orphaned symbols from sector_cache...")
-                
-                # Remove orphaned symbols
+
                 conn.execute(text("""
                     DELETE FROM sector_cache 
                     WHERE symbol NOT IN (SELECT symbol FROM symbols WHERE is_active = true)
@@ -136,14 +134,12 @@ def update_sector_cache(clear_existing: bool = False):
         failed_updates = 0
         batch_size = 100
 
-        # Process symbols in batches
         for batch_start in range(0, len(symbols), batch_size):
             batch_end = min(batch_start + batch_size, len(symbols))
             batch_symbols = symbols[batch_start:batch_end]
 
             print(f"INFO: Processing batch {batch_start//batch_size + 1} ({batch_start + 1}-{batch_end} of {len(symbols)})")
 
-            # Collect batch data
             batch_data = []
 
             for symbol in batch_symbols:
@@ -157,7 +153,6 @@ def update_sector_cache(clear_existing: bool = False):
                         sic_description = ''
                         sic_code = None
 
-                        # Use FMP API for company profile
                         if client.fmp_api_key:
                             try:
                                 url = f"https://financialmodelingprep.com/api/v3/profile/{symbol}"
@@ -173,7 +168,6 @@ def update_sector_cache(clear_existing: bool = False):
                             except Exception as e:
                                 print(f"Warning: FMP API failed for {symbol}: {e}")
 
-                        # Fallback to SIC database lookup
                         if sector == 'Unknown' and (sic_description or sic_code):
                             sector = client._map_sic_to_sector(sic_description, str(sic_code) if sic_code else None)
                     
@@ -291,17 +285,17 @@ Examples:
                        help="Clean up orphaned symbols from sector_cache")
     parser.add_argument("--clear", action="store_true",
                        help="Clear existing data before updating")
+    parser.add_argument("--force-refresh", action="store_true",
+                       help="Force refresh S&P 500 list from iShares (skip cache)")
     
     args = parser.parse_args()
 
-    # Check for Alpaca credentials
     if not settings.RT_ALPACA_API_KEY or not settings.RT_ALPACA_SECRET_KEY:
         print("ERROR: Alpaca API credentials required!")
         print("Set RT_ALPACA_API_KEY and RT_ALPACA_SECRET_KEY in your .env file")
         print("Get Alpaca credentials at: https://alpaca.markets/")
         return 1
 
-    # FMP is optional but recommended for sector data
     if not settings.RT_FMP_API_KEY:
         print("WARNING: FMP API key not found. Sector data updates will be limited.")
         print("Get a free FMP key at: https://financialmodelingprep.com/")
@@ -328,7 +322,7 @@ Examples:
                 print("WARNING: Continuing with other operations despite SIC database failure")
         
         if update_syms:
-            if update_symbols_table(clear_existing=args.clear):
+            if update_symbols_table(clear_existing=args.clear, force_refresh=args.force_refresh):
                 success_count += 1
             else:
                 print("ERROR: Symbols update failed - aborting remaining operations")
