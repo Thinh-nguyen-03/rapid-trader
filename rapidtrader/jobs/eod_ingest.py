@@ -1,8 +1,4 @@
-"""End-of-Day Data Ingestion Job for RapidTrader.
-
-Automated job to download daily OHLCV data for all symbols in the universe
-and refresh the SPY market state cache for trading decisions.
-"""
+"""End-of-Day Data Ingestion Job for RapidTrader."""
 
 import argparse
 from pathlib import Path
@@ -56,7 +52,6 @@ def main():
         action="store_true", 
         help="Only refresh SPY cache, skip symbol data"
     )
-    # Parallel processing is always used - no need for flags
     parser.add_argument(
         "--max-workers",
         type=int,

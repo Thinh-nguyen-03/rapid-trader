@@ -1,17 +1,213 @@
 """Stock universe and sector classification management."""
 
 import pandas as pd
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Optional
 import requests
 from alpaca.trading.client import TradingClient
 from alpaca.trading.requests import GetAssetsRequest
 from alpaca.trading.enums import AssetClass, AssetStatus
 from ..core.config import settings
 from ..core.logging_config import get_logger
+from ..core.retry import retry_api_call
 from sqlalchemy import text
 import time
+from datetime import date, timedelta
+from io import StringIO
 
 logger = get_logger(__name__)
+
+
+class iSharesClient:
+    """Fetches S&P 500 constituents from iShares Core S&P 500 ETF (IVV)."""
+
+    def __init__(self, url: str = None, timeout: int = None):
+        self.url = url or settings.RT_SP500_ISHARES_URL
+        self.timeout = timeout or settings.RT_SP500_REQUEST_TIMEOUT
+        self.logger = logger
+
+    @retry_api_call(max_attempts=3, min_wait=2.0, max_wait=30.0)
+    def fetch_sp500_csv(self) -> str:
+        try:
+            headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'}
+            self.logger.info("ishares_fetch_start", url=self.url)
+
+            response = requests.get(self.url, headers=headers, timeout=self.timeout)
+            response.raise_for_status()
+
+            self.logger.info("ishares_fetch_success", bytes=len(response.content))
+            return response.text
+
+        except requests.exceptions.Timeout:
+            self.logger.error("ishares_fetch_timeout", timeout=self.timeout)
+            raise RuntimeError(f"iShares request timed out after {self.timeout}s")
+        except requests.exceptions.RequestException as e:
+            self.logger.error("ishares_fetch_failed", error=str(e))
+            raise RuntimeError(f"iShares API request failed: {e}")
+
+    def parse_csv(self, csv_content: str) -> pd.DataFrame:
+        try:
+            lines = csv_content.split('\n')
+            header_idx = None
+
+            for idx, line in enumerate(lines):
+                if 'Ticker' in line and 'Name' in line:
+                    header_idx = idx
+                    break
+
+            if header_idx is None:
+                raise ValueError("Could not find CSV header row with 'Ticker' column")
+
+            df = pd.read_csv(StringIO('\n'.join(lines[header_idx:])))
+            df.columns = df.columns.str.strip()
+
+            column_mapping = {
+                'Ticker': 'symbol',
+                'Name': 'name',
+                'Sector': 'sector',
+                'Weight (%)': 'weight',
+                'Asset Class': 'asset_class'
+            }
+
+            missing_cols = [col for col in column_mapping.keys() if col not in df.columns]
+            if missing_cols:
+                raise ValueError(f"Missing required columns: {missing_cols}")
+
+            df = df.rename(columns=column_mapping)
+            df = df[df['asset_class'].str.upper() == 'EQUITY'].copy()
+
+            df['symbol'] = df['symbol'].str.strip().str.upper()
+            df = df[df['symbol'].notna() & (df['symbol'] != '') & (df['symbol'] != '-')]
+            df['sector'] = df['sector'].fillna('Unknown').str.strip()
+            df['weight'] = pd.to_numeric(df['weight'], errors='coerce').fillna(0.0)
+
+            df = df[['symbol', 'name', 'sector', 'weight']].copy()
+            df = df.sort_values('weight', ascending=False).reset_index(drop=True)
+
+            self.logger.info("ishares_csv_parsed", count=len(df))
+            return df
+
+        except Exception as e:
+            self.logger.error("ishares_csv_parse_failed", error=str(e))
+            raise ValueError(f"Failed to parse iShares CSV: {e}")
+
+    def get_constituents(self) -> pd.DataFrame:
+        csv_content = self.fetch_sp500_csv()
+        df = self.parse_csv(csv_content)
+
+        if df.empty:
+            raise RuntimeError("iShares returned empty constituent list")
+
+        if 'SPY' not in df['symbol'].values:
+            self.logger.warning("spy_missing_from_ishares", action="adding_manually")
+            spy_row = pd.DataFrame([{
+                'symbol': 'SPY',
+                'name': 'SPDR S&P 500 ETF Trust',
+                'sector': 'ETF',
+                'weight': 0.0
+            }])
+            df = pd.concat([spy_row, df], ignore_index=True)
+
+        self.logger.info("ishares_constituents_loaded", count=len(df), top_symbol=df.iloc[0]['symbol'])
+        return df
+
+    def _ensure_cache_table(self):
+        from ..core.db import get_engine
+
+        eng = get_engine()
+        with eng.begin() as conn:
+            conn.execute(text("""
+                CREATE TABLE IF NOT EXISTS sp500_constituents (
+                    symbol TEXT PRIMARY KEY,
+                    name TEXT,
+                    sector TEXT NOT NULL,
+                    weight DECIMAL(10, 6),
+                    source TEXT DEFAULT 'ishares',
+                    last_updated DATE NOT NULL DEFAULT CURRENT_DATE,
+                    created_at TIMESTAMPTZ DEFAULT NOW()
+                )
+            """))
+
+            conn.execute(text("""
+                CREATE INDEX IF NOT EXISTS idx_sp500_last_updated
+                ON sp500_constituents(last_updated)
+            """))
+
+    def _check_cache_freshness(self) -> bool:
+        from ..core.db import get_engine
+
+        self._ensure_cache_table()
+
+        ttl_days = settings.RT_SP500_CACHE_TTL_DAYS
+        stale_threshold = date.today() - timedelta(days=ttl_days)
+
+        eng = get_engine()
+        with eng.begin() as conn:
+            count = conn.execute(text("SELECT COUNT(*) FROM sp500_constituents")).scalar()
+
+            if count == 0:
+                self.logger.info("sp500_cache_empty")
+                return False
+
+            last_update = conn.execute(text("SELECT MAX(last_updated) FROM sp500_constituents")).scalar()
+
+            if last_update is None or last_update <= stale_threshold:
+                self.logger.info("sp500_cache_stale", last_update=last_update, threshold=stale_threshold)
+                return False
+
+            self.logger.info("sp500_cache_fresh", last_update=last_update, count=count)
+            return True
+
+    def _load_from_cache(self) -> pd.DataFrame:
+        from ..core.db import get_engine
+
+        eng = get_engine()
+        with eng.begin() as conn:
+            results = conn.execute(text("""
+                SELECT symbol, name, sector, weight
+                FROM sp500_constituents
+                ORDER BY weight DESC
+            """)).fetchall()
+
+        df = pd.DataFrame(results, columns=['symbol', 'name', 'sector', 'weight'])
+        self.logger.info("sp500_cache_loaded", count=len(df))
+        return df
+
+    def upsert_to_cache(self, df: pd.DataFrame):
+        from ..core.db import get_engine
+
+        self._ensure_cache_table()
+
+        eng = get_engine()
+        with eng.begin() as conn:
+            for _, row in df.iterrows():
+                conn.execute(text("""
+                    INSERT INTO sp500_constituents
+                    (symbol, name, sector, weight, source, last_updated)
+                    VALUES (:symbol, :name, :sector, :weight, 'ishares', CURRENT_DATE)
+                    ON CONFLICT (symbol) DO UPDATE SET
+                        name = EXCLUDED.name,
+                        sector = EXCLUDED.sector,
+                        weight = EXCLUDED.weight,
+                        source = EXCLUDED.source,
+                        last_updated = EXCLUDED.last_updated
+                """), {
+                    "symbol": row["symbol"],
+                    "name": row["name"],
+                    "sector": row["sector"],
+                    "weight": float(row["weight"])
+                })
+
+        self.logger.info("sp500_cache_updated", count=len(df))
+
+    def get_constituents_with_cache(self, force_refresh: bool = False) -> pd.DataFrame:
+        """Get S&P 500 constituents with TTL-based caching."""
+        if not force_refresh and self._check_cache_freshness():
+            return self._load_from_cache()
+
+        self.logger.info("sp500_fetching_fresh_data")
+        df = self.get_constituents()
+        self.upsert_to_cache(df)
+        return df
 
 
 class CompanyDataClient:
@@ -83,21 +279,15 @@ class CompanyDataClient:
         
         self._ensure_sector_cache_table(eng)
         
-        # Only auto-update sectors for symbols that are in the active symbols table
-        # This prevents sector_cache from being populated with non-S&P500 symbols
         with eng.begin() as conn:
             active_symbols = conn.execute(text("""
                 SELECT symbol FROM symbols WHERE is_active = true
             """)).fetchall()
             active_symbol_set = {row[0] for row in active_symbols}
         
-        # Filter to only include active symbols for auto-update
         symbols_to_check = [s for s in df['symbol'].tolist() if s in active_symbol_set]
-        
-        # Check cache coverage and freshness for active symbols only
         symbols_needing_update = self._check_sector_cache_status(eng, symbols_to_check)
         
-        # Auto-update missing or stale sectors (only for active symbols)
         if symbols_needing_update:
             logger.info("auto_updating_sectors", count=len(symbols_needing_update))
             self._update_sectors_automatically(symbols_needing_update)
@@ -113,7 +303,6 @@ class CompanyDataClient:
         sector_map = {row[0]: row[1] for row in cached_sectors}
         df['sector'] = df['symbol'].map(sector_map).fillna('Unknown')
         
-        # Report final coverage
         cached_count = len(sector_map)
         total_count = len(df)
         coverage_pct = cached_count/total_count*100 if total_count > 0 else 0
@@ -208,7 +397,6 @@ class CompanyDataClient:
                     if sector == 'Unknown' and (sic_description or sic_code):
                         sector = self._map_sic_to_sector(sic_description, str(sic_code) if sic_code else None)
                 
-                # Upsert into database (include sic_code for consistency)
                 with eng.begin() as conn:
                     conn.execute(text("""
                         INSERT INTO sector_cache (symbol, sector, sic_description, sic_code, last_updated)
@@ -228,13 +416,11 @@ class CompanyDataClient:
                 
                 updated_count += 1
                 
-                # Rate limiting
-                time.sleep(0.12)  # ~8 requests per second
+                time.sleep(0.12)
                 
             except Exception as e:
                 logger.warning("sector_update_failed", symbol=symbol, error=str(e))
                 
-                # Store as Unknown if we can't fetch data
                 with eng.begin() as conn:
                     conn.execute(text("""
                         INSERT INTO sector_cache (symbol, sector, sic_description, sic_code, last_updated)
@@ -251,7 +437,6 @@ class CompanyDataClient:
     def _map_sic_to_sector(self, sic_description: str, sic_code: str = None) -> str:
         """Map SIC code/description to GICS sector using official SIC database."""
         
-        # First try exact SIC code lookup (most accurate)
         if sic_code:
             try:
                 sic_num = int(sic_code)
@@ -267,7 +452,6 @@ class CompanyDataClient:
             if sector != 'Unknown':
                 return sector
         
-        # Final fallback
         return 'Unknown'
     
     def _get_sector_from_sic_database(self, sic_code: int) -> str:
@@ -310,10 +494,8 @@ class CompanyDataClient:
             if result:
                 return result[0]
 
-            # Try fuzzy matching with key terms from description
             sic_lower = sic_description.lower()
 
-            # Extract key terms for better matching
             key_terms = []
             if 'services' in sic_lower:
                 key_terms.append('SERVICES')
@@ -346,71 +528,113 @@ class CompanyDataClient:
         finally:
             conn.close()
 
-def get_sp500_symbols() -> List[Tuple[str, str]]:
+def _get_hardcoded_fallback_symbols() -> List[Tuple[str, str]]:
+    """Fallback list of ~100 major S&P 500 symbols when iShares is unavailable."""
+    fallback_map = {
+        # Technology
+        'AAPL': 'Technology', 'MSFT': 'Technology', 'NVDA': 'Technology',
+        'AVGO': 'Technology', 'ORCL': 'Technology', 'AMD': 'Technology',
+        'CRM': 'Technology', 'ADBE': 'Technology', 'CSCO': 'Technology',
+        'ACN': 'Technology', 'TXN': 'Technology', 'QCOM': 'Technology',
+        'INTU': 'Technology', 'IBM': 'Technology', 'NOW': 'Technology',
+
+        # Communication Services
+        'GOOGL': 'Communication Services', 'GOOG': 'Communication Services',
+        'META': 'Communication Services', 'NFLX': 'Communication Services',
+        'DIS': 'Communication Services', 'CMCSA': 'Communication Services',
+        'T': 'Communication Services', 'VZ': 'Communication Services',
+
+        # Consumer Discretionary
+        'AMZN': 'Consumer Discretionary', 'TSLA': 'Consumer Discretionary',
+        'HD': 'Consumer Discretionary', 'NKE': 'Consumer Discretionary',
+        'MCD': 'Consumer Discretionary', 'LOW': 'Consumer Discretionary',
+        'BKNG': 'Consumer Discretionary', 'SBUX': 'Consumer Discretionary',
+        'TJX': 'Consumer Discretionary',
+
+        # Consumer Staples
+        'WMT': 'Consumer Staples', 'PG': 'Consumer Staples',
+        'COST': 'Consumer Staples', 'KO': 'Consumer Staples',
+        'PEP': 'Consumer Staples', 'PM': 'Consumer Staples',
+        'MO': 'Consumer Staples', 'MDLZ': 'Consumer Staples',
+        'CL': 'Consumer Staples',
+
+        # Financials
+        'JPM': 'Financials', 'V': 'Financials', 'MA': 'Financials',
+        'BAC': 'Financials', 'WFC': 'Financials', 'GS': 'Financials',
+        'MS': 'Financials', 'BLK': 'Financials', 'SPGI': 'Financials',
+        'C': 'Financials', 'SCHW': 'Financials', 'AXP': 'Financials',
+        'CB': 'Financials', 'PNC': 'Financials', 'USB': 'Financials',
+        'CME': 'Financials', 'ICE': 'Financials', 'MCO': 'Financials',
+        'BRK.B': 'Financials', 'AON': 'Financials',
+
+        # Healthcare
+        'UNH': 'Healthcare', 'JNJ': 'Healthcare', 'LLY': 'Healthcare',
+        'ABBV': 'Healthcare', 'MRK': 'Healthcare', 'TMO': 'Healthcare',
+        'ABT': 'Healthcare', 'DHR': 'Healthcare', 'PFE': 'Healthcare',
+        'BMY': 'Healthcare', 'AMGN': 'Healthcare', 'GILD': 'Healthcare',
+        'VRTX': 'Healthcare', 'CI': 'Healthcare', 'ELV': 'Healthcare',
+        'CVS': 'Healthcare', 'ISRG': 'Healthcare', 'REGN': 'Healthcare',
+        'ZTS': 'Healthcare', 'SYK': 'Healthcare', 'BSX': 'Healthcare',
+
+        # Industrials
+        'CAT': 'Industrials', 'GE': 'Industrials', 'RTX': 'Industrials',
+        'HON': 'Industrials', 'UNP': 'Industrials', 'LMT': 'Industrials',
+        'ADP': 'Industrials', 'DE': 'Industrials', 'BA': 'Industrials',
+        'NOC': 'Industrials', 'WM': 'Industrials', 'ITW': 'Industrials',
+        'EMR': 'Industrials', 'CSX': 'Industrials', 'NSC': 'Industrials',
+        'FDX': 'Industrials', 'UPS': 'Industrials',
+
+        # Energy
+        'XOM': 'Energy', 'CVX': 'Energy', 'COP': 'Energy',
+        'SLB': 'Energy', 'EOG': 'Energy', 'MPC': 'Energy',
+
+        # Materials
+        'LIN': 'Materials', 'APD': 'Materials', 'ECL': 'Materials',
+        'SHW': 'Materials', 'FCX': 'Materials', 'NEM': 'Materials',
+
+        # Real Estate
+        'PLD': 'Real Estate', 'AMT': 'Real Estate', 'EQIX': 'Real Estate',
+        'CCI': 'Real Estate', 'PSA': 'Real Estate',
+
+        # Utilities
+        'NEE': 'Utilities', 'DUK': 'Utilities', 'SO': 'Utilities',
+        'D': 'Utilities', 'AEP': 'Utilities',
+
+        # ETF (for market filter)
+        'SPY': 'ETF'
+    }
+
+    return list(fallback_map.items())
+
+
+def get_sp500_symbols(force_refresh: bool = False) -> List[Tuple[str, str]]:
     """
-    Get S&P 500 symbols and sectors from Alpaca with dynamic sector mapping using FMP.
+    Get S&P 500 symbols and sectors.
 
-    Returns:
-        List of (symbol, sector) tuples
+    Primary: iShares IVV ETF (cached, configurable TTL)
+    Fallback: Hardcoded ~100 major constituents
     """
-    alpaca_api_key = settings.RT_ALPACA_API_KEY
-    alpaca_secret_key = settings.RT_ALPACA_SECRET_KEY
-    fmp_api_key = settings.RT_FMP_API_KEY
+    source_mode = settings.RT_SP500_SOURCE.lower()
 
-    if not alpaca_api_key or not alpaca_secret_key:
-        raise ValueError("Alpaca API credentials not provided. Set RT_ALPACA_API_KEY and RT_ALPACA_SECRET_KEY in config.")
+    if source_mode != "hardcoded":
+        try:
+            logger.info("sp500_fetch_start", source="ishares", force_refresh=force_refresh)
 
-    client = CompanyDataClient(
-        fmp_api_key=fmp_api_key,
-        alpaca_api_key=alpaca_api_key,
-        alpaca_secret_key=alpaca_secret_key
-    )
+            ishares_client = iSharesClient()
+            df = ishares_client.get_constituents_with_cache(force_refresh=force_refresh)
 
-    try:
-        # Get all US stocks from Alpaca - this will now fetch sectors dynamically
-        df = client.get_sp500_constituents()
+            result = [(row['symbol'], row['sector']) for _, row in df.iterrows()]
 
-        # For now, we'll use a curated list of major S&P 500 symbols
-        # In production, you'd want to get the actual S&P 500 list from a reliable source
-        major_sp500_symbols = {
-            'AAPL', 'MSFT', 'GOOGL', 'GOOG', 'AMZN', 'NVDA', 'META', 'TSLA', 'BRK.B', 'UNH',
-            'JNJ', 'XOM', 'JPM', 'V', 'PG', 'MA', 'HD', 'CVX', 'ABBV', 'PFE', 'AVGO', 'KO',
-            'PEP', 'COST', 'TMO', 'WMT', 'BAC', 'NFLX', 'DIS', 'ABT', 'ADBE', 'CRM', 'ACN',
-            'VZ', 'CMCSA', 'ORCL', 'NKE', 'DHR', 'NEE', 'TXN', 'LIN', 'PM', 'RTX', 'QCOM',
-            'HON', 'UNP', 'T', 'LOW', 'SPGI', 'INTU', 'IBM', 'GS', 'CAT', 'AXP', 'AMD',
-            'BLK', 'DE', 'LMT', 'ELV', 'BKNG', 'SYK', 'GE', 'MDLZ', 'ADP', 'TJX', 'GILD',
-            'MMM', 'CVS', 'VRTX', 'C', 'MO', 'SCHW', 'ZTS', 'CB', 'CI', 'NOW', 'ISRG',
-            'BSX', 'ETN', 'PLD', 'DUK', 'SO', 'PYPL', 'WM', 'ITW', 'CL', 'EMR', 'AON',
-            'CSX', 'EQIX', 'PNC', 'NOC', 'SHW', 'CME', 'USB', 'WFC', 'MS', 'MCO', 'FDX',
-            'NSC', 'APD', 'ECL', 'COP', 'REGN', 'FCX', 'ICE', 'SPY'  # SPY for market filter
-        }
+            logger.info("sp500_symbols_loaded", source="ishares", count=len(result))
+            return result
 
-        # Filter to major S&P 500 symbols that exist in Alpaca data
-        available_symbols = set(df['symbol'].str.upper())
-        valid_symbols = major_sp500_symbols.intersection(available_symbols)
+        except Exception as e:
+            logger.warning("ishares_fetch_failed_using_fallback", error=str(e))
 
-        sp500_df = df[df['symbol'].isin(valid_symbols)].copy()
-
-        # Convert to list of tuples
-        result = []
-        for _, row in sp500_df.iterrows():
-            symbol = str(row['symbol']).strip()
-            sector = str(row.get('sector', 'Unknown')).strip()
-
-            if symbol and symbol != 'nan':
-                result.append((symbol, sector))
-
-        # Ensure SPY is included (needed for market filter)
-        spy_present = any(symbol == 'SPY' for symbol, _ in result)
-        if not spy_present:
-            result.append(('SPY', 'ETF'))
-            logger.info("spy_added_to_list")
-
-        logger.info("sp500_symbols_loaded", count=len(result))
-        return result
-
-    except Exception as e:
-        raise RuntimeError(f"Error fetching S&P 500 symbols from Alpaca: {e}")
+    logger.info("sp500_fetch_start", source="hardcoded_fallback")
+    result = _get_hardcoded_fallback_symbols()
+    logger.info("sp500_symbols_loaded", source="hardcoded_fallback", count=len(result))
+    return result
 
 def map_sector_name(sector: str) -> str:
     """
@@ -425,7 +649,6 @@ def map_sector_name(sector: str) -> str:
     if not sector or sector.lower() in ['', 'null', 'none', 'unknown']:
         return 'Unknown'
     
-    # Common sector mappings
     sector_map = {
         'Information Technology': 'Technology',
         'Health Care': 'Healthcare',

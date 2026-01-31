@@ -1,8 +1,7 @@
 """Summary and reporting utilities for daily jobs.
 
 This module provides functions for generating daily summaries
-and printing trading activity reports.
-"""
+and printing trading activity reports."""
 
 from datetime import date
 from sqlalchemy import text
@@ -10,11 +9,7 @@ from rapidtrader.core.db import get_engine
 
 
 def print_daily_summary(trade_date: date):
-    """Print an enhanced summary of the day's trading activity.
-    
-    Args:
-        trade_date: The trading date to summarize
-    """
+    """Print an enhanced summary of the day's trading activity."""
     eng = get_engine()
     
     with eng.begin() as conn:
@@ -27,7 +22,6 @@ def print_daily_summary(trade_date: date):
             ORDER BY direction
         """), {"d": trade_date}).all()
         
-        # Get order counts with breakdown by reason
         order_stats = conn.execute(text("""
             SELECT side, COUNT(*) as count, SUM(qty) as total_qty
             FROM orders_eod 
@@ -36,14 +30,12 @@ def print_daily_summary(trade_date: date):
             ORDER BY side
         """), {"d": trade_date}).all()
         
-        # Get blocked buy count
         blocked_buys = conn.execute(text("""
             SELECT COUNT(*) 
             FROM orders_eod 
             WHERE d = :d AND side = 'buy' AND qty = 0 AND reason = 'market_gate_block'
         """), {"d": trade_date}).scalar() or 0
         
-        # Get actual position exits
         position_exits = conn.execute(text("""
             SELECT COUNT(*) 
             FROM orders_eod o
@@ -51,7 +43,6 @@ def print_daily_summary(trade_date: date):
             WHERE o.d = :d AND o.side = 'sell' AND p.qty > 0
         """), {"d": trade_date}).scalar() or 0
         
-        # Get enhanced market state with SPY data
         market_info = conn.execute(text("""
             SELECT bull_gate, pct_entries_filtered, total_candidates, filtered_candidates,
                    spy_close, spy_sma200

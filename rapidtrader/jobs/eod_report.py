@@ -1,8 +1,7 @@
 """End-of-Day Reporting Job for RapidTrader.
 
 Generates daily summary reports showing trading activity, filtering metrics,
-and system performance statistics.
-"""
+and system performance statistics."""
 
 import argparse
 from datetime import date
@@ -11,11 +10,7 @@ from ..core.db import get_engine
 
 
 def get_latest_trading_date() -> date:
-    """Get the most recent trading date with data.
-    
-    Returns:
-        Date of the most recent market data
-    """
+    """Get the most recent trading date with data."""
     eng = get_engine()
     
     with eng.begin() as conn:
@@ -25,16 +20,8 @@ def get_latest_trading_date() -> date:
     
     return result if result else date.today()
 
-
 def get_market_summary(trade_date: date) -> dict:
-    """Get market state summary for a trading date.
-    
-    Args:
-        trade_date: Date to get market summary for
-        
-    Returns:
-        Dictionary with market state information
-    """
+    """Get market state summary for a trading date."""
     eng = get_engine()
     
     with eng.begin() as conn:
@@ -69,20 +56,11 @@ def get_market_summary(trade_date: date) -> dict:
             "pct_entries_filtered": 0.0
         }
 
-
 def get_signal_summary(trade_date: date) -> dict:
-    """Get trading signal summary for a date.
-    
-    Args:
-        trade_date: Date to get signal summary for
-        
-    Returns:
-        Dictionary with signal statistics
-    """
+    """Get trading signal summary for a date."""
     eng = get_engine()
     
     with eng.begin() as conn:
-        # Get signal counts by strategy and direction
         signal_results = conn.execute(text("""
             SELECT strategy, direction, COUNT(*) as count
             FROM signals_daily 
@@ -91,14 +69,12 @@ def get_signal_summary(trade_date: date) -> dict:
             ORDER BY strategy, direction
         """), {"date": trade_date}).all()
         
-        # Get total unique symbols with signals
         total_signals = conn.execute(text("""
             SELECT COUNT(DISTINCT symbol) as count
             FROM signals_daily 
             WHERE d = :date AND direction != 'hold'
         """), {"date": trade_date}).scalar() or 0
     
-    # Organize results
     signals_by_strategy = {}
     for strategy, direction, count in signal_results:
         if strategy not in signals_by_strategy:
@@ -110,20 +86,11 @@ def get_signal_summary(trade_date: date) -> dict:
         "by_strategy": signals_by_strategy
     }
 
-
 def get_order_summary(trade_date: date) -> dict:
-    """Get order summary for a trading date.
-    
-    Args:
-        trade_date: Date to get order summary for
-        
-    Returns:
-        Dictionary with order statistics and details
-    """
+    """Get order summary for a trading date."""
     eng = get_engine()
     
     with eng.begin() as conn:
-        # Get order counts by side
         order_counts = conn.execute(text("""
             SELECT side, COUNT(*) as count
             FROM orders_eod 
@@ -131,7 +98,6 @@ def get_order_summary(trade_date: date) -> dict:
             GROUP BY side
         """), {"date": trade_date}).all()
         
-        # Get order details
         order_details = conn.execute(text("""
             SELECT symbol, side, qty, reason
             FROM orders_eod 
@@ -139,7 +105,6 @@ def get_order_summary(trade_date: date) -> dict:
             ORDER BY side, symbol
         """), {"date": trade_date}).all()
     
-    # Organize order counts
     counts = {"buy": 0, "sell": 0, "exit": 0}
     for side, count in order_counts:
         counts[side] = count
@@ -150,14 +115,8 @@ def get_order_summary(trade_date: date) -> dict:
         "details": order_details
     }
 
-
 def print_market_report(trade_date: date, market_data: dict):
-    """Print market state section of the report.
-    
-    Args:
-        trade_date: Trading date
-        market_data: Market state data dictionary
-    """
+    """Print market state section of the report."""
     print("=" * 60)
     print(f"RAPIDTRADER EOD REPORT - {trade_date}")
     print("=" * 60)
@@ -169,26 +128,16 @@ def print_market_report(trade_date: date, market_data: dict):
     print(f"  Market Gate: {'BULL' if market_data['bull_gate'] else 'BEAR'} (new entries {'allowed' if market_data['bull_gate'] else 'blocked'})")
     print()
 
-
 def print_filtering_report(market_data: dict):
-    """Print filtering metrics section of the report.
-    
-    Args:
-        market_data: Market state data dictionary
-    """
+    """Print filtering metrics section of the report."""
     print("FILTERING METRICS:")
     print(f"  Total Candidates: {market_data['total_candidates']}")
     print(f"  Filtered Out: {market_data['filtered_candidates']}")
     print(f"  Filter Rate: {market_data['pct_entries_filtered']:.1f}%")
     print()
 
-
 def print_signal_report(signal_data: dict):
-    """Print signal generation section of the report.
-    
-    Args:
-        signal_data: Signal summary data dictionary
-    """
+    """Print signal generation section of the report."""
     print("SIGNAL GENERATION:")
     print(f"  Symbols with Signals: {signal_data['total_signals']}")
     
@@ -201,13 +150,8 @@ def print_signal_report(signal_data: dict):
         print("  No signals generated")
     print()
 
-
 def print_order_report(order_data: dict):
-    """Print order creation section of the report.
-    
-    Args:
-        order_data: Order summary data dictionary
-    """
+    """Print order creation section of the report."""
     print("ORDER CREATION:")
     print(f"  Total Orders: {order_data['total_orders']}")
     print(f"  Buy Orders: {order_data['counts']['buy']}")
@@ -225,7 +169,6 @@ def print_order_report(order_data: dict):
     else:
         print("  No orders created")
     print()
-
 
 def main():
     """Main EOD reporting job entry point."""

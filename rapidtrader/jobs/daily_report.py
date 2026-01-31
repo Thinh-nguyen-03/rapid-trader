@@ -2,9 +2,7 @@
 
 Generates comprehensive daily trading reports with detailed decision analysis,
 signal breakdowns, filtering reasons, and risk management decisions.
-Reports are saved to files with timestamps for historical tracking.
-"""
-
+Reports are saved to files with timestamps for historical tracking."""
 import os
 import json
 from datetime import date, datetime
@@ -75,14 +73,7 @@ class DailyReport:
 
 
 def get_market_state_details(trade_date: date) -> MarketState:
-    """Get detailed market state information.
-    
-    Args:
-        trade_date: Trading date to analyze
-        
-    Returns:
-        MarketState object with detailed information
-    """
+    """Get detailed market state information."""
     eng = get_engine()
     
     with eng.begin() as conn:
@@ -94,7 +85,6 @@ def get_market_state_details(trade_date: date) -> MarketState:
             WHERE d = :d
         """), {"d": trade_date}).first()
         
-        # Check kill switch status (handle missing table gracefully)
         kill_data = None
         try:
             kill_data = conn.execute(text("""
@@ -132,20 +122,11 @@ def get_market_state_details(trade_date: date) -> MarketState:
         filtered_candidates=int(filtered or 0)
     )
 
-
 def get_signal_details(trade_date: date) -> List[SignalDetail]:
-    """Get detailed signal information for all symbols.
-    
-    Args:
-        trade_date: Trading date to analyze
-        
-    Returns:
-        List of SignalDetail objects
-    """
+    """Get detailed signal information for all symbols."""
     eng = get_engine()
     
     with eng.begin() as conn:
-        # Get all signals with symbol and sector info
         signal_data = conn.execute(text("""
             SELECT s.symbol, sym.sector,
                    MAX(CASE WHEN s.strategy = 'RSI_MR' THEN s.direction END) as rsi_signal,
@@ -165,7 +146,6 @@ def get_signal_details(trade_date: date) -> List[SignalDetail]:
     for row in signal_data:
         symbol, sector, rsi_signal, sma_signal, current_price, position_qty = row
         
-        # Determine final signal (same logic as eod_trade.py)
         final_signal = "hold"
         strategy_used = "none"
         
@@ -189,16 +169,8 @@ def get_signal_details(trade_date: date) -> List[SignalDetail]:
     
     return signals
 
-
 def get_order_details(trade_date: date) -> List[OrderDetail]:
-    """Get detailed order information.
-    
-    Args:
-        trade_date: Trading date to analyze
-        
-    Returns:
-        List of OrderDetail objects
-    """
+    """Get detailed order information."""
     eng = get_engine()
     
     with eng.begin() as conn:
@@ -225,28 +197,16 @@ def get_order_details(trade_date: date) -> List[OrderDetail]:
     
     return orders
 
-
 def analyze_filtering_reasons(trade_date: date, signals: List[SignalDetail], orders: List[OrderDetail]) -> List[FilteringDetail]:
-    """Analyze why symbols were filtered out of trading decisions.
-    
-    Args:
-        trade_date: Trading date to analyze
-        signals: List of signal details
-        orders: List of order details
-        
-    Returns:
-        List of FilteringDetail objects
-    """
+    """Analyze why symbols were filtered out of trading decisions."""
     filtered = []
     
-    # Create lookup sets for efficiency
     order_symbols = {order.symbol for order in orders if order.quantity > 0}
     blocked_buy_symbols = {order.symbol for order in orders if order.side == "buy" and order.quantity == 0}
     
-    # Analyze signals that didn't result in orders
     for signal in signals:
         if signal.final_signal == "hold":
-            continue  # Hold signals are not filtered, they're intentional
+            continue
         
         if signal.symbol not in order_symbols:
             if signal.symbol in blocked_buy_symbols:
@@ -256,14 +216,12 @@ def analyze_filtering_reasons(trade_date: date, signals: List[SignalDetail], ord
                     details=f"Buy signal blocked by bear market filter ({signal.strategy_used})"
                 ))
             elif signal.final_signal == "buy":
-                # Buy signal but no order - could be various reasons
                 filtered.append(FilteringDetail(
                     symbol=signal.symbol,
                     reason="entry_filtered",
                     details=f"Buy signal filtered - possible reasons: sector limits, position sizing, kill switch ({signal.strategy_used})"
                 ))
             elif signal.final_signal == "sell" and signal.position_qty == 0:
-                # Sell signal but no position to sell
                 filtered.append(FilteringDetail(
                     symbol=signal.symbol,
                     reason="no_position_to_sell",
@@ -272,21 +230,9 @@ def analyze_filtering_reasons(trade_date: date, signals: List[SignalDetail], ord
     
     return filtered
 
-
 def calculate_summary_stats(market_state: MarketState, signals: List[SignalDetail], 
                           orders: List[OrderDetail], filtered: List[FilteringDetail]) -> Dict[str, Any]:
-    """Calculate summary statistics for the report.
-    
-    Args:
-        market_state: Market state information
-        signals: List of signal details
-        orders: List of order details
-        filtered: List of filtered symbols
-        
-    Returns:
-        Dictionary of summary statistics
-    """
-    # Signal counts
+    """Calculate summary statistics for the report."""
     signal_counts = {"buy": 0, "sell": 0, "hold": 0}
     strategy_counts = {"RSI_MR": 0, "SMA_X": 0, "both": 0}
     
@@ -300,7 +246,6 @@ def calculate_summary_stats(market_state: MarketState, signals: List[SignalDetai
         elif signal.sma_signal != "hold":
             strategy_counts["SMA_X"] += 1
     
-    # Order counts and values
     order_counts = {"buy": 0, "sell": 0}
     order_values = {"buy": 0.0, "sell": 0.0}
     blocked_orders = 0
@@ -330,19 +275,10 @@ def calculate_summary_stats(market_state: MarketState, signals: List[SignalDetai
         "kill_switch_status": "ACTIVE" if market_state.kill_switch_active else "INACTIVE"
     }
 
-
 def generate_daily_report(trade_date: date) -> DailyReport:
-    """Generate a comprehensive daily trading report.
-    
-    Args:
-        trade_date: Trading date to generate report for
-        
-    Returns:
-        Complete DailyReport object
-    """
+    """Generate a comprehensive daily trading report."""
     print(f"INFO: Generating detailed report for {trade_date}")
     
-    # Gather all report data
     market_state = get_market_state_details(trade_date)
     signals = get_signal_details(trade_date)
     orders = get_order_details(trade_date)
@@ -359,18 +295,8 @@ def generate_daily_report(trade_date: date) -> DailyReport:
         summary_stats=summary_stats
     )
 
-
 def save_report_to_file(report: DailyReport, output_dir: str = "reports") -> str:
-    """Save the daily report to a file.
-    
-    Args:
-        report: DailyReport object to save
-        output_dir: Directory to save reports in
-        
-    Returns:
-        Path to the saved report file
-    """
-    # Ensure output directory exists
+    """Save the daily report to a file."""
     os.makedirs(output_dir, exist_ok=True)
     
     # Generate filename with timestamp
@@ -386,25 +312,14 @@ def save_report_to_file(report: DailyReport, output_dir: str = "reports") -> str
     report_dict["generation_time"] = report.generation_time.isoformat()
     report_dict["market_state"]["date"] = report.market_state.date.isoformat()
     
-    # Save to JSON file
     with open(filepath, 'w') as f:
         json.dump(report_dict, f, indent=2, default=str)
     
     print(f"SUCCESS: Detailed report saved to {filepath}")
     return filepath
 
-
 def save_human_readable_report(report: DailyReport, output_dir: str = "reports") -> str:
-    """Save a human-readable version of the report.
-    
-    Args:
-        report: DailyReport object to save
-        output_dir: Directory to save reports in
-        
-    Returns:
-        Path to the saved human-readable report file
-    """
-    # Ensure output directory exists
+    """Save a human-readable version of the report."""
     os.makedirs(output_dir, exist_ok=True)
     
     # Generate filename
@@ -419,7 +334,6 @@ def save_human_readable_report(report: DailyReport, output_dir: str = "reports")
         f.write(f"Generated: {report.generation_time.strftime('%Y-%m-%d %H:%M:%S')}\n")
         f.write("=" * 80 + "\n\n")
         
-        # Market State Section
         f.write("MARKET STATE ANALYSIS\n")
         f.write("-" * 40 + "\n")
         ms = report.market_state
@@ -455,7 +369,6 @@ def save_human_readable_report(report: DailyReport, output_dir: str = "reports")
         
         f.write("\n")
         
-        # Filtering Analysis
         if report.filtered_symbols:
             f.write("FILTERING ANALYSIS\n")
             f.write("-" * 40 + "\n")
@@ -463,11 +376,9 @@ def save_human_readable_report(report: DailyReport, output_dir: str = "reports")
                 f.write(f"{reason.replace('_', ' ').title()}: {count} symbols\n")
             f.write("\n")
         
-        # Detailed Signal Analysis
         f.write("DETAILED SIGNAL ANALYSIS\n")
         f.write("-" * 40 + "\n")
         
-        # Group signals by final decision
         buy_signals = [s for s in report.signals if s.final_signal == "buy"]
         sell_signals = [s for s in report.signals if s.final_signal == "sell"]
         
@@ -512,7 +423,6 @@ def save_human_readable_report(report: DailyReport, output_dir: str = "reports")
                     f.write(f"  {order.symbol:6} | Market Gate Block | {order.reason}\n")
                 f.write("\n")
         
-        # Filtered Symbols Detail
         if report.filtered_symbols:
             f.write("FILTERED SYMBOLS DETAIL\n")
             f.write("-" * 40 + "\n")
@@ -526,23 +436,12 @@ def save_human_readable_report(report: DailyReport, output_dir: str = "reports")
     print(f"SUCCESS: Human-readable report saved to {filepath}")
     return filepath
 
-
 def generate_and_save_daily_report(trade_date: date, output_dir: str = "reports") -> Tuple[str, str]:
-    """Generate and save both JSON and human-readable daily reports.
-    
-    Args:
-        trade_date: Trading date to generate report for
-        output_dir: Directory to save reports in
-        
-    Returns:
-        Tuple of (json_filepath, text_filepath)
-    """
+    """Generate and save both JSON and human-readable daily reports."""
     print(f"INFO: Starting detailed report generation for {trade_date}")
     
-    # Generate the report
     report = generate_daily_report(trade_date)
     
-    # Save both formats
     json_path = save_report_to_file(report, output_dir)
     text_path = save_human_readable_report(report, output_dir)
     

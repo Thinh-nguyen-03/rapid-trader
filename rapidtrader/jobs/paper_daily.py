@@ -1,13 +1,4 @@
-"""Daily Paper Trading Job for RapidTrader.
-
-Orchestrates the complete daily trading workflow:
-1. Ingest fresh market data (OHLCV bars + SPY market state)
-2. Generate trading signals and apply risk filters
-3. Create paper trading orders (recorded in database)
-
-This job is designed to run every trading day after market close
-(typically around 6:00 PM ET) as part of an automated pipeline.
-"""
+"""Daily Paper Trading Job for RapidTrader."""
 
 import argparse
 from datetime import date
@@ -83,14 +74,11 @@ Typical usage:
         print("Starting RapidTrader Daily Paper Trading Job")
         print("=" * 60)
         
-        # Initialize system run tracking
         create_system_runs_table_if_not_exists()
         
-        # Step 1: Data Ingestion (Smart Detection)
         print("\nStep 1: Data Ingestion")
         print("-" * 30)
         
-        # Override automatic detection if user explicitly requests to skip
         if args.skip_ingest:
             print("Data ingestion manually skipped via --skip-ingest flag")
             missing_days = []
@@ -109,7 +97,6 @@ Typical usage:
             import sys
             original_argv = sys.argv[:]
             try:
-                # Temporarily replace sys.argv for the ingest job
                 sys.argv = ["eod_ingest.py", "--days", str(days_back)]
                 ingest_result = ingest_main()
             finally:
@@ -120,7 +107,6 @@ Typical usage:
             
             print("SUCCESS: Data ingestion completed")
             
-            # Verify that gaps were filled
             remaining_gaps = get_missing_trading_days()
             if remaining_gaps:
                 print(f"WARNING: Some gaps remain after ingestion: {[str(d) for d in remaining_gaps]}")
@@ -137,7 +123,6 @@ Typical usage:
         
         print(f"Processing trading date: {trade_date}")
         
-        # Step 2: Data Validation
         print("\nStep 2: Data Validation")
         print("-" * 30)
         if not validate_data_completeness(trade_date):
@@ -155,7 +140,6 @@ Typical usage:
         import sys
         original_argv = sys.argv[:]
         try:
-            # Temporarily replace sys.argv for the trading job
             trade_args = ["eod_trade.py", "--mode", "dry_run"]
             if args.signals_only or args.dry_run:
                 trade_args.append("--signals-only")
@@ -169,14 +153,12 @@ Typical usage:
         
         print("SUCCESS: Signal generation and trading completed")
         
-        # Step 4: Mark Completion and Summary
         print("\nStep 4: Completion & Summary")
         print("-" * 30)
         
         if not args.dry_run:
             mark_run_completion(trade_date)
         
-        # Generate detailed report files
         print("\nGenerating detailed trading report...")
         try:
             json_path, text_path = generate_and_save_daily_report(trade_date, args.report_dir)

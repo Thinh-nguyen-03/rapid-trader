@@ -1,8 +1,4 @@
-"""End-of-Day Trading Job for RapidTrader.
-
-Generates trading signals using RSI mean-reversion and SMA crossover strategies,
-applies risk management controls, and creates dry-run orders.
-"""
+"""End-of-Day trading job - generates signals, applies risk controls, creates orders."""
 
 import argparse
 import pandas as pd
@@ -33,126 +29,79 @@ from ..risk.kill_switch import is_kill_switch_active, update_kill_switch_state
 
 
 def get_bars(symbol: str, lookback: int = 250) -> pd.DataFrame:
-    """Get historical OHLCV bars for a symbol.
-    
-    Args:
-        symbol: Stock symbol
-        lookback: Number of days to retrieve (default 250)
-        
-    Returns:
-        DataFrame with OHLCV data indexed by date
-    """
     eng = get_engine()
-    
+
     query = text("""
-        SELECT d, open, high, low, close, volume 
-        FROM bars_daily 
-        WHERE symbol = :symbol 
+        SELECT d, open, high, low, close, volume
+        FROM bars_daily
+        WHERE symbol = :symbol
         ORDER BY d DESC
         LIMIT :lookback
     """)
-    
+
     df = pd.read_sql(
-        query, 
-        eng, 
-        params={"symbol": symbol, "lookback": lookback}, 
+        query,
+        eng,
+        params={"symbol": symbol, "lookback": lookback},
         parse_dates=["d"]
     ).set_index("d")
-    
-    # Sort by date (oldest first) for calculations
+
     return df.sort_index()
 
 
 def get_last_session() -> date:
-    """Get the most recent trading session date.
-    
-    Returns:
-        Date of the most recent data in bars_daily table
-    """
     eng = get_engine()
-    
+
     with eng.begin() as conn:
         result = conn.execute(text("""
             SELECT MAX(d) FROM bars_daily
         """)).scalar_one()
-    
+
     return result
 
 
 def get_portfolio_value() -> float:
-    """Get current portfolio value for position sizing.
-    
-    Returns:
-        Portfolio value in dollars (uses RT_START_CAPITAL for MVP)
-    """
-    # For MVP, use static starting capital
-    # In production, this would calculate actual portfolio value
     return settings.RT_START_CAPITAL
 
 
 def get_sector_value(sector: str) -> float:
-    """Get current dollar value invested in a sector.
-    
-    Args:
-        sector: Sector name
-        
-    Returns:
-        Current sector exposure in dollars
-    """
     eng = get_engine()
-    
+
     with eng.begin() as conn:
         result = conn.execute(text("""
-            SELECT COALESCE(SUM(qty * avg_px), 0) 
-            FROM positions 
+            SELECT COALESCE(SUM(qty * avg_px), 0)
+            FROM positions
             WHERE sector = :sector
         """), {"sector": sector}).scalar_one()
-    
+
     return float(result or 0.0)
 
 
 def get_position_quantity(symbol: str) -> int:
-    """Get current position quantity for a symbol.
-    
-    Args:
-        symbol: Stock symbol
-        
-    Returns:
-        Current position quantity (0 if no position)
-    """
     eng = get_engine()
-    
+
     try:
         with eng.begin() as conn:
             result = conn.execute(text("""
-                SELECT COALESCE(qty, 0) 
-                FROM positions 
+                SELECT COALESCE(qty, 0)
+                FROM positions
                 WHERE symbol = :symbol
             """), {"symbol": symbol}).scalar()
-            
+
             return int(result or 0)
-            
+
     except Exception:
         return 0
 
 
 def record_signal(trade_date: date, symbol: str, strategy: str, direction: str, strength: float = 1.0):
-    """Record a trading signal in the database.
-    
-    Args:
-        trade_date: Trading date
-        symbol: Stock symbol  
-        strategy: Strategy name (e.g., 'RSI_MR', 'SMA_X')
-        direction: Signal direction ('buy', 'sell', 'hold')
-        strength: Signal strength (0.0 to 1.0)
-    """
     eng = get_engine()
-    
+
     with eng.begin() as conn:
         conn.execute(text("""
             INSERT INTO signals_daily (d, symbol, strategy, direction, strength)
             VALUES (:d, :symbol, :strategy, :direction, :strength)
-            ON CONFLICT (d, symbol, strategy) DO UPDATE SET 
+            ON CONFLICT (d, symbol, strategy) DO UPDATE SET
                 direction = :direction, strength = :strength
         """), {
             "d": trade_date,
@@ -164,17 +113,8 @@ def record_signal(trade_date: date, symbol: str, strategy: str, direction: str, 
 
 
 def record_order(trade_date: date, symbol: str, side: str, quantity: int, reason: str):
-    """Record a trading order in the database.
-    
-    Args:
-        trade_date: Trading date
-        symbol: Stock symbol
-        side: Order side ('buy', 'sell', 'exit')
-        quantity: Number of shares
-        reason: Order reason/description
-    """
     eng = get_engine()
-    
+
     with eng.begin() as conn:
         conn.execute(text("""
             INSERT INTO orders_eod (d, symbol, side, qty, type, reason)
@@ -189,20 +129,13 @@ def record_order(trade_date: date, symbol: str, side: str, quantity: int, reason
 
 
 def update_filtering_metrics(trade_date: date, total_candidates: int, filtered_candidates: int):
-    """Update market state with filtering statistics.
-    
-    Args:
-        trade_date: Trading date
-        total_candidates: Total symbols processed
-        filtered_candidates: Number of symbols filtered out
-    """
     eng = get_engine()
-    
+
     pct_filtered = 0.0 if total_candidates == 0 else 100.0 * filtered_candidates / total_candidates
-    
+
     with eng.begin() as conn:
         conn.execute(text("""
-            UPDATE market_state 
+            UPDATE market_state
             SET total_candidates = :total,
                 filtered_candidates = :filtered,
                 pct_entries_filtered = :pct
@@ -216,7 +149,6 @@ def update_filtering_metrics(trade_date: date, total_candidates: int, filtered_c
 
 
 def main():
-    """Main EOD trading job entry point."""
     parser = argparse.ArgumentParser(
         description="RapidTrader End-of-Day Trading Job"
     )
@@ -234,7 +166,6 @@ def main():
     
     args = parser.parse_args()
 
-    # Initialize logging
     setup_logging(
         log_level=settings.RT_LOG_LEVEL,
         json_logs=settings.RT_LOG_JSON,
@@ -258,7 +189,6 @@ def main():
             update_filtering_metrics(trade_date, 0, 0)
             return 0
 
-        # Check market filter but don't return early
         bear_gate = settings.RT_MARKET_FILTER_ENABLE and not is_bull_market(trade_date)
         if bear_gate:
             from ..core.market_state import get_market_state
@@ -285,7 +215,6 @@ def main():
 
         logger.info("processing_symbols", count=len(symbols_data))
         
-        # Initialize counters
         total_candidates = 0
         filtered_candidates = 0
         signals_generated = 0
@@ -299,7 +228,6 @@ def main():
         position_symbols = [p['symbol'] for p in current_positions]
         position_atr_values = get_position_atr_values(position_symbols, settings.RT_ATR_LOOKBACK)
 
-        # Check portfolio heat limit
         portfolio_heat_blocked = False
         if settings.RT_PORTFOLIO_HEAT_ENABLE:
             heat_ok, current_heat = portfolio_heat_ok(
@@ -332,7 +260,6 @@ def main():
             else:
                 logger.info("vix_data_unavailable")
 
-        # Process each symbol
         for symbol, sector in symbols_data:
             total_candidates += 1
             
@@ -342,14 +269,12 @@ def main():
                     filtered_candidates += 1
                     continue
                 
-                # Get historical data
                 df = get_bars(symbol, lookback=250)
                 
-                if len(df) < 200:  # Need sufficient data for calculations
+                if len(df) < 200:
                     filtered_candidates += 1
                     continue
                 
-                # Generate strategy signals
                 rsi_result = rsi_mean_reversion(
                     df, 
                     window=settings.RT_CONFIRM_WINDOW,
@@ -371,7 +296,6 @@ def main():
                     final_signal = "buy"
                     strategy = "RSI_MR" if rsi_signal == "buy" else "SMA_X"
                 
-                # Always record signals for analytics (regardless of market gate)
                 record_signal(trade_date, symbol, "RSI_MR", rsi_signal)
                 record_signal(trade_date, symbol, "SMA_X", sma_signal)
                 
@@ -392,7 +316,6 @@ def main():
                             record_order(trade_date, symbol, "buy", 0, "market_gate_block")
                             continue
 
-                        # Block if portfolio heat exceeded
                         if portfolio_heat_blocked:
                             filtered_candidates += 1
                             record_order(trade_date, symbol, "buy", 0, "portfolio_heat_block")
@@ -404,7 +327,6 @@ def main():
                             filtered_candidates += 1
                             continue
 
-                        # Check correlation with existing positions
                         if settings.RT_CORRELATION_CHECK_ENABLE and current_positions:
                             corr_ok, correlated_with = correlation_ok(
                                 symbol,
@@ -432,7 +354,6 @@ def main():
                         )
 
                         if quantity > 0:
-                            # Check sector exposure limits
                             current_sector_value = get_sector_value(sector or "")
                             candidate_value = quantity * current_price
 
@@ -464,7 +385,6 @@ def main():
                                 should_create_sell = position_qty > 0
                             
                             if should_create_sell:
-                                # Create exit order (quantity 0 indicates full position exit)
                                 record_order(
                                     trade_date,
                                     symbol,
